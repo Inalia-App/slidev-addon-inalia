@@ -28,7 +28,7 @@
     "export": "slidev export",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
-    "publish": "npm run lint && changelogen --release && npm publish && git push --follow-tags"
+    "release": "npm run lint && changelogen --release && npm publish && git push --follow-tags"
   },
   "dependencies": {
     "@slidev/cli": "^0.49.29",
