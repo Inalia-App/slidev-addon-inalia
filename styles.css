@@ -1,0 +1,12 @@
+.slidev-layout a.inalia {
+  border-bottom-width: 0;
+}
+
+.slidev-layout ul.inalia {
+  list-style-type: none;
+}
+
+.slidev-layout ul.inalia li {
+  margin: 0;
+  padding: 0;
+}

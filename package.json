@@ -1,0 +1,48 @@
+{
+  "name": "slidev-addon-inalia",
+  "type": "module",
+  "version": "0.0.0",
+  "private": true,
+  "packageManager": "pnpm@9.10.0+sha512.73a29afa36a0d092ece5271de5177ecbf8318d454ecd701343131b8ebc0c1a91c487da46ab77c8e596d6acf1461e3594ced4becedf8921b074fbd8653ed7051c",
+  "keywords": [
+    "slidev",
+    "slidev-addon",
+    "inalia"
+  ],
+  "files": [
+    "components",
+    "composables",
+    "setup",
+    "styles.css",
+    "tsconfig.json",
+    "types",
+    "vite-env.d.ts.ts",
+    "window.d.ts"
+  ],
+  "engines": {
+    "slidev": ">=0.49.29"
+  },
+  "scripts": {
+    "build": "slidev build",
+    "dev": "slidev --open",
+    "export": "slidev export",
+    "lint": "eslint .",
+    "lint:fix": "eslint . --fix",
+    "publish": "npm run lint && changelogen --release && npm publish && git push --follow-tags"
+  },
+  "dependencies": {
+    "@slidev/cli": "^0.49.29",
+    "@slidev/theme-default": "latest",
+    "laravel-echo": "^1.16.1",
+    "ofetch": "^1.3.4",
+    "pusher-js": "8.4.0-rc2",
+    "uqr": "^0.1.2",
+    "vue": "^3.4.38"
+  },
+  "devDependencies": {
+    "@antfu/eslint-config": "^3.7.0",
+    "changelogen": "^0.5.7",
+    "eslint": "^9.10.0",
+    "typescript": "^5.6.2"
+  }
+}
