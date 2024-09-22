@@ -3,8 +3,10 @@ import type { PropType } from 'vue'
 import type { StaticAnswer } from '../types/answer'
 import type { Question, StaticQuestion } from '../types/question'
 import InaliaAnswersText from '../components/InaliaAnswersText.vue'
-import InaliaQR from '../components/InaliaQR.vue'
 import { useInalia } from '../composables/useInalia'
+import InaliaAnswersSingleSelect from './InaliaAnswersSingleSelect.vue'
+import InaliaDefaultLayout from './InaliaDefaultLayout.vue'
+import InaliaLoading from './InaliaLoading.vue'
 
 const props = defineProps({
   questionId: {
@@ -29,28 +31,26 @@ const { isStatic, question, answers, answerUrl } = useInalia(() => props.questio
 
 <template>
   <template v-if="question">
-    <div class="h-full flex flex-row justify-between gap-8">
-      <div class="flex flex-col">
-        <h1>
-          <slot name="title" :question="question">
-            {{ question.question }}
-          </slot>
-        </h1>
-
-        <InaliaAnswersText v-if="question.type === 'text' && answers" :answers="answers" class="overflow-auto" />
-      </div>
-
-      <div
-        class="inalia shrink-0 w-40 h-40 rounded-lg overflow-hidden"
+    <InaliaDefaultLayout :question="question" :url="isStatic ? undefined : answerUrl">
+      <slot
+        :is-static="isStatic"
+        :question="question"
+        :answers="answers"
       >
-        <InaliaQR
-          v-if="!isStatic"
-          :url="answerUrl" class="block"
+        <InaliaAnswersText
+          v-if="question.type === 'text' && answers"
+          class="overflow-auto"
+          :answers="answers"
         />
-      </div>
-    </div>
+
+        <InaliaAnswersSingleSelect
+          v-else-if="question.type === 'single_select' && answers"
+          :answers="answers"
+        />
+      </slot>
+    </InaliaDefaultLayout>
   </template>
   <template v-else>
-    <p>Loading...</p>
+    <InaliaLoading />
   </template>
 </template>

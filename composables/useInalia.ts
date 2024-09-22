@@ -112,6 +112,7 @@ export function useInalia<Q extends Question>(defaultQuestionId: MaybeRefOrGette
   function startListening(): void {
     window.Echo.private(eventName.value)
       .listen('AnswerCreated', (event: Answer<Q['type']>) => {
+        // TODO: handle single_select to aggregate answers
         answers.value.push(event.value)
       })
   }
