@@ -1,6 +1,18 @@
 # Changelog
 
 
+## v0.1.1
+
+[compare changes](https://github.com/Inalia-App/slidev-addon-inalia/compare/v0.1.0...v0.1.1)
+
+### 🩹 Fixes
+
+- Does not start echo if no key is provided ([f5e7116](https://github.com/Inalia-App/slidev-addon-inalia/commit/f5e7116))
+
+### ❤️ Contributors
+
+- Barbapapazes <e.soubiran25@gmail.com>
+
 ## v0.1.0
 
 [compare changes](https://github.com/Inalia-App/slidev-addon-inalia/compare/v0.0.6...v0.1.0)
