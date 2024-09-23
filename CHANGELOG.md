@@ -1,6 +1,18 @@
 # Changelog
 
 
+## v0.1.7
+
+[compare changes](https://github.com/Inalia-App/slidev-addon-inalia/compare/v0.1.6...v0.1.7)
+
+### 🩹 Fixes
+
+- Css ([55428a8](https://github.com/Inalia-App/slidev-addon-inalia/commit/55428a8))
+
+### ❤️ Contributors
+
+- Barbapapazes <e.soubiran25@gmail.com>
+
 ## v0.1.6
 
 [compare changes](https://github.com/Inalia-App/slidev-addon-inalia/compare/v0.1.5...v0.1.6)
