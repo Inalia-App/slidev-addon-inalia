@@ -14,7 +14,11 @@ interface UseInaliaOptions<Q extends Question> {
     /**
      * The question to display.
      */
-    question: MaybeRefOrGetter<StaticQuestion<Q['type']> | undefined>
+    question: MaybeRefOrGetter<string | undefined>
+    /**
+     * The type of the question.
+     */
+    type: MaybeRefOrGetter<Q['type'] | undefined>
     /**
      * The answers to display.
      */
@@ -45,16 +49,17 @@ export function useInalia<Q extends Question>(defaultQuestionId: MaybeRefOrGette
     }
 
     const staticQuestion = toValue(staticContent.question)
+    const staticType = toValue(staticContent.type)
     const staticAnswers = toValue(staticContent.answers)
 
-    if (!staticQuestion || !staticAnswers) {
+    if (!staticQuestion || !staticType || !staticAnswers) {
       return
     }
 
     question.value = {
       id: 0,
-      question: staticQuestion.question,
-      type: staticQuestion.type,
+      question: staticQuestion,
+      type: staticType,
     } as Q
     answers.value = staticAnswers.map(answer => ({ value: answer }))
     isStatic.value = true

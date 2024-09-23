@@ -1,7 +1,6 @@
-<script lang="ts" setup generic="Q extends Question">
-import type { PropType } from 'vue'
+<script lang="ts" setup generic="T extends QuestionType">
 import type { StaticAnswer } from '../types/answer'
-import type { Question, StaticQuestion } from '../types/question'
+import type { QuestionType } from '../types/question'
 import InaliaAnswersText from '../components/InaliaAnswersText.vue'
 import { useInalia } from '../composables/useInalia'
 import InaliaAnswersSingleSelect from './InaliaAnswersSingleSelect.vue'
@@ -9,22 +8,17 @@ import InaliaDefaultLayout from './InaliaDefaultLayout.vue'
 import InaliaLegend from './InaliaLegend.vue'
 import InaliaLoading from './InaliaLoading.vue'
 
-const props = defineProps({
-  questionId: {
-    type: Number,
-    default: 0,
-  },
-  question: {
-    type: Object as PropType<StaticQuestion<Q['type']>>,
-  },
-  answers: {
-    type: Array as PropType<StaticAnswer<Q['type']>[]>,
-  },
-})
+const props = withDefaults(defineProps<{
+  questionId?: number
+  question?: string
+  type?: T
+  answers?: StaticAnswer<T>[]
+}>(), { questionId: 0 })
 
 const { isStatic, question, answers, answerUrl } = useInalia(() => props.questionId, {
   staticContent: {
     question: () => props.question,
+    type: () => props.type,
     answers: () => props.answers,
   },
 })
