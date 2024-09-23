@@ -1,6 +1,18 @@
 # Changelog
 
 
+## v0.1.2
+
+[compare changes](https://github.com/Inalia-App/slidev-addon-inalia/compare/v0.1.1...v0.1.2)
+
+### 📦 Build
+
+- Add missing file ([b305776](https://github.com/Inalia-App/slidev-addon-inalia/commit/b305776))
+
+### ❤️ Contributors
+
+- Barbapapazes <e.soubiran25@gmail.com>
+
 ## v0.1.1
 
 [compare changes](https://github.com/Inalia-App/slidev-addon-inalia/compare/v0.1.0...v0.1.1)
