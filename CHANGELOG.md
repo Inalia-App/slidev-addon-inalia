@@ -1,6 +1,18 @@
 # Changelog
 
 
+## v0.0.5
+
+[compare changes](https://github.com/Inalia-App/slidev-addon-inalia/compare/v0.0.4...v0.0.5)
+
+### 📦 Build
+
+- Add missing utils folder ([60d44c6](https://github.com/Inalia-App/slidev-addon-inalia/commit/60d44c6))
+
+### ❤️ Contributors
+
+- Barbapapazes <e.soubiran25@gmail.com>
+
 ## v0.0.4
 
 [compare changes](https://github.com/Inalia-App/slidev-addon-inalia/compare/v0.0.3...v0.0.4)
