@@ -9,6 +9,10 @@ import { default as Pusher } from 'pusher-js'
  * Setup the Laravel Echo client
  */
 export default defineAppSetup(() => {
+  if (!import.meta.env.VITE_REVERB_APP_KEY) {
+    return
+  }
+
   window.Pusher = Pusher
 
   window.Echo = new Echo({

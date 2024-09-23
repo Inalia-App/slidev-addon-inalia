@@ -1,7 +1,7 @@
 import type { MaybeRefOrGetter, Ref } from 'vue'
 import type { Answer, StaticAnswer } from '../types/answer'
 import type { Inalia } from '../types/inalia'
-import type { Question, StaticQuestion } from '../types/question'
+import type { Question } from '../types/question'
 import { ofetch } from 'ofetch'
 import { computed, onMounted, onUnmounted, readonly, ref, shallowRef, toRef, toValue, watch, watchEffect } from 'vue'
 import { getInaliaEnv } from '../utils/env'
