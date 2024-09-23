@@ -10,3 +10,9 @@
   margin: 0;
   padding: 0;
 }
+
+.slidev-layout .inalia.inalia-legend {
+  font-size: 1.125rem;
+  color: inherit;
+  opacity: 0.5;
+}

@@ -12,7 +12,7 @@ defineProps({
 
 <template>
   <ul
-    class="inalia space-x-8 whitespace-wrap"
+    class="inalia inalia-answers-text space-x-8 whitespace-wrap"
   >
     <li v-for="answer in answers" :key="answer" class="inline">
       {{ answer }}

@@ -1,7 +1,14 @@
 ---
+inalia:
+  donut:
+    cornerRadius: 0
+    padAngle: 0
+    arcWidth: 0
 ---
 
 # Inalia
+
+This is the subtitle
 
 ---
 

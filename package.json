@@ -38,6 +38,7 @@
     "dist",
     "index.d.ts",
     "setup",
+    "slidev.d.ts",
     "styles.css",
     "tsconfig.json",
     "types",
