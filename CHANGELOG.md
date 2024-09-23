@@ -1,6 +1,22 @@
 # Changelog
 
 
+## v0.1.0
+
+[compare changes](https://github.com/Inalia-App/slidev-addon-inalia/compare/v0.0.6...v0.1.0)
+
+### 🩹 Fixes
+
+- ⚠️  Improve types ([76a4669](https://github.com/Inalia-App/slidev-addon-inalia/commit/76a4669))
+
+#### ⚠️ Breaking Changes
+
+- ⚠️  Improve types ([76a4669](https://github.com/Inalia-App/slidev-addon-inalia/commit/76a4669))
+
+### ❤️ Contributors
+
+- Barbapapazes <e.soubiran25@gmail.com>
+
 ## v0.0.6
 
 [compare changes](https://github.com/Inalia-App/slidev-addon-inalia/compare/v0.0.5...v0.0.6)
