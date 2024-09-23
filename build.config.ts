@@ -13,6 +13,14 @@ export default defineBuildConfig({
       pattern: '**/*.vue',
       loaders: ['vue'],
     },
+    {
+      builder: 'mkdist',
+      input: 'components',
+      outDir: 'dist/components',
+      pattern: '**/*.ts',
+      format: 'esm',
+      loaders: ['js'],
+    },
   ],
 
   declaration: true,
