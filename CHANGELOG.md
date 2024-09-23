@@ -1,6 +1,18 @@
 # Changelog
 
 
+## v0.1.6
+
+[compare changes](https://github.com/Inalia-App/slidev-addon-inalia/compare/v0.1.5...v0.1.6)
+
+### 🩹 Fixes
+
+- Does not throw an error if used in static mode ([f5d39c3](https://github.com/Inalia-App/slidev-addon-inalia/commit/f5d39c3))
+
+### ❤️ Contributors
+
+- Barbapapazes <e.soubiran25@gmail.com>
+
 ## v0.1.5
 
 [compare changes](https://github.com/Inalia-App/slidev-addon-inalia/compare/v0.1.4...v0.1.5)
