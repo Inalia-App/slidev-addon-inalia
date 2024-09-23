@@ -6,6 +6,7 @@ import InaliaAnswersText from '../components/InaliaAnswersText.vue'
 import { useInalia } from '../composables/useInalia'
 import InaliaAnswersSingleSelect from './InaliaAnswersSingleSelect.vue'
 import InaliaDefaultLayout from './InaliaDefaultLayout.vue'
+import InaliaLegend from './InaliaLegend.vue'
 import InaliaLoading from './InaliaLoading.vue'
 
 const props = defineProps({
@@ -45,6 +46,13 @@ const { isStatic, question, answers, answerUrl } = useInalia(() => props.questio
 
         <InaliaAnswersSingleSelect
           v-else-if="question.type === 'single_select' && answers"
+          :answers="answers"
+          class="h-full mb-10"
+        />
+
+        <InaliaLegend
+          v-if="question.type === 'single_select' && answers"
+          class="absolute bottom-10 left-14 right-14"
           :answers="answers"
         />
       </slot>

@@ -1,4 +1,4 @@
-import type { MaybeRefOrGetter } from 'vue'
+import type { MaybeRefOrGetter, Ref } from 'vue'
 import type { Answer, StaticAnswer } from '../types/answer'
 import type { Inalia } from '../types/inalia'
 import type { Question, StaticQuestion } from '../types/question'
@@ -34,7 +34,7 @@ export function useInalia<Q extends Question>(defaultQuestionId: MaybeRefOrGette
   const questionId = toRef(defaultQuestionId)
 
   const question = shallowRef<Q | null>(null)
-  const answers = ref<Answer<Q['type']>[]>([])
+  const answers = ref<Answer<Q['type']>[]>([]) as Ref<Answer<Q['type']>[]>
 
   const isStatic = ref<boolean>(false)
 

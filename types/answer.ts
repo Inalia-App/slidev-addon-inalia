@@ -6,6 +6,7 @@ export interface Answer<T extends QuestionType> {
       ? {
           label: string
           value: string
+          color: string
         } : any
 }
 
@@ -15,4 +16,5 @@ export type StaticAnswer<T extends QuestionType> =
       ? {
           label: string
           value: string
+          color: string
         } : any

@@ -8,9 +8,29 @@
     "slidev-addon",
     "inalia"
   ],
+  "exports": {
+    ".": {
+      "types": "./index.d.ts",
+      "import": "./dist/index.mjs"
+    },
+    "./components/**": {
+      "import": "./dist/components/**"
+    },
+    "./composables/**": {
+      "types": "./dist/composables/**.d.ts",
+      "import": "./dist/composables/**"
+    },
+    "./types/**": {
+      "types": "./dist/types/**.d.ts",
+      "import": "./dist/types/**"
+    }
+  },
+  "main": "./dist/index.mjs",
+  "types": "./index.d.ts",
   "files": [
     "components",
     "composables",
+    "dist",
     "setup",
     "styles.css",
     "tsconfig.json",
@@ -23,6 +43,7 @@
   },
   "scripts": {
     "build": "slidev build",
+    "prepack": "unbuild",
     "dev": "slidev --open",
     "export": "slidev export",
     "lint": "eslint .",
@@ -44,6 +65,8 @@
     "@antfu/eslint-config": "^3.7.0",
     "changelogen": "^0.5.7",
     "eslint": "^9.10.0",
-    "typescript": "^5.6.2"
+    "mkdist": "^1.5.9",
+    "typescript": "^5.6.2",
+    "unbuild": "^2.0.0"
   }
 }

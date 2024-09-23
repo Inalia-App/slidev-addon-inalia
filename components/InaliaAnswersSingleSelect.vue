@@ -1,9 +1,9 @@
 <script lang="ts" setup>
+import type { PropType } from 'vue'
 import type { Answer } from '../types/answer'
-import { VisBulletLegend, VisDonut, VisSingleContainer } from '@unovis/vue'
-import { computed, type PropType } from 'vue'
+import { VisDonut, VisSingleContainer } from '@unovis/vue'
 
-const props = defineProps({
+defineProps({
   answers: {
     required: true,
     type: Array as PropType<Answer<'single_select'>[]>,
@@ -11,14 +11,12 @@ const props = defineProps({
 })
 
 const value = (d: Answer<'single_select'>) => d.value.value
-const items = computed(() => props.answers.map(d => ({ name: d.value.label })))
+const color = (d: Answer<'single_select'>) => d.value.color
 </script>
 
 <template>
-  <VisSingleContainer :data="answers" class="h-full mb-4">
-    <VisDonut :value="value" :corner-radius="4" :pad-angle="0.04" :show-background="false" />
+  <VisSingleContainer :data="answers">
+    <!-- TODO: passer de la config via le frontmatter principale -->
+    <VisDonut :value="value" :color="color" :corner-radius="4" :pad-angle="0.04" :arc-width="30" :show-background="false" />
   </VisSingleContainer>
-
-  <!-- TODO: use a var css -->
-  <VisBulletLegend :items="items" label-font-size="1.125rem" class="self-center" />
 </template>

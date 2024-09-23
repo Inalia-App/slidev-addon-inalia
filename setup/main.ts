@@ -1,7 +1,9 @@
 import { defineAppSetup } from '@slidev/types'
 import Echo from 'laravel-echo'
 import { ofetch } from 'ofetch'
-import Pusher from 'pusher-js'
+// This is necessary for the Pusher import to avoid a SyntaxError
+// eslint-disable-next-line import/no-named-default
+import { default as Pusher } from 'pusher-js'
 
 /**
  * Setup the Laravel Echo client
