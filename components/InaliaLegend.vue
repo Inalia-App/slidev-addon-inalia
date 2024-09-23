@@ -15,6 +15,5 @@ const items = computed(() => props.answers.map(d => ({ name: `${d.value.value} -
 </script>
 
 <template>
-  <!-- TODO: use a css var -->
-  <VisBulletLegend :items="items" label-font-size="1.125rem" class="self-center" />
+  <VisBulletLegend :items="items" label-font-size="1.125rem" />
 </template>
