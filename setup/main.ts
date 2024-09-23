@@ -8,6 +8,8 @@ import Pusher from 'pusher-js'
  */
 export default defineAppSetup(() => {
   if (!import.meta.env.VITE_REVERB_APP_KEY) {
+    // eslint-disable-next-line no-console
+    console.info('Inalia is running in static mode. Set up environments variables to enable real-time features.')
     return
   }
 

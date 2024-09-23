@@ -5,7 +5,19 @@ interface GetInaliaEnv {
   talkId: number
 }
 
+/**
+ * If the environment variable `VITE_REVERB_APP_KEY` is not set, Inalia can only be used in static mode so there is no need to throw errors for missing environment variables.
+ */
 export function getInaliaEnv(): GetInaliaEnv {
+  if (!import.meta.env.VITE_REVERB_APP_KEY) {
+    return {
+      endpoint: '',
+      apiKey: '',
+      username: '',
+      talkId: 0,
+    }
+  }
+
   const endpoint = import.meta.env.VITE_INALIA_ENDPOINT
 
   if (!endpoint) {
