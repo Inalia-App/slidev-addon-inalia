@@ -43,7 +43,7 @@
     "types",
     "utils",
     "vite-env.d.ts",
-    "vite.config.js",
+    "vite.config.ts",
     "window.d.ts"
   ],
   "engines": {
