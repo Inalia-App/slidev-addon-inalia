@@ -36,6 +36,7 @@
     "components",
     "composables",
     "dist",
+    "index.d.ts",
     "setup",
     "styles.css",
     "tsconfig.json",
