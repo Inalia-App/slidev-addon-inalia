@@ -1,6 +1,22 @@
 # Changelog
 
 
+## v0.1.8
+
+[compare changes](https://github.com/Inalia-App/slidev-addon-inalia/compare/v0.1.7...v0.1.8)
+
+### 🚀 Enhancements
+
+- Support more customization ([a5e8e80](https://github.com/Inalia-App/slidev-addon-inalia/commit/a5e8e80))
+
+### 🩹 Fixes
+
+- Improve answer types ([6cf01ba](https://github.com/Inalia-App/slidev-addon-inalia/commit/6cf01ba))
+
+### ❤️ Contributors
+
+- Barbapapazes <e.soubiran25@gmail.com>
+
 ## v0.1.7
 
 [compare changes](https://github.com/Inalia-App/slidev-addon-inalia/compare/v0.1.6...v0.1.7)
