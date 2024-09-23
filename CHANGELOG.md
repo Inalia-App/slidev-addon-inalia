@@ -1,6 +1,18 @@
 # Changelog
 
 
+## v0.1.4
+
+[compare changes](https://github.com/Inalia-App/slidev-addon-inalia/compare/v0.1.3...v0.1.4)
+
+### 📦 Build
+
+- Include vite.config.js to the tarball ([f7827d8](https://github.com/Inalia-App/slidev-addon-inalia/commit/f7827d8))
+
+### ❤️ Contributors
+
+- Barbapapazes <e.soubiran25@gmail.com>
+
 ## v0.1.3
 
 [compare changes](https://github.com/Inalia-App/slidev-addon-inalia/compare/v0.1.2...v0.1.3)
