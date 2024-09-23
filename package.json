@@ -25,9 +25,9 @@
       "types": "./dist/utils/*.d.ts",
       "import": "./dist/utils/*.mjs"
     },
-    "./types/*": {
-      "types": "./dist/types/*.d.ts",
-      "import": "./dist/types/*.mjs"
+    "./types": {
+      "types": "./dist/types/index.d.ts",
+      "import": "./dist/types/index.mjs"
     }
   },
   "main": "./dist/index.mjs",

@@ -1,5 +1,5 @@
 <script lang="ts" setup generic="T extends QuestionType">
-import type { StaticAnswer } from '../types/answer'
+import type { Answer } from '../types/answer'
 import type { QuestionType } from '../types/question'
 import InaliaAnswersText from '../components/InaliaAnswersText.vue'
 import { useInalia } from '../composables/useInalia'
@@ -12,7 +12,7 @@ const props = withDefaults(defineProps<{
   questionId?: number
   question?: string
   type?: T
-  answers?: StaticAnswer<T>[]
+  answers?: Answer<T>[]
 }>(), { questionId: 0 })
 
 const { isStatic, question, answers, answerUrl } = useInalia(() => props.questionId, {

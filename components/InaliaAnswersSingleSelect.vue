@@ -10,8 +10,8 @@ defineProps({
   },
 })
 
-const value = (d: Answer<'single_select'>) => d.value.value
-const color = (d: Answer<'single_select'>) => d.value.color
+const value = (d: Answer<'single_select'>) => d.value
+const color = (d: Answer<'single_select'>) => d.color
 </script>
 
 <template>

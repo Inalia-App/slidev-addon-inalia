@@ -1,20 +1,13 @@
 import type { QuestionType } from './question'
 
-export interface Answer<T extends QuestionType> {
-  value: T extends 'text'
-    ? string : T extends 'single_select'
-      ? {
-          label: string
-          value: string
-          color: string
-        } : any
-}
-
-export type StaticAnswer<T extends QuestionType> =
+export type Answer<T extends QuestionType> =
   T extends 'text'
     ? string : T extends 'single_select'
       ? {
           label: string
-          value: string
+          value: number
           color: string
         } : any
+
+// eslint-disable-next-line unused-imports/no-unused-vars
+export interface AnswerCreated<T extends QuestionType> {}

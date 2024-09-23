@@ -1,5 +1,5 @@
 import type { MaybeRefOrGetter, Ref } from 'vue'
-import type { Answer, StaticAnswer } from '../types/answer'
+import type { Answer, AnswerCreated } from '../types/answer'
 import type { Inalia } from '../types/inalia'
 import type { Question } from '../types/question'
 import { ofetch } from 'ofetch'
@@ -22,7 +22,7 @@ interface UseInaliaOptions<Q extends Question> {
     /**
      * The answers to display.
      */
-    answers: MaybeRefOrGetter<StaticAnswer<Q['type']>[] | undefined>
+    answers: MaybeRefOrGetter<Answer<Q['type']>[] | undefined>
   }
 }
 
@@ -61,7 +61,7 @@ export function useInalia<Q extends Question>(defaultQuestionId: MaybeRefOrGette
       question: staticQuestion,
       type: staticType,
     } as Q
-    answers.value = staticAnswers.map(answer => ({ value: answer }))
+    answers.value = staticAnswers
     isStatic.value = true
   })
 
@@ -116,9 +116,10 @@ export function useInalia<Q extends Question>(defaultQuestionId: MaybeRefOrGette
 
   function startListening(): void {
     window.Echo.private(eventName.value)
-      .listen('AnswerCreated', (event: Answer<Q['type']>) => {
+      // eslint-disable-next-line unused-imports/no-unused-vars
+      .listen('AnswerCreated', (event: AnswerCreated<Q['type']>) => {
         // TODO: handle single_select to aggregate answers
-        answers.value.push(event.value)
+        // answers.value.push(event.value)
       })
   }
 

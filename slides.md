@@ -22,3 +22,15 @@
   type="single_select"
   :answers="[{ label: 'Answer 1', value: 3 }, { label: 'Answer 2', value: 4 }, { label: 'Answer 3', value: 5 }, { label: 'Answer 4', value: 6 }]"
 />
+
+---
+
+<Inalia
+  question="Connaissez-vous UnJS ?"
+  type="single_select"
+  :answers="[
+    { label: 'Je l\'utilise régulièrement', value: 0, color: '#4ade80' },
+    { label: 'Oui mais de nom', value: 5, color: '#16a34a' },
+    { label: 'Non', value: 20, color: '#166534' }
+  ]"
+/>

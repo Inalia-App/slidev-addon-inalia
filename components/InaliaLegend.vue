@@ -11,7 +11,7 @@ const props = defineProps({
   },
 })
 
-const items = computed(() => props.answers.map(d => ({ name: `${d.value.value} - ${d.value.label}`, color: d.value.color })))
+const items = computed(() => props.answers.map(d => ({ name: `${d.value} - ${d.label}`, color: d.color })))
 </script>
 
 <template>

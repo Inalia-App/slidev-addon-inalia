@@ -14,8 +14,8 @@ defineProps({
   <ul
     class="inalia space-x-8 whitespace-wrap"
   >
-    <li v-for="answer in answers" :key="answer.value" class="inline">
-      {{ answer.value }}
+    <li v-for="answer in answers" :key="answer" class="inline">
+      {{ answer }}
     </li>
   </ul>
 </template>
