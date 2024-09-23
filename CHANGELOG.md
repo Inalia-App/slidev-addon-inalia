@@ -1,6 +1,23 @@
 # Changelog
 
 
+## v0.1.3
+
+[compare changes](https://github.com/Inalia-App/slidev-addon-inalia/compare/v0.1.2...v0.1.3)
+
+### 🩹 Fixes
+
+- Add a vite config file to optimize commonjs deps ([3ef7acd](https://github.com/Inalia-App/slidev-addon-inalia/commit/3ef7acd))
+
+### 🏡 Chore
+
+- Remove .env ([ef63b28](https://github.com/Inalia-App/slidev-addon-inalia/commit/ef63b28))
+- Add .env to gitignore ([7e813f8](https://github.com/Inalia-App/slidev-addon-inalia/commit/7e813f8))
+
+### ❤️ Contributors
+
+- Barbapapazes <e.soubiran25@gmail.com>
+
 ## v0.1.2
 
 [compare changes](https://github.com/Inalia-App/slidev-addon-inalia/compare/v0.1.1...v0.1.2)
