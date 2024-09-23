@@ -1,6 +1,18 @@
 # Changelog
 
 
+## v0.1.5
+
+[compare changes](https://github.com/Inalia-App/slidev-addon-inalia/compare/v0.1.4...v0.1.5)
+
+### 📦 Build
+
+- Use ts file for vite config ([5f5557d](https://github.com/Inalia-App/slidev-addon-inalia/commit/5f5557d))
+
+### ❤️ Contributors
+
+- Barbapapazes <e.soubiran25@gmail.com>
+
 ## v0.1.4
 
 [compare changes](https://github.com/Inalia-App/slidev-addon-inalia/compare/v0.1.3...v0.1.4)
