@@ -14,23 +14,23 @@ defineProps({
 const { $slidev, $frontmatter } = useSlideContext()
 const inaliaConfig = $slidev.configs.inalia
 
-const cornerRadius =
-  $frontmatter.inalia?.donut?.cornerRadius
+const cornerRadius
+  = $frontmatter.inalia?.donut?.cornerRadius
   ?? inaliaConfig?.donut?.cornerRadius
   ?? 4
 
-const padAngle =
-  $frontmatter.inalia?.donut?.padAngle
+const padAngle
+  = $frontmatter.inalia?.donut?.padAngle
   ?? inaliaConfig?.donut?.padAngle
   ?? 0.04
 
-const arcWidth =
-  $frontmatter.inalia?.donut?.arcWidth
+const arcWidth
+  = $frontmatter.inalia?.donut?.arcWidth
   ?? inaliaConfig?.donut?.arcWidth
   ?? 30
 
-const showBackground =
-  $frontmatter.inalia?.donut?.showBackground
+const showBackground
+  = $frontmatter.inalia?.donut?.showBackground
   ?? inaliaConfig?.donut?.showBackground
   ?? false
 
