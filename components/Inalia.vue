@@ -1,6 +1,6 @@
 <script lang="ts" setup generic="T extends QuestionType">
 import type { Answer } from '../types/answer'
-import type { QuestionType } from '../types/question'
+import type { ChartType, QuestionType } from '../types/question'
 import InaliaAnswersText from '../components/InaliaAnswersText.vue'
 import { useInalia } from '../composables/useInalia'
 import InaliaAnswersSingleSelect from './InaliaAnswersSingleSelect.vue'
@@ -12,6 +12,7 @@ const props = withDefaults(defineProps<{
   questionId?: number
   question?: string
   type?: T
+  chart?: T extends 'text' ? never : ChartType
   answers?: Answer<T>[]
 }>(), { questionId: 0 })
 
@@ -19,6 +20,7 @@ const { isStatic, question, answers, answerUrl } = useInalia(() => props.questio
   staticContent: {
     question: () => props.question,
     type: () => props.type,
+    chart: () => props.chart,
     answers: () => props.answers,
   },
 })
@@ -33,19 +35,30 @@ const { isStatic, question, answers, answerUrl } = useInalia(() => props.questio
         :answers="answers"
       >
         <InaliaAnswersText
-          v-if="question.type === 'text' && answers"
+          v-if="
+            question.type === 'text'
+              && answers
+          "
           class="overflow-auto"
           :answers="answers"
         />
 
         <InaliaAnswersSingleSelect
-          v-else-if="question.type === 'single_select' && answers"
+          v-else-if="
+            question.type === 'single_select'
+              && question.chartType
+              && answers
+          "
           :answers="answers"
+          :chart="question.chartType"
           class="h-full mb-10"
         />
 
         <InaliaLegend
-          v-if="question.type === 'single_select' && answers"
+          v-if="
+            question.type === 'single_select'
+              && answers
+          "
           class="absolute bottom-10 left-14 right-14"
           :answers="answers"
         />

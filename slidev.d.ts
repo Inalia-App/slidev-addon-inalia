@@ -7,6 +7,11 @@ declare module '@slidev/types' {
         arcWidth?: number
         showBackground?: boolean
       }
+      bar?: {
+        barWidth?: number
+        barPadding?: number
+        roundedCorners?: number | boolean
+      }
     }
   }
 }

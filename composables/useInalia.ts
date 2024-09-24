@@ -1,7 +1,7 @@
 import type { MaybeRefOrGetter, Ref } from 'vue'
 import type { Answer, AnswerCreated } from '../types/answer'
 import type { Inalia } from '../types/inalia'
-import type { Question } from '../types/question'
+import type { ChartType, Question } from '../types/question'
 import { ofetch } from 'ofetch'
 import { computed, onMounted, onUnmounted, readonly, ref, shallowRef, toRef, toValue, watch, watchEffect } from 'vue'
 import { getInaliaEnv } from '../utils/env'
@@ -19,6 +19,12 @@ interface UseInaliaOptions<Q extends Question> {
      * The type of the question.
      */
     type: MaybeRefOrGetter<Q['type'] | undefined>
+    /**
+     * The type of the chart to display.
+     */
+    chart: MaybeRefOrGetter<
+      Q['type'] extends 'text' ? never : ChartType | undefined
+    >
     /**
      * The answers to display.
      */
@@ -50,6 +56,7 @@ export function useInalia<Q extends Question>(defaultQuestionId: MaybeRefOrGette
 
     const staticQuestion = toValue(staticContent.question)
     const staticType = toValue(staticContent.type)
+    const staticChart = toValue(staticContent.chart)
     const staticAnswers = toValue(staticContent.answers)
 
     if (!staticQuestion || !staticType || !staticAnswers) {
@@ -60,6 +67,7 @@ export function useInalia<Q extends Question>(defaultQuestionId: MaybeRefOrGette
       id: 0,
       question: staticQuestion,
       type: staticType,
+      chartType: staticChart,
     } as Q
     answers.value = staticAnswers
     isStatic.value = true
@@ -110,6 +118,7 @@ export function useInalia<Q extends Question>(defaultQuestionId: MaybeRefOrGette
       id: data.data.id,
       question: data.data.question,
       type: data.data.type,
+      chartType: data.data.chartType,
     }
     answers.value = data.data.answers
   }
