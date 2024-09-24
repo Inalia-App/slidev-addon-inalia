@@ -1,6 +1,27 @@
 # Changelog
 
 
+## v0.1.10
+
+[compare changes](https://github.com/Inalia-App/slidev-addon-inalia/compare/v0.1.9...v0.1.10)
+
+### 🚀 Enhancements
+
+- Support frontmatter and more customization ([944963c](https://github.com/Inalia-App/slidev-addon-inalia/commit/944963c))
+
+### 🩹 Fixes
+
+- Typo ([0bac1b4](https://github.com/Inalia-App/slidev-addon-inalia/commit/0bac1b4))
+
+### 🏡 Chore
+
+- Format ([1634c08](https://github.com/Inalia-App/slidev-addon-inalia/commit/1634c08))
+- Format ([7be7fe6](https://github.com/Inalia-App/slidev-addon-inalia/commit/7be7fe6))
+
+### ❤️ Contributors
+
+- Barbapapazes <e.soubiran25@gmail.com>
+
 ## v0.1.9
 
 [compare changes](https://github.com/Inalia-App/slidev-addon-inalia/compare/v0.1.8...v0.1.9)
