@@ -14,6 +14,9 @@ defineProps({
 const { $slidev, $frontmatter } = useSlideContext()
 const inaliaConfig = $slidev.configs.inalia
 
+const width = $frontmatter.inalia?.donut?.width
+const height = $frontmatter.inalia?.donut?.height
+
 const cornerRadius
   = $frontmatter.inalia?.donut?.cornerRadius
   ?? inaliaConfig?.donut?.cornerRadius
@@ -39,7 +42,7 @@ const color = (d: Answer<'single_select'>) => d.color
 </script>
 
 <template>
-  <VisSingleContainer :data="answers">
+  <VisSingleContainer :data="answers" :width="width" :height="height">
     <VisDonut
       :value="value"
       :color="color"

@@ -14,6 +14,9 @@ defineProps({
 const { $slidev, $frontmatter } = useSlideContext()
 const inaliaConfig = $slidev.configs.inalia
 
+const width = $frontmatter.inalia?.bar?.width
+const height = $frontmatter.inalia?.bar?.height
+
 const barWidth
   = $frontmatter.inalia?.bar?.barWidth
   ?? inaliaConfig?.bar?.barWidth
@@ -35,7 +38,7 @@ const color = (d: Answer<'single_select'>) => d.color
 </script>
 
 <template>
-  <VisXYContainer :data="answers">
+  <VisXYContainer :data="answers" :width="width" :height="height">
     <VisStackedBar
       :x="x"
       :y="y"
