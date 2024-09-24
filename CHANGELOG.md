@@ -1,6 +1,18 @@
 # Changelog
 
 
+## v0.1.9
+
+[compare changes](https://github.com/Inalia-App/slidev-addon-inalia/compare/v0.1.8...v0.1.9)
+
+### 🚀 Enhancements
+
+- Support static chat type ([4037dda](https://github.com/Inalia-App/slidev-addon-inalia/commit/4037dda))
+
+### ❤️ Contributors
+
+- Barbapapazes <e.soubiran25@gmail.com>
+
 ## v0.1.8
 
 [compare changes](https://github.com/Inalia-App/slidev-addon-inalia/compare/v0.1.7...v0.1.8)
