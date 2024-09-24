@@ -34,6 +34,10 @@ This is the subtitle
 />
 
 ---
+inalia:
+  bar:
+    barWidth: 30
+---
 
 <Inalia
   question="Connaissez-vous UnJS ?"

@@ -39,7 +39,7 @@ const { isStatic, question, answers, answerUrl } = useInalia(() => props.questio
             question.type === 'text'
               && answers
           "
-          class="overflow-auto"
+          class="overflow-auto inalia inalia-answers-text"
           :answers="answers"
         />
 
@@ -51,7 +51,7 @@ const { isStatic, question, answers, answerUrl } = useInalia(() => props.questio
           "
           :answers="answers"
           :chart="question.chartType"
-          class="h-full mb-10"
+          class="inalia inalia-answers-single-select h-full"
         />
 
         <InaliaLegend
@@ -59,7 +59,6 @@ const { isStatic, question, answers, answerUrl } = useInalia(() => props.questio
             question.type === 'single_select'
               && answers
           "
-          class="absolute bottom-10 left-14 right-14"
           :answers="answers"
         />
       </slot>

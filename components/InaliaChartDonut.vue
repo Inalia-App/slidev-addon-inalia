@@ -11,13 +11,28 @@ defineProps({
   },
 })
 
-const { $slidev } = useSlideContext()
+const { $slidev, $frontmatter } = useSlideContext()
 const inaliaConfig = $slidev.configs.inalia
 
-const cornerRadius = inaliaConfig?.donut?.cornerRadius ?? 4
-const padAngle = inaliaConfig?.donut?.padAngle ?? 0.04
-const arcWidth = inaliaConfig?.donut?.arcWidth ?? 30
-const showBackground = inaliaConfig?.donut?.showBackground ?? false
+const cornerRadius =
+  $frontmatter.inalia?.donut?.cornerRadius
+  ?? inaliaConfig?.donut?.cornerRadius
+  ?? 4
+
+const padAngle =
+  $frontmatter.inalia?.donut?.padAngle
+  ?? inaliaConfig?.donut?.padAngle
+  ?? 0.04
+
+const arcWidth =
+  $frontmatter.inalia?.donut?.arcWidth
+  ?? inaliaConfig?.donut?.arcWidth
+  ?? 30
+
+const showBackground =
+  $frontmatter.inalia?.donut?.showBackground
+  ?? inaliaConfig?.donut?.showBackground
+  ?? false
 
 const value = (d: Answer<'single_select'>) => d.value
 const color = (d: Answer<'single_select'>) => d.color

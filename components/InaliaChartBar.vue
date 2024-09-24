@@ -11,12 +11,24 @@ defineProps({
   },
 })
 
-const { $slidev } = useSlideContext()
+const { $slidev, $frontmatter } = useSlideContext()
 const inaliaConfig = $slidev.configs.inalia
 
-const barWidth = inaliaConfig?.bar?.barWidth ?? 30
-const barPadding = inaliaConfig?.bar?.barPadding ?? 0.1
-const roundedCorners = inaliaConfig?.bar?.roundedCorners ?? 4
+const barWidth
+  = $frontmatter.inalia?.bar?.barWidth
+  ?? inaliaConfig?.bar?.barWidth
+  ?? 30
+
+const barPadding =
+  $frontmatter.inalia?.bar?.barPadding
+  ?? inaliaConfig?.bar?.barPadding
+  ?? 0.1
+
+const roundedCorners =
+  $frontmatter.inalia?.bar?.roundedCorners
+  ?? inaliaConfig?.bar?.roundedCorners
+  ?? 4
+
 
 const x = (d: Answer<'single_select'>, index: number) => index
 const y = (d: Answer<'single_select'>) => d.value

@@ -11,7 +11,18 @@
   padding: 0;
 }
 
+.slidev-layout .inalia.inalia-answers-single-select {
+  margin-bottom: 2.5rem;
+}
+
 .slidev-layout .inalia.inalia-legend {
+  position: absolute;
+  bottom: 2.5rem;
+  left: 3.5rem;
+  right: 3.5rem;
+}
+
+.slidev-layout .inalia.inalia-legend-text {
   font-size: 1.125rem;
   color: inherit;
   opacity: 0.5;

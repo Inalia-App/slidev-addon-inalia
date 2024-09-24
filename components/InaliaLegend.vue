@@ -15,5 +15,5 @@ const items = computed(() => props.answers.map(d => ({ name: `${d.value} - ${d.l
 </script>
 
 <template>
-  <VisBulletLegend :items="items" label-class-name="inalia inalia-legend" />
+  <VisBulletLegend :items="items" class="inalia inalia-legend" label-class-name="inalia inalia-legend-text" />
 </template>
