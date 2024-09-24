@@ -1,6 +1,18 @@
 # Changelog
 
 
+## v0.1.11
+
+[compare changes](https://github.com/Inalia-App/slidev-addon-inalia/compare/v0.1.10...v0.1.11)
+
+### 🚀 Enhancements
+
+- Support width and height ([30d0814](https://github.com/Inalia-App/slidev-addon-inalia/commit/30d0814))
+
+### ❤️ Contributors
+
+- Barbapapazes <e.soubiran25@gmail.com>
+
 ## v0.1.10
 
 [compare changes](https://github.com/Inalia-App/slidev-addon-inalia/compare/v0.1.9...v0.1.10)
