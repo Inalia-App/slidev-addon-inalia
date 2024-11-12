@@ -1,6 +1,6 @@
 <script lang="ts" setup>
-import type { PropType } from 'vue'
-import type { Answer, ChartType } from '../types'
+import type { DeepReadonly, PropType } from 'vue'
+import type { ChartType, SelectData } from '../types'
 import InaliaChartBar from './InaliaChartBar.vue'
 import InaliaChartDonut from './InaliaChartDonut.vue'
 
@@ -9,9 +9,9 @@ defineProps({
     required: true,
     type: String as PropType<ChartType>,
   },
-  answers: {
+  data: {
     required: true,
-    type: Array as PropType<Answer<'single_select'>[]>,
+    type: Array as PropType<DeepReadonly<SelectData>>,
   },
 })
 </script>
@@ -19,10 +19,10 @@ defineProps({
 <template>
   <InaliaChartDonut
     v-if="chart === 'donut'"
-    :answers="answers"
+    :data="data"
   />
   <InaliaChartBar
     v-else-if="chart === 'bar'"
-    :answers="answers"
+    :data="data"
   />
 </template>

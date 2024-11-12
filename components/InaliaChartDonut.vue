@@ -1,13 +1,13 @@
 <script lang="ts" setup>
-import type { PropType } from 'vue'
-import type { Answer } from '../types/answer'
+import type { DeepReadonly, PropType } from 'vue'
+import type { SelectData } from '../types'
 import { useSlideContext } from '@slidev/client'
 import { VisDonut, VisSingleContainer } from '@unovis/vue'
 
 defineProps({
-  answers: {
+  data: {
     required: true,
-    type: Array as PropType<Answer<'single_select'>[]>,
+    type: Array as PropType<DeepReadonly<SelectData>>,
   },
 })
 
@@ -17,6 +17,7 @@ const inaliaConfig = $slidev.configs.inalia
 const width = $frontmatter.inalia?.donut?.width
 const height = $frontmatter.inalia?.donut?.height
 
+// TODO: create an helper function
 const cornerRadius
   = $frontmatter.inalia?.donut?.cornerRadius
   ?? inaliaConfig?.donut?.cornerRadius
@@ -37,12 +38,12 @@ const showBackground
   ?? inaliaConfig?.donut?.showBackground
   ?? false
 
-const value = (d: Answer<'single_select'>) => d.value
-const color = (d: Answer<'single_select'>) => d.color
+const value = (d: SelectData[number]) => d.count
+const color = (d: SelectData[number]) => d.color
 </script>
 
 <template>
-  <VisSingleContainer :data="answers" :width="width" :height="height">
+  <VisSingleContainer :data="data" :width="width" :height="height">
     <VisDonut
       :value="value"
       :color="color"

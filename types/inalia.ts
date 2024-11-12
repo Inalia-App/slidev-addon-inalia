@@ -1,12 +1,10 @@
-import type { ComputedRef, Ref, ShallowRef } from 'vue'
-import type { Answer } from './answer'
+import type { DeepReadonly, Ref, ShallowRef } from 'vue'
+import type { Data } from './data'
 import type { Question } from './question'
 
-export interface Inalia<Q extends Question> {
+export interface Inalia {
   isStatic: Readonly<Ref<boolean>>
 
-  question: Readonly<ShallowRef<Question | null>>
-  answers: Ref<Answer<Q['type']>[]>
-
-  answerUrl: ComputedRef<string>
+  question: DeepReadonly<ShallowRef<Question | null>>
+  data: DeepReadonly<Ref<Data>>
 }

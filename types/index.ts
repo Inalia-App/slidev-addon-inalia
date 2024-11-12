@@ -1,4 +1,5 @@
-export type { Answer, AnswerCreated } from './answer'
+export type { Answer, MultipleSelectAnswer, TextAnswer } from './answer'
+export type { Data, SelectData, TextData } from './data'
 export type { Inalia } from './inalia'
-export type { ChartType, Question, QuestionType } from './question'
+export type { ChartType, MultipleSelectQuestion, Question, QuestionType, SingleSelectQuestion, TextQuestion } from './question'
 export type { Talk } from './talk'

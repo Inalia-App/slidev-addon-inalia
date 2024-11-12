@@ -1,13 +1,13 @@
 <script lang="ts" setup>
-import type { PropType } from 'vue'
-import type { Answer } from '../types'
+import type { DeepReadonly, PropType } from 'vue'
+import type { SelectData } from '../types'
 import { useSlideContext } from '@slidev/client'
 import { VisStackedBar, VisXYContainer } from '@unovis/vue'
 
 defineProps({
-  answers: {
+  data: {
     required: true,
-    type: Array as PropType<Answer<'single_select'>[]>,
+    type: Array as PropType<DeepReadonly<SelectData>>,
   },
 })
 
@@ -32,13 +32,13 @@ const roundedCorners
   ?? inaliaConfig?.bar?.roundedCorners
   ?? 4
 
-const x = (d: Answer<'single_select'>, index: number) => index
-const y = (d: Answer<'single_select'>) => d.value
-const color = (d: Answer<'single_select'>) => d.color
+const x = (d: SelectData[number], index: number) => index
+const y = (d: SelectData[number]) => d.count
+const color = (d: SelectData[number]) => d.color
 </script>
 
 <template>
-  <VisXYContainer :data="answers" :width="width" :height="height">
+  <VisXYContainer :data="data" :width="width" :height="height">
     <VisStackedBar
       :x="x"
       :y="y"

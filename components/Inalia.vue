@@ -1,65 +1,65 @@
-<script lang="ts" setup generic="T extends QuestionType">
-import type { Answer } from '../types/answer'
-import type { ChartType, QuestionType } from '../types/question'
-import InaliaAnswersText from '../components/InaliaAnswersText.vue'
+<script lang="ts" setup>
+import type { ChartType, Data, QuestionType, SelectData, TextData } from '../types'
 import { useInalia } from '../composables/useInalia'
-import InaliaAnswersSingleSelect from './InaliaAnswersSingleSelect.vue'
 import InaliaDefaultLayout from './InaliaDefaultLayout.vue'
 import InaliaLegend from './InaliaLegend.vue'
 import InaliaLoading from './InaliaLoading.vue'
+import InaliaSelect from './InaliaSelect.vue'
+import InaliaText from './InaliaText.vue'
 
 const props = withDefaults(defineProps<{
   questionId?: number
   question?: string
-  type?: T
-  chart?: T extends 'text' ? never : ChartType
-  answers?: Answer<T>[]
+  type?: QuestionType
+  chart?: ChartType
+  data?: Data
 }>(), { questionId: 0 })
 
-const { isStatic, question, answers, answerUrl } = useInalia(() => props.questionId, {
+const { isStatic, question, data } = useInalia(() => props.questionId, {
   staticContent: {
     question: () => props.question,
     type: () => props.type,
     chart: () => props.chart,
-    answers: () => props.answers,
+    data: () => props.data,
   },
 })
 </script>
 
 <template>
   <template v-if="question">
-    <InaliaDefaultLayout :question="question" :url="isStatic ? undefined : answerUrl">
+    <InaliaDefaultLayout :question="question">
       <slot
         :is-static="isStatic"
         :question="question"
-        :answers="answers"
+        :data="data"
       >
-        <InaliaAnswersText
+        <InaliaText
           v-if="
             question.type === 'text'
-              && answers
+              && data
           "
-          class="overflow-auto inalia inalia-answers-text"
-          :answers="answers"
+          class="overflow-auto inalia inalia-data-text"
+          :data="data as TextData"
         />
 
-        <InaliaAnswersSingleSelect
+        <InaliaSelect
           v-else-if="
-            question.type === 'single_select'
-              && question.chartType
-              && answers
+            (question.type === 'single_select'
+              || question.type === 'multiple_select')
+              && data
           "
-          :answers="answers"
-          :chart="question.chartType"
-          class="inalia inalia-answers-single-select h-full"
+          :data="data as SelectData"
+          :chart="question.options.chart_type"
+          class="inalia inalia-data-select h-full"
         />
 
         <InaliaLegend
           v-if="
-            question.type === 'single_select'
-              && answers
+            (question.type === 'single_select'
+              || question.type === 'multiple_select')
+              && data
           "
-          :answers="answers"
+          :data="data as SelectData"
         />
       </slot>
     </InaliaDefaultLayout>
