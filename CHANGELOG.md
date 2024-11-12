@@ -1,6 +1,18 @@
 # Changelog
 
 
+## v0.1.12
+
+[compare changes](https://github.com/Inalia-App/slidev-addon-inalia/compare/v0.1.11...v0.1.12)
+
+### 🚀 Enhancements
+
+- Support multi-select ([1aa2221](https://github.com/Inalia-App/slidev-addon-inalia/commit/1aa2221))
+
+### ❤️ Contributors
+
+- Barbapapazes <e.soubiran25@gmail.com>
+
 ## v0.1.11
 
 [compare changes](https://github.com/Inalia-App/slidev-addon-inalia/compare/v0.1.10...v0.1.11)
