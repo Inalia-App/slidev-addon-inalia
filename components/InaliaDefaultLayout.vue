@@ -37,7 +37,7 @@ defineProps({
       </div>
     </template>
 
-    <div class="absolute op-40 bottom-10 right-14">
+    <div class="absolute op-40 bottom-2 left-1/2 -translate-x-1/2">
       <InaliaPoweredBy />
     </div>
   </div>
