@@ -1,11 +1,11 @@
 ---
-inalia:
-  donut:
-    cornerRadius: 0
-    padAngle: 0
-    arcWidth: 0
-  bar:
-    barWidth: 120
+# inalia:
+#   donut:
+#     cornerRadius: 0
+#     padAngle: 0
+#     arcWidth: 0
+#   bar:
+#     barWidth: 120
 ---
 
 # Inalia

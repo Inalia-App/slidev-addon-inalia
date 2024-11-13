@@ -2,7 +2,7 @@
 import type { DeepReadonly, PropType } from 'vue'
 import type { Question } from '../types/question'
 import InaliaQR from './InaliaQR.vue'
-import InaliaShortUrl from './InaliaTinyUrl.vue'
+import InaliaShortUrl from './InaliaShortUrl.vue'
 
 defineProps({
   question: {
@@ -14,7 +14,7 @@ defineProps({
 
 <template>
   <div class="h-full w-full flex flex-row gap-8">
-    <div class="grow flex flex-col">
+    <div class="flex grow flex-col">
       <h1>
         <slot name="title" :question="question">
           {{ question.question }}
@@ -25,7 +25,7 @@ defineProps({
     </div>
 
     <template v-if="question.tiny_url">
-      <div class="flex flex-col space-y-4 items-end">
+      <div class="flex flex-col space-y-2 items-end">
         <div
           class="inalia shrink-0 w-40 h-40 rounded-lg overflow-hidden"
         >
@@ -33,8 +33,12 @@ defineProps({
             :url="question.tiny_url" class="block"
           />
         </div>
-        <InaliaShortUrl :url="question.tiny_url" />
+        <InaliaShortUrl :url="question.tiny_url" class="border-0! text-xs mx-auto" />
       </div>
     </template>
+
+    <div class="absolute op-40 bottom-10 right-14">
+      <InaliaPoweredBy />
+    </div>
   </div>
 </template>

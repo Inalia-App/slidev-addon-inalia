@@ -4,10 +4,11 @@ import InaliaChartDonut from './InaliaChartDonut.vue'
 import InaliaDefaultLayout from './InaliaDefaultLayout.vue'
 import InaliaLegend from './InaliaLegend.vue'
 import InaliaLoading from './InaliaLoading.vue'
+import InaliaPoweredBy from './InaliaPoweredBy.vue'
 import InaliaQR from './InaliaQR.vue'
 import InaliaSelect from './InaliaSelect.vue'
+import InaliaShortUrl from './InaliaShortUrl.vue'
 import InaliaText from './InaliaText.vue'
-import InaliaShortUrl from './InaliaTinyUrl.vue'
 
 export {
   Inalia,
@@ -16,6 +17,7 @@ export {
   InaliaDefaultLayout,
   InaliaLegend,
   InaliaLoading,
+  InaliaPoweredBy,
   InaliaQR,
   InaliaSelect,
   InaliaShortUrl,

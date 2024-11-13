@@ -12,7 +12,7 @@ const props = withDefaults(defineProps<{
   question?: string
   type?: QuestionType
   chart?: ChartType
-  data?: Data
+  data?: Data // TODO: dynamic types depending on question type
 }>(), { questionId: 0 })
 
 const { isStatic, question, data } = useInalia(() => props.questionId, {
@@ -38,7 +38,7 @@ const { isStatic, question, data } = useInalia(() => props.questionId, {
             question.type === 'text'
               && data
           "
-          class="overflow-auto inalia inalia-data-text"
+          class="inalia overflow-auto inalia-data-text"
           :data="data as TextData"
         />
 
@@ -50,7 +50,7 @@ const { isStatic, question, data } = useInalia(() => props.questionId, {
           "
           :data="data as SelectData"
           :chart="question.options.chart_type"
-          class="inalia inalia-data-select h-full"
+          class="inalia h-full inalia-data-select"
         />
 
         <InaliaLegend

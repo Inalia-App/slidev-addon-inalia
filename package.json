@@ -72,6 +72,7 @@
   },
   "devDependencies": {
     "@antfu/eslint-config": "^3.7.0",
+    "@unocss/eslint-plugin": "^0.64.0",
     "changelogen": "^0.5.7",
     "eslint": "^9.10.0",
     "mkdist": "^1.5.9",
