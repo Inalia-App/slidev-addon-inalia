@@ -1,6 +1,18 @@
 # Changelog
 
 
+## v0.1.13
+
+[compare changes](https://github.com/Inalia-App/slidev-addon-inalia/compare/v0.1.12...v0.1.13)
+
+### 🚀 Enhancements
+
+- Add powered by ([b686028](https://github.com/Inalia-App/slidev-addon-inalia/commit/b686028))
+
+### ❤️ Contributors
+
+- Barbapapazes <e.soubiran25@gmail.com>
+
 ## v0.1.12
 
 [compare changes](https://github.com/Inalia-App/slidev-addon-inalia/compare/v0.1.11...v0.1.12)
