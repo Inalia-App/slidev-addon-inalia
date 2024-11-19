@@ -1,5 +1,5 @@
 import type { MaybeRefOrGetter } from 'vue'
-import type { Answer, ChartType, Data, MultipleSelectAnswer, MultipleSelectQuestion, Question, QuestionType, SelectData, SingleSelectQuestion, TextAnswer, TextData, TextQuestion } from '../types'
+import type { Answer, ChartType, Data, MultipleSelectAnswer, MultipleSelectQuestion, Question, QuestionType, SelectData, SingleSelectAnswer, SingleSelectQuestion, TextAnswer, TextData, TextQuestion } from '../types'
 import type { Inalia } from '../types/inalia'
 import { ofetch } from 'ofetch'
 import { computed, onMounted, readonly, ref, shallowRef, toRef, toValue, watch, watchEffect } from 'vue'
@@ -191,6 +191,20 @@ export function useInalia(defaultQuestionId: MaybeRefOrGetter<number>, options?:
       .listen('AnswerCreated', (event: Answer) => {
         if (question.value!.type === 'text') {
           (data.value as string[]).push((event as TextAnswer).value)
+        }
+        else if (question.value!.type === 'single_select') {
+          const choice = question.value!.options.choices.find(choice => choice.value === (event as SingleSelectAnswer).value)
+          if (!choice) {
+            return
+          }
+
+          const index = (data.value as SelectData).findIndex(answer => answer.label === choice.text)
+
+          if (index === -1) {
+            return
+          }
+
+          (data.value[index] as SelectData[number]).count++
         }
         else if (question.value!.type === 'multiple_select') {
           for (const value of (event as MultipleSelectAnswer).value) {
