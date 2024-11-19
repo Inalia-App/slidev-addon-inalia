@@ -1,6 +1,18 @@
 # Changelog
 
 
+## v0.1.16
+
+[compare changes](https://github.com/Inalia-App/slidev-addon-inalia/compare/v0.1.15...v0.1.16)
+
+### 🚀 Enhancements
+
+- Single select ([f32974f](https://github.com/Inalia-App/slidev-addon-inalia/commit/f32974f))
+
+### ❤️ Contributors
+
+- Barbapapazes <e.soubiran25@gmail.com>
+
 ## v0.1.15
 
 [compare changes](https://github.com/Inalia-App/slidev-addon-inalia/compare/v0.1.14...v0.1.15)
