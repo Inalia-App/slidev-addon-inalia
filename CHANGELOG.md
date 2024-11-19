@@ -1,6 +1,18 @@
 # Changelog
 
 
+## v0.1.15
+
+[compare changes](https://github.com/Inalia-App/slidev-addon-inalia/compare/v0.1.14...v0.1.15)
+
+### 🩹 Fixes
+
+- Use question id to listen for answer created event ([9030bdc](https://github.com/Inalia-App/slidev-addon-inalia/commit/9030bdc))
+
+### ❤️ Contributors
+
+- Barbapapazes <e.soubiran25@gmail.com>
+
 ## v0.1.14
 
 [compare changes](https://github.com/Inalia-App/slidev-addon-inalia/compare/v0.1.13...v0.1.14)
