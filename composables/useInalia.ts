@@ -2,7 +2,7 @@ import type { MaybeRefOrGetter } from 'vue'
 import type { Answer, ChartType, Data, MultipleSelectAnswer, MultipleSelectQuestion, Question, QuestionType, SelectData, SingleSelectQuestion, TextAnswer, TextData, TextQuestion } from '../types'
 import type { Inalia } from '../types/inalia'
 import { ofetch } from 'ofetch'
-import { computed, onMounted, onUnmounted, readonly, ref, shallowRef, toRef, toValue, watch, watchEffect } from 'vue'
+import { computed, onMounted, readonly, ref, shallowRef, toRef, toValue, watch, watchEffect } from 'vue'
 import { getInaliaEnv } from '../utils/env'
 
 interface UseInaliaOptions {
@@ -64,6 +64,7 @@ export function useInalia(defaultQuestionId: MaybeRefOrGetter<number>, options?:
 
     if (staticType === 'text') {
       question.value = {
+        id: 0,
         number: 0,
         tiny_url: '',
         question: staticQuestion,
@@ -77,6 +78,7 @@ export function useInalia(defaultQuestionId: MaybeRefOrGetter<number>, options?:
     }
     else if (staticType === 'single_select') {
       question.value = {
+        id: 0,
         number: 0,
         tiny_url: '',
         question: staticQuestion,
@@ -93,6 +95,7 @@ export function useInalia(defaultQuestionId: MaybeRefOrGetter<number>, options?:
     }
     else if (staticType === 'multiple_select') {
       question.value = {
+        id: 0,
         number: 0,
         tiny_url: '',
         question: staticQuestion,
@@ -113,26 +116,17 @@ export function useInalia(defaultQuestionId: MaybeRefOrGetter<number>, options?:
     isStatic.value = true
   })
 
-  const eventName = computed(() => `Users.${username}.Talks.${talkId}.Questions.${questionId.value}.Answers`)
+  const eventName = computed(() => `questions.${question.value?.id}.answers`)
 
   onMounted(() => {
     if (isStatic.value) {
       return
     }
 
-    startListening()
-
+    // Load the talk's question if it is not already loaded.
     if (!question.value) {
       fetchQuestion()
     }
-  })
-
-  onUnmounted(() => {
-    if (isStatic.value) {
-      return
-    }
-
-    stopListening()
   })
 
   watch(questionId, () => {
@@ -140,10 +134,16 @@ export function useInalia(defaultQuestionId: MaybeRefOrGetter<number>, options?:
       return
     }
 
+    fetchQuestion()
+  })
+
+  watchEffect(() => {
+    if (isStatic.value || !question.value) {
+      return
+    }
+
     stopListening()
     startListening()
-
-    fetchQuestion()
   })
 
   async function fetchQuestion(): Promise<void> {

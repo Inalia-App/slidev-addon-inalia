@@ -28,7 +28,23 @@ This is the subtitle
   question="This is the question"
   type="single_select"
   chart="donut"
-  :data="[{ label: 'Answer 1', count: 3 }, { label: 'Answer 2', count: 4 }, { label: 'Answer 3', count: 5 }, { label: 'Answer 4', count: 6 }]"
+  :data="[
+    { label:'Answer 1',count:3 },
+    { label:'Answer 2',count:4 },
+    { label:'Answer 3',count:5 },
+    { label:'Answer 4',count:6 }
+  ]"
+/>
+
+---
+
+<Inalia
+  question="question"
+  type="multiple_select"
+  chart="donut"
+  :data="[
+    { label: 'text', count: 2, color: '#000000' }, { label: 'coucou', count: 2, color: '#FF0000' }
+  ]"
 />
 
 ---

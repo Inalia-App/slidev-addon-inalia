@@ -2,6 +2,7 @@ import type { MultipleSelectAnswer, TextAnswer } from './answer'
 
 interface BaseQuestion {
   tiny_url: string
+  id: number
   number: number
   question: string
 }
