@@ -1,18 +1,18 @@
 <script lang="ts" setup>
-import type { AugmentedLiveReaction } from '../types/live-reaction'
-import InaliaLiveReaction from './InaliaLiveReaction.vue'
+import { useInaliaLiveReactions } from '../composables/useInaliaLiveReactions';
 
-const props = defineProps<{
-  liveReactions: AugmentedLiveReaction[]
-}>()
+const { liveReactions } = useInaliaLiveReactions()
 </script>
 
 <template>
   <TransitionGroup tag="div" name="inalia-fade">
-    <InaliaLiveReaction
-      v-for="liveReaction in props.liveReactions"
+    <div
+      v-for="liveReaction in liveReactions"
       :key="liveReaction.id"
-      :live-reaction="liveReaction"
-    />
+      class="inalia-live-reaction absolute text-3xl pointer-event-none select-none"
+      :style="`left: ${liveReaction.position.x}%; bottom: ${liveReaction.position.y}%; transform: scale(${liveReaction.scale});`"
+    >
+      {{ liveReaction.emoji }}
+    </div>
   </TransitionGroup>
 </template>
