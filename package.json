@@ -60,7 +60,7 @@
     "release": "npm run lint && changelogen --release && npm publish && git push --follow-tags"
   },
   "dependencies": {
-    "@slidev/cli": "^0.49.29",
+    "@slidev/cli": "^51.4.0",
     "@slidev/theme-default": "latest",
     "@unovis/ts": "1.4.3-beta.0",
     "@unovis/vue": "1.4.3-beta.0",
