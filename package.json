@@ -39,6 +39,7 @@
     "global-bottom.vue",
     "index.d.ts",
     "layouts",
+    "pages",
     "setup",
     "slidev.d.ts",
     "styles.css",
