@@ -13,10 +13,6 @@
       "types": "./index.d.ts",
       "import": "./dist/index.mjs"
     },
-    "./channels": {
-      "types": "./dist/channels.d.ts",
-      "import": "./dist/channels.mjs"
-    },
     "./components": {
       "types": "./dist/components/index.d.ts",
       "import": "./dist/components/index.mjs"
@@ -37,7 +33,6 @@
   "main": "./dist/index.mjs",
   "types": "./index.d.ts",
   "files": [
-    "channels.ts",
     "components",
     "composables",
     "dist",
