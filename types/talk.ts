@@ -10,5 +10,6 @@ export interface Talk {
   urls: {
     details: string
     overview: string
+    tiny_overview: string
   }
 }
