@@ -2,7 +2,6 @@ import type { DeepReadonly, Ref } from 'vue'
 import type { AugmentedLiveReaction, LiveReaction } from '../types/live-reaction'
 import { randomUUID } from 'uncrypto'
 import { onMounted, onUnmounted, readonly, ref } from 'vue'
-import { liveReactions as liveReactionsChannel } from '../utils/channels'
 
 interface UseInaliaLiveReactions {
   liveReactions: DeepReadonly<Ref<AugmentedLiveReaction[]>>
@@ -13,7 +12,7 @@ export function useInaliaLiveReactions(): UseInaliaLiveReactions {
 
   onMounted(() => {
     window.Echo
-      .private(liveReactionsChannel)
+      .private(`talks.${import.meta.env.VITE_INALIA_TALK_ID}`)
       .listen('LiveReactionSubmitted', (liveReaction: LiveReaction) => {
         const id = randomUUID()
 
