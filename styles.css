@@ -27,3 +27,39 @@
   color: inherit;
   opacity: 0.5;
 }
+
+.inalia-fade-enter-active,
+.inalia-fade-leave-active {
+  transition: opacity 0.2s ease-in-out;
+}
+
+.inalia-fade-enter-from,
+.inalia-fade-leave-to {
+  opacity: 0;
+}
+
+.inalia-live-reaction {
+  animation: float-up 3s cubic-bezier(0.20, 0.110, 0.855, 1) forwards;
+  will-change: transform, opacity;
+}
+
+@keyframes float-up {
+  0% {
+    opacity: 0;
+    transform: translateY(0);
+  }
+
+  8% {
+    opacity: 1;
+  }
+
+  85% {
+    opacity: 0.2;
+    transform: translateY(-70vh);
+  }
+
+  100% {
+    opacity: 0;
+    transform: translateY(-90vh);
+  }
+}
