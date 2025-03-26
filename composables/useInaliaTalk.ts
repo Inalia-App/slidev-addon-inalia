@@ -1,11 +1,11 @@
-import type { Ref } from 'vue'
+import type { DeepReadonly, Ref } from 'vue'
 import type { Talk } from '../types'
 import { createSharedComposable } from '@vueuse/core'
 import { readonly, ref } from 'vue'
 import { fetchTalk as _fetchTalk } from '../utils/talk'
 
 interface UseInaliaTalk {
-  talk: Readonly<Ref<Talk | null>>
+  talk: DeepReadonly<Ref<Talk | null>>
   fetchTalk: () => void
 }
 
