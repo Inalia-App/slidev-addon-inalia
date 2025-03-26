@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { useInaliaLiveReactions } from '../composables/useInaliaLiveReactions';
+import { useInaliaLiveReactions } from '../composables/useInaliaLiveReactions'
 
 const { liveReactions } = useInaliaLiveReactions()
 </script>
@@ -9,7 +9,7 @@ const { liveReactions } = useInaliaLiveReactions()
     <div
       v-for="liveReaction in liveReactions"
       :key="liveReaction.id"
-      class="inalia-live-reaction absolute text-3xl pointer-event-none select-none"
+      class="absolute inalia-live-reaction text-3xl pointer-event-none select-none"
       :style="`left: ${liveReaction.position.x}%; bottom: ${liveReaction.position.y}%; transform: scale(${liveReaction.scale});`"
     >
       {{ liveReaction.emoji }}

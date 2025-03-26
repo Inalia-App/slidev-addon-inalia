@@ -3,5 +3,5 @@ import InaliaLiveReactions from './components/InaliaLiveReactions.vue'
 </script>
 
 <template>
-  <InaliaLiveReactions class="relative w-full h-full" />
+  <InaliaLiveReactions class="w-full h-full relative" />
 </template>
