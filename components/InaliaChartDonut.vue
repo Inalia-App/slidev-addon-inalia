@@ -20,23 +20,23 @@ const height = $frontmatter.inalia?.donut?.height
 // TODO: create an helper function
 const cornerRadius
   = $frontmatter.inalia?.donut?.cornerRadius
-  ?? inaliaConfig?.donut?.cornerRadius
-  ?? 4
+    ?? inaliaConfig?.donut?.cornerRadius
+    ?? 4
 
 const padAngle
   = $frontmatter.inalia?.donut?.padAngle
-  ?? inaliaConfig?.donut?.padAngle
-  ?? 0.04
+    ?? inaliaConfig?.donut?.padAngle
+    ?? 0.04
 
 const arcWidth
   = $frontmatter.inalia?.donut?.arcWidth
-  ?? inaliaConfig?.donut?.arcWidth
-  ?? 30
+    ?? inaliaConfig?.donut?.arcWidth
+    ?? 30
 
 const showBackground
   = $frontmatter.inalia?.donut?.showBackground
-  ?? inaliaConfig?.donut?.showBackground
-  ?? false
+    ?? inaliaConfig?.donut?.showBackground
+    ?? false
 
 const value = (d: SelectData[number]) => d.count
 const color = (d: SelectData[number]) => d.color

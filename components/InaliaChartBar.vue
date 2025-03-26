@@ -19,18 +19,18 @@ const height = $frontmatter.inalia?.bar?.height
 
 const barWidth
   = $frontmatter.inalia?.bar?.barWidth
-  ?? inaliaConfig?.bar?.barWidth
-  ?? 30
+    ?? inaliaConfig?.bar?.barWidth
+    ?? 30
 
 const barPadding
   = $frontmatter.inalia?.bar?.barPadding
-  ?? inaliaConfig?.bar?.barPadding
-  ?? 0.1
+    ?? inaliaConfig?.bar?.barPadding
+    ?? 0.1
 
 const roundedCorners
   = $frontmatter.inalia?.bar?.roundedCorners
-  ?? inaliaConfig?.bar?.roundedCorners
-  ?? 4
+    ?? inaliaConfig?.bar?.roundedCorners
+    ?? 4
 
 const x = (d: SelectData[number], index: number) => index
 const y = (d: SelectData[number]) => d.count
