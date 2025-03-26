@@ -10,7 +10,7 @@ const { talk } = useInaliaTalk()
 <template>
   <div class="h-full grid slidev-layout inalia-overview">
     <template v-if="talk">
-      <div class="flex flex-col space-y-2 justify-center items-center">
+      <div class="flex justify-center items-center flex-col space-y-2">
         <div
           class="inalia shrink-0 w-60 h-60 rounded-lg overflow-hidden"
         >
