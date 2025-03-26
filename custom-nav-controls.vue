@@ -12,8 +12,12 @@ const { talk } = useInaliaTalk()
     <IconButton title="Inalia" as="a" :href="talk.urls.overview" target="_blank">
       <img src="https://inalia.app/favicon.svg" alt="Inalia Logo" class="size-5 grayscale-100">
     </IconButton>
+    <VerticalDivider />
     <IconButton title="Overview" as="a" :href="talk.urls.details" target="_blank">
       <div class="i-carbon:dashboard" />
+    </IconButton>
+    <IconButton title="Audience Questions" to="/audience-questions">
+      <div class="i-carbon:message-queue" />
     </IconButton>
   </template>
 </template>
