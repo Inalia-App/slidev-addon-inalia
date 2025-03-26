@@ -2,9 +2,10 @@ import { defineAppSetup } from '@slidev/types'
 import Echo from 'laravel-echo'
 import { ofetch } from 'ofetch'
 import Pusher from 'pusher-js'
+import { useInaliaTalk } from '../composables/useInaliaTalk'
 
 /**
- * Setup the Laravel Echo client
+ * Setup the Laravel Echo client and fetch the talk data.
  */
 export default defineAppSetup(() => {
   if (!import.meta.env.VITE_REVERB_APP_KEY) {
@@ -47,4 +48,6 @@ export default defineAppSetup(() => {
       }
     },
   })
+
+  useInaliaTalk().fetchTalk()
 })
