@@ -2,7 +2,7 @@ import type { DeepReadonly, Ref } from 'vue'
 import type { AugmentedLiveReaction, LiveReaction } from '../types/live-reaction'
 import { randomUUID } from 'uncrypto'
 import { onMounted, onUnmounted, readonly, ref } from 'vue'
-import { liveReactions as liveReactionsChannel } from '../channels'
+import { liveReactions as liveReactionsChannel } from '../utils/channels'
 
 interface UseInaliaLiveReactions {
   liveReactions: DeepReadonly<Ref<AugmentedLiveReaction[]>>
