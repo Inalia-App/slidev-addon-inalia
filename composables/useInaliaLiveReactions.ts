@@ -38,7 +38,7 @@ export function useInaliaLiveReactions(): UseInaliaLiveReactions {
   onUnmounted(() => {
     // Leave the channel when the component is unmounted
     // Mainly used to handle the HMR
-    window.Echo.leave(liveReactionsChannel)
+    window.Echo.leave(`talks.${import.meta.env.VITE_INALIA_TALK_ID}`)
   })
 
   return {
