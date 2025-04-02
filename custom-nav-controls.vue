@@ -14,10 +14,10 @@ const { talk } = useInaliaTalk()
     </IconButton>
     <VerticalDivider />
     <IconButton title="Overview" as="a" :href="talk.urls.details" target="_blank">
-      <div class="i-carbon:dashboard" />
+      <div class="i-carbon:settings-edit" />
     </IconButton>
-    <IconButton title="Audience Questions" to="/audience-questions">
-      <div class="i-carbon:message-queue" />
+    <IconButton title="Dashboard" to="/inalia/dashboard">
+      <div class="i-carbon:dashboard" />
     </IconButton>
   </template>
 </template>

@@ -1,10 +1,7 @@
 <script lang="ts" setup>
-import type { AudienceQuestion } from '../types/audience-question'
+import type { AudienceQuestion } from '../../types/audience-question'
 import { onMounted, onUnmounted, ref } from 'vue'
-import { useInaliaTalk } from '../composables/useInaliaTalk'
-import { fetchAudienceQuestions } from '../utils/audience-questions'
-
-const { talk } = useInaliaTalk()
+import { fetchAudienceQuestions } from '../../utils/audience-questions'
 
 const audienceQuestions = ref<AudienceQuestion[]>([])
 
@@ -23,17 +20,14 @@ onUnmounted(() => {
 </script>
 
 <template>
-  <div v-if="talk" class="p-4">
-    <h1 class="text-lg font-bold">
-      Audience Questions for {{ talk?.title }}
-    </h1>
+  <div>
+    <h2 class="text-base font-semibold">
+      Audience Questions
+    </h2>
     <ol class="mt-4 text-base list-decimal list-inside">
       <li v-for="question in audienceQuestions" :key="question.question">
         {{ question.question }}
       </li>
     </ol>
-  </div>
-  <div v-else>
-    <span>Loading...</span>
   </div>
 </template>
