@@ -1,2 +1,4 @@
 export const EVENT_LIVE_REACTION_SUBMITTED = 'LiveReactionSubmitted'
 export const EVENT_AUDIENCE_QUESTION_CREATED = 'AudienceQuestionCreated'
+export const EVENT_FEEDBACK_MESSAGE_CREATED = 'FeedbackMessageCreated'
+export const EVENT_FEEDBACK_REACTION_CREATED = 'FeedbackReactionCreated'
