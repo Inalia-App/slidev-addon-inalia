@@ -28,7 +28,7 @@ onUnmounted(() => {
     <h2 class="text-base font-semibold">
       Feedback Reactions
     </h2>
-    <ol class="mt-4 text-base list-decimal list-inside">
+    <ol class="text-base mt-4 list-decimal list-inside">
       <li v-for="reaction in feedbackReactions" :key="reaction.id">
         {{ reaction.feedback_reactions_count }} {{ reaction.feedback_reactions_count! > 1 ? 'reactions' : 'reaction' }} for {{ reaction.emoji }} {{ reaction.description }}
       </li>

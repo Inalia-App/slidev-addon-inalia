@@ -2,7 +2,7 @@
   "name": "slidev-addon-inalia",
   "type": "module",
   "version": "0.1.16",
-  "packageManager": "pnpm@10.6.5",
+  "packageManager": "pnpm@10.8.0",
   "keywords": [
     "slidev",
     "slidev-addon",
@@ -63,7 +63,7 @@
     "release": "npm run lint && changelogen --release && npm publish && git push --follow-tags"
   },
   "dependencies": {
-    "@slidev/cli": "^51.4.0",
+    "@slidev/cli": "^51.5.0",
     "@slidev/theme-default": "latest",
     "@unovis/ts": "1.4.3-beta.0",
     "@unovis/vue": "1.4.3-beta.0",
@@ -78,9 +78,9 @@
     "@antfu/eslint-config": "^4.11.0",
     "@unocss/eslint-plugin": "^0.64.1",
     "changelogen": "^0.5.7",
-    "eslint": "^9.23.0",
+    "eslint": "^9.24.0",
     "mkdist": "^1.6.0",
-    "typescript": "^5.8.2",
+    "typescript": "^5.8.3",
     "unbuild": "^2.0.0"
   }
 }

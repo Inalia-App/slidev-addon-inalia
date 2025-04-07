@@ -11,7 +11,7 @@ const { talk } = useInaliaTalk()
   <div v-if="talk" class="h-full grid slidev-layout inalia-feedback">
     <div class="flex justify-center items-center flex-col space-y-2">
       <div
-        class="inalia shrink-0 w-60 h-60 rounded-lg overflow-hidden"
+        class="inalia shrink-0 rounded-lg overflow-hidden w-60 h-60"
       >
         <InaliaQR
           :url="talk.urls.tiny_feedback" class="block"
