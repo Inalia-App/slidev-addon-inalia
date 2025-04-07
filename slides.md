@@ -56,12 +56,9 @@ inalia:
 ---
 
 <Inalia
-  question="Connaissez-vous UnJS ?"
-  type="single_select"
-  chart="bar"
-  :data="[
-    { label: 'Je l\'utilise régulièrement', count: 0, color: '#4ade80' },
-    { label: 'Oui mais de nom', count: 5, color: '#16a34a' },
-    { label: 'Non', count: 20, color: '#166534' }
-  ]"
+  :questionId="4"
 />
+
+---
+layout: inalia-feedback
+---

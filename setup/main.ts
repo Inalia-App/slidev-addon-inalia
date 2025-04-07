@@ -2,20 +2,21 @@ import { defineAppSetup } from '@slidev/types'
 import Echo from 'laravel-echo'
 import { ofetch } from 'ofetch'
 import Pusher from 'pusher-js'
-import { useInaliaTalk } from '../composables/useInaliaTalk'
+import { fetchTalk } from '../utils/api'
 
 /**
- * Setup the Laravel Echo client and fetch the talk data.
+ * Initializes the Laravel Echo client for real-time event broadcasting
+ * and sets up the necessary configurations for authentication and connection.
  */
-export default defineAppSetup(() => {
+export default defineAppSetup(async ({ app }) => {
   if (!import.meta.env.VITE_REVERB_APP_KEY) {
-    // eslint-disable-next-line no-console
-    console.info('Inalia is running in static mode. Set up environment variables to enable real-time features.')
+    console.warn('Inalia is running in static mode. Set up environment variables to enable real-time features.')
+
+    app.provide('talk', null) // Can only be null in static mode.
     return
   }
 
   window.Pusher = Pusher
-
   window.Echo = new Echo({
     broadcaster: 'reverb',
     key: import.meta.env.VITE_REVERB_APP_KEY,
@@ -49,5 +50,6 @@ export default defineAppSetup(() => {
     },
   })
 
-  useInaliaTalk().fetchTalk()
+  const talk = await fetchTalk()
+  app.provide('talk', talk)
 })

@@ -1,6 +1,7 @@
 <script lang="ts" setup>
-import type { ChartType, Data, QuestionType, SelectData, TextData } from '../types'
-import { useInalia } from '../composables/useInalia'
+import type { Data, SelectData, TextData } from '../types/data'
+import type { ChartType, QuestionType } from '../types/question'
+import { useInaliaQuestion } from '../composables/useInaliaQuestion'
 import InaliaDefaultLayout from './InaliaDefaultLayout.vue'
 import InaliaLegend from './InaliaLegend.vue'
 import InaliaLoading from './InaliaLoading.vue'
@@ -15,7 +16,7 @@ const props = withDefaults(defineProps<{
   data?: Data // TODO: dynamic types depending on question type
 }>(), { questionId: 0 })
 
-const { isStatic, question, data } = useInalia(() => props.questionId, {
+const { isStatic, question, data } = useInaliaQuestion(() => props.questionId, {
   staticContent: {
     question: () => props.question,
     type: () => props.type,

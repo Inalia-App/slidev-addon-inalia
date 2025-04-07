@@ -1,19 +1,40 @@
 import type { DeepReadonly, Ref } from 'vue'
 import type { AugmentedLiveReaction, LiveReaction } from '../types/live-reaction'
 import { randomUUID } from 'uncrypto'
-import { onMounted, onUnmounted, readonly, ref } from 'vue'
+import { readonly, ref } from 'vue'
+import { talkChannel } from '../utils/channels'
+import { EVENT_LIVE_REACTION_SUBMITTED } from '../utils/events'
+import { useInaliaTalk } from './useInaliaTalk'
 
 interface UseInaliaLiveReactions {
   liveReactions: DeepReadonly<Ref<AugmentedLiveReaction[]>>
+  listen: () => void
+  dispose: () => void
 }
 
 export function useInaliaLiveReactions(): UseInaliaLiveReactions {
+  const { talk } = useInaliaTalk()
+
   const liveReactions = ref<AugmentedLiveReaction[]>([])
 
-  onMounted(() => {
+  if (!talk) {
+    console.warn('Inalia is running in static mode. Live reactions are disabled.')
+
+    return {
+      liveReactions: readonly(liveReactions),
+      listen: () => {},
+      dispose: () => {},
+    }
+  }
+
+  function listen(): void {
+    if (!talk) {
+      return
+    }
+
     window.Echo
-      .private(`talks.${import.meta.env.VITE_INALIA_TALK_ID}`)
-      .listen('LiveReactionSubmitted', (liveReaction: LiveReaction) => {
+      .private(talkChannel(talk.id))
+      .listen(EVENT_LIVE_REACTION_SUBMITTED, (liveReaction: LiveReaction) => {
         const id = randomUUID()
 
         liveReactions.value.push({
@@ -33,15 +54,20 @@ export function useInaliaLiveReactions(): UseInaliaLiveReactions {
           liveReactions.value = liveReactions.value.filter(liveReaction => liveReaction.id !== id)
         }, 3000)
       })
-  })
+  }
 
-  onUnmounted(() => {
-    // Leave the channel when the component is unmounted
-    // Mainly used to handle the HMR
-    window.Echo.leave(`talks.${import.meta.env.VITE_INALIA_TALK_ID}`)
-  })
+  function dispose(): void {
+    if (!talk) {
+      return
+    }
+
+    window.Echo.leave(talkChannel(talk.id))
+  }
 
   return {
     liveReactions: readonly(liveReactions),
+
+    listen,
+    dispose,
   }
 }

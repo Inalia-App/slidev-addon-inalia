@@ -1,29 +1,30 @@
 <script lang="ts" setup>
-import type { AudienceQuestion } from '../types/audience-question'
-import { onMounted, onUnmounted, ref } from 'vue'
+import { onMounted, onUnmounted } from 'vue'
+import { useInaliaAudienceQuestions } from '../composables/useInaliaAudienceAuestions'
 import { useInaliaTalk } from '../composables/useInaliaTalk'
-import { fetchAudienceQuestions } from '../utils/audience-questions'
 
 const { talk } = useInaliaTalk()
-
-const audienceQuestions = ref<AudienceQuestion[]>([])
+const { audienceQuestions, fetch, listen, dispose } = useInaliaAudienceQuestions()
 
 onMounted(async () => {
-  audienceQuestions.value = await fetchAudienceQuestions()
+  await fetch()
 
-  window.Echo.private(`talks.${import.meta.env.VITE_INALIA_TALK_ID}`)
-    .listen('AudienceQuestionCreated', (e: AudienceQuestion) => {
-      audienceQuestions.value.push(e)
-    })
+  listen()
 })
 
 onUnmounted(() => {
-  window.Echo.leave(`talks.${import.meta.env.VITE_INALIA_TALK_ID}`)
+  dispose()
 })
 </script>
 
 <template>
-  <div v-if="talk" class="p-4">
+  <div v-if="!talk">
+    <span>
+      Inalia is running in static mode.
+    </span>
+  </div>
+
+  <div v-else-if="audienceQuestions" class="p-4">
     <h1 class="text-lg font-bold">
       Audience Questions for {{ talk?.title }}
     </h1>
@@ -34,6 +35,8 @@ onUnmounted(() => {
     </ol>
   </div>
   <div v-else>
-    <span>Loading...</span>
+    <span>
+      No audience questions available.
+    </span>
   </div>
 </template>

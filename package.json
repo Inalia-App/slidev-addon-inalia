@@ -13,9 +13,9 @@
       "types": "./index.d.ts",
       "import": "./dist/index.mjs"
     },
-    "./components": {
-      "types": "./dist/components/index.d.ts",
-      "import": "./dist/components/index.mjs"
+    "./components/*": {
+      "types": "./dist/components/*.d.ts",
+      "import": "./dist/components/*.mjs"
     },
     "./composables/*": {
       "types": "./dist/composables/*.d.ts",
@@ -25,9 +25,9 @@
       "types": "./dist/utils/*.d.ts",
       "import": "./dist/utils/*.mjs"
     },
-    "./types": {
-      "types": "./dist/types/index.d.ts",
-      "import": "./dist/types/index.mjs"
+    "./types/*": {
+      "types": "./dist/types/*.d.ts",
+      "import": "./dist/types/*.mjs"
     }
   },
   "main": "./dist/index.mjs",
