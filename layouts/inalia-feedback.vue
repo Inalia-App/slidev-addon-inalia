@@ -8,16 +8,16 @@ const { talk } = useInaliaTalk()
 </script>
 
 <template>
-  <div v-if="talk" class="h-full grid slidev-layout inalia-overview">
+  <div v-if="talk" class="h-full grid slidev-layout inalia-feedback">
     <div class="flex justify-center items-center flex-col space-y-2">
       <div
         class="inalia shrink-0 w-60 h-60 rounded-lg overflow-hidden"
       >
         <InaliaQR
-          :url="talk.urls.tiny_overview" class="block"
+          :url="talk.urls.tiny_feedback" class="block"
         />
       </div>
-      <InaliaShortUrl :url="talk.urls.tiny_overview" class="border-0! text-xs mx-auto" />
+      <InaliaShortUrl :url="talk.urls.tiny_feedback" class="border-0! text-xs mx-auto" />
     </div>
 
     <div class="absolute op-40 bottom-2 left-1/2 -translate-x-1/2">

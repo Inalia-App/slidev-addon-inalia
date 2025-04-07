@@ -1,11 +1,12 @@
 import type { MaybeRefOrGetter } from 'vue'
-import type { Answer, ChartType, Data, MultipleSelectAnswer, MultipleSelectQuestion, Question, QuestionType, SelectData, SingleSelectAnswer, SingleSelectQuestion, TextAnswer, TextData, TextQuestion } from '../types'
+import type { Answer, MultipleSelectAnswer, SingleSelectAnswer, TextAnswer } from '../types/answer'
+import type { Data, SelectData, TextData } from '../types/data'
 import type { Inalia } from '../types/inalia'
-import { ofetch } from 'ofetch'
+import type { ChartType, MultipleSelectQuestion, Question, QuestionType, SingleSelectQuestion, TextQuestion } from '../types/question'
 import { computed, onMounted, readonly, ref, shallowRef, toRef, toValue, watch, watchEffect } from 'vue'
-import { getInaliaEnv } from '../utils/env'
+import { fetchQuestion } from '../utils/api'
 
-interface UseInaliaOptions {
+interface UseInaliaQuestionOptions {
   /**
    * Static content to display instead of the dynamically fetched question. This option is useful when you want to deploy your slides after the talk to keep a record of the questions.
    */
@@ -31,14 +32,8 @@ interface UseInaliaOptions {
   }
 }
 
-export function useInalia(defaultQuestionId: MaybeRefOrGetter<number>, options?: UseInaliaOptions): Inalia {
+export function useInaliaQuestion(defaultQuestionId: MaybeRefOrGetter<number>, options?: UseInaliaQuestionOptions): Inalia {
   const { staticContent } = options || {}
-
-  const env = getInaliaEnv()
-
-  const endpoint = env.endpoint
-  const username = env.username
-  const talkId = env.talkId
 
   const questionId = toRef(defaultQuestionId)
 
@@ -125,7 +120,7 @@ export function useInalia(defaultQuestionId: MaybeRefOrGetter<number>, options?:
 
     // Load the talk's question if it is not already loaded.
     if (!question.value) {
-      fetchQuestion()
+      fetch()
     }
   })
 
@@ -134,7 +129,7 @@ export function useInalia(defaultQuestionId: MaybeRefOrGetter<number>, options?:
       return
     }
 
-    fetchQuestion()
+    fetch()
   })
 
   watchEffect(() => {
@@ -146,15 +141,8 @@ export function useInalia(defaultQuestionId: MaybeRefOrGetter<number>, options?:
     startListening()
   })
 
-  async function fetchQuestion(): Promise<void> {
-    const response = await ofetch<{ data: Question }>(`${endpoint}/api/${username}/talks/${talkId}/questions/${questionId.value}`, {
-      headers: {
-        Accept: 'application/json',
-        Authorization: `Bearer ${env.apiKey}`,
-      },
-    })
-
-    question.value = response.data
+  async function fetch(): Promise<void> {
+    question.value = await fetchQuestion(toValue(questionId))
 
     if (question.value.type === 'text') {
       data.value = question.value.answers.map(answer => answer.value) as TextData

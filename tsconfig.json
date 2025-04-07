@@ -6,9 +6,13 @@
     "strict": true,
     "allowSyntheticDefaultImports": true,
     "esModuleInterop": true,
-    "skipLibCheck": true
+    "skipLibCheck": true,
   },
   "include": [
-    "./"
-  ]
+    "window.d.ts",
+    "vite-env.d.ts",
+    "slidev.d.ts",
+    "**/*.ts",
+    "**/*.vue"
+  ],
 }

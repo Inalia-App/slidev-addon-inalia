@@ -1,26 +1,13 @@
-import type { DeepReadonly, Ref } from 'vue'
 import type { Talk } from '../types'
-import { createSharedComposable } from '@vueuse/core'
-import { readonly, ref } from 'vue'
-import { fetchTalk as _fetchTalk } from '../utils/talk'
+import { inject } from 'vue'
 
 interface UseInaliaTalk {
-  talk: DeepReadonly<Ref<Talk | null>>
-  fetchTalk: () => void
+  talk: Talk | null
 }
-
-function _useInaliaTalk(): UseInaliaTalk {
-  const talk = ref<Talk | null>(null)
-
-  async function fetchTalk(): Promise<void> {
-    talk.value = await _fetchTalk()
-  }
+export function useInaliaTalk(): UseInaliaTalk {
+  const talk = inject<Talk | null>('talk', null) // Can only be null in static mode because the fetch is awaited in the setup function.
 
   return {
-    talk: readonly(talk),
-
-    fetchTalk,
+    talk,
   }
 }
-
-export const useInaliaTalk = createSharedComposable(_useInaliaTalk)

@@ -11,5 +11,6 @@ export interface Talk {
     details: string
     overview: string
     tiny_overview: string
+    tiny_feedback: string
   }
 }
