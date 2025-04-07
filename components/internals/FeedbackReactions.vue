@@ -1,33 +1,30 @@
 <script lang="ts" setup>
-import type { FeedbackReaction } from '../../types/feedback-reaction'
-import { onMounted, onUnmounted, ref } from 'vue'
-import { fetchFeedbackReactions } from '../../utils/feedback-reactions'
+import { onMounted, onUnmounted } from 'vue'
+import { useInaliaFeedbackReactions } from '../../composables/useInaliaFeedbackReactions'
+import { useInaliaTalk } from '../../composables/useInaliaTalk'
 
-const feedbackReactions = ref<FeedbackReaction[]>([])
+const { talk } = useInaliaTalk()
+const { feedbackReactions, fetch, listen, dispose } = useInaliaFeedbackReactions()
 
 onMounted(async () => {
-  feedbackReactions.value = await fetchFeedbackReactions()
+  await fetch()
 
-  window.Echo.private(`talks.${import.meta.env.VITE_INALIA_TALK_ID}`)
-    .listen('FeedbackReactionCreated', (e: { feedback_reaction_id: number }) => {
-      const feedbackReaction = feedbackReactions.value.find(
-        reaction => reaction.id === e.feedback_reaction_id,
-      )
-
-      if (!feedbackReaction) {
-        return
-      }
-
-      feedbackReaction.feedback_reactions_count = (feedbackReaction.feedback_reactions_count ?? 0) + 1
-    })
+  listen()
 })
+
 onUnmounted(() => {
-  window.Echo.leave(`talks.${import.meta.env.VITE_INALIA_TALK_ID}`)
+  dispose()
 })
 </script>
 
 <template>
-  <div>
+  <div v-if="!talk">
+    <span>
+      Inalia is running in static mode.
+    </span>
+  </div>
+
+  <div v-else-if="feedbackReactions">
     <h2 class="text-base font-semibold">
       Feedback Reactions
     </h2>
@@ -36,5 +33,11 @@ onUnmounted(() => {
         {{ reaction.feedback_reactions_count }} {{ reaction.feedback_reactions_count! > 1 ? 'reactions' : 'reaction' }} for {{ reaction.emoji }} {{ reaction.description }}
       </li>
     </ol>
+  </div>
+
+  <div v-else>
+    <span>
+      No feedback reactions available.
+    </span>
   </div>
 </template>

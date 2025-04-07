@@ -1,7 +1,9 @@
 import type { AudienceQuestion } from '../types/audience-question'
+import type { FeedbackMessage } from '../types/feedback-message'
+import type { FeedbackReaction } from '../types/feedback-reaction'
+import type { Question } from '../types/question'
+import type { Talk } from '../types/talk'
 import { ofetch } from 'ofetch'
-import { Talk } from '../types/talk'
-import { Question } from '../types/question'
 
 export const api = ofetch.create({
   baseURL: import.meta.env.VITE_INALIA_ENDPOINT,
@@ -20,5 +22,13 @@ export async function fetchQuestion(questionNumber: number): Promise<Question> {
 }
 
 export async function fetchAudienceQuestions(): Promise<AudienceQuestion[]> {
-  return api<{ data: AudienceQuestion[]}>(`/api/${import.meta.env.VITE_INALIA_USERNAME}/talks/${import.meta.env.VITE_INALIA_TALK_NUMBER}/audience-questions`).then(response => response.data)
+  return api<{ data: AudienceQuestion[] }>(`/api/${import.meta.env.VITE_INALIA_USERNAME}/talks/${import.meta.env.VITE_INALIA_TALK_NUMBER}/audience-questions`).then(response => response.data)
+}
+
+export async function fetchFeedbackMessages(): Promise<FeedbackMessage[]> {
+  return api<{ data: FeedbackMessage[] }>(`/api/${import.meta.env.VITE_INALIA_USERNAME}/talks/${import.meta.env.VITE_INALIA_TALK_NUMBER}/feedback-messages`).then(response => response.data)
+}
+
+export async function fetchFeedbackReactions(): Promise<FeedbackReaction[]> {
+  return api<{ data: FeedbackReaction[] }>(`/api/${import.meta.env.VITE_INALIA_USERNAME}/talks/${import.meta.env.VITE_INALIA_TALK_NUMBER}/feedback-reactions`, {}).then(response => response.data)
 }

@@ -1,26 +1,30 @@
 <script lang="ts" setup>
-import type { FeedbackMessage } from '../../types/feedback-message'
-import { onMounted, onUnmounted, ref } from 'vue'
-import { fetchFeedbackMessages } from '../../utils/feedback-messages'
+import { onMounted, onUnmounted } from 'vue'
+import { useInaliaFeedbackMessages } from '../../composables/useInaliaFeedbackMessages'
+import { useInaliaTalk } from '../../composables/useInaliaTalk'
 
-const feedbackMessages = ref<FeedbackMessage[]>([])
+const { talk } = useInaliaTalk()
+const { feedbackMessages, fetch, listen, dispose } = useInaliaFeedbackMessages()
 
 onMounted(async () => {
-  feedbackMessages.value = await fetchFeedbackMessages()
+  await fetch()
 
-  window.Echo.private(`talks.${import.meta.env.VITE_INALIA_TALK_ID}`)
-    .listen('FeedbackMessageCreated', (e: FeedbackMessage) => {
-      feedbackMessages.value.push(e)
-    })
+  listen()
 })
 
 onUnmounted(() => {
-  window.Echo.leave(`talks.${import.meta.env.VITE_INALIA_TALK_ID}`)
+  dispose()
 })
 </script>
 
 <template>
-  <div>
+  <div v-if="!talk">
+    <span>
+      Inalia is running in static mode.
+    </span>
+  </div>
+
+  <div v-else-if="feedbackMessages">
     <h2 class="text-base font-semibold">
       Feedback Messages
     </h2>
@@ -29,5 +33,11 @@ onUnmounted(() => {
         {{ message.message }}
       </li>
     </ol>
+  </div>
+
+  <div v-else>
+    <span>
+      No feedback messages available.
+    </span>
   </div>
 </template>
