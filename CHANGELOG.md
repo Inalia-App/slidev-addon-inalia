@@ -1,6 +1,38 @@
 # Changelog
 
 
+## v0.1.17
+
+[compare changes](https://github.com/Inalia-App/slidev-addon-inalia/compare/v0.1.16...v0.1.17)
+
+### 🚀 Enhancements
+
+- Show navigation controls to the talk details and overview ([#7](https://github.com/Inalia-App/slidev-addon-inalia/pull/7))
+- Live reactions ([#5](https://github.com/Inalia-App/slidev-addon-inalia/pull/5))
+- Real-time audience questions ([#8](https://github.com/Inalia-App/slidev-addon-inalia/pull/8))
+- Add overview layout ([#9](https://github.com/Inalia-App/slidev-addon-inalia/pull/9))
+- Feedback ([#10](https://github.com/Inalia-App/slidev-addon-inalia/pull/10))
+
+### 🩹 Fixes
+
+- Wrong channel ([46432ed](https://github.com/Inalia-App/slidev-addon-inalia/commit/46432ed))
+
+### 💅 Refactors
+
+- Talks ([dc5355f](https://github.com/Inalia-App/slidev-addon-inalia/commit/dc5355f))
+
+### 🏡 Chore
+
+- Update packages ([7a3d136](https://github.com/Inalia-App/slidev-addon-inalia/commit/7a3d136))
+- Format ([3361143](https://github.com/Inalia-App/slidev-addon-inalia/commit/3361143))
+- Format ([ba86b80](https://github.com/Inalia-App/slidev-addon-inalia/commit/ba86b80))
+- Format ([552f938](https://github.com/Inalia-App/slidev-addon-inalia/commit/552f938))
+
+### ❤️ Contributors
+
+- Barbapapazes <e.soubiran25@gmail.com>
+- Estéban <e.soubiran25@gmail.com>
+
 ## v0.1.16
 
 [compare changes](https://github.com/Inalia-App/slidev-addon-inalia/compare/v0.1.15...v0.1.16)
