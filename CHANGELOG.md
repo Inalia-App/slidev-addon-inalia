@@ -1,6 +1,18 @@
 # Changelog
 
 
+## v0.1.19
+
+[compare changes](https://github.com/Inalia-App/slidev-addon-inalia/compare/v0.1.18...v0.1.19)
+
+### 🩹 Fixes
+
+- Remove types and extension to components export ([7e277a1](https://github.com/Inalia-App/slidev-addon-inalia/commit/7e277a1))
+
+### ❤️ Contributors
+
+- Barbapapazes <e.soubiran25@gmail.com>
+
 ## v0.1.18
 
 [compare changes](https://github.com/Inalia-App/slidev-addon-inalia/compare/v0.1.17...v0.1.18)
