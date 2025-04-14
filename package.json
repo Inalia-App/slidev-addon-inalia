@@ -14,8 +14,7 @@
       "import": "./dist/index.mjs"
     },
     "./components/*": {
-      "types": "./dist/components/*.d.ts",
-      "import": "./dist/components/*.vue"
+      "import": "./dist/components/*"
     },
     "./composables/*": {
       "types": "./dist/composables/*.d.ts",
