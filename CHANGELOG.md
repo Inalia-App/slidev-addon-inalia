@@ -1,6 +1,22 @@
 # Changelog
 
 
+## v0.1.18
+
+[compare changes](https://github.com/Inalia-App/slidev-addon-inalia/compare/v0.1.17...v0.1.18)
+
+### 🩹 Fixes
+
+- Expose `.vue` instead of `.mjs` ([7602d79](https://github.com/Inalia-App/slidev-addon-inalia/commit/7602d79))
+
+### 🏡 Chore
+
+- Update deps ([d4a8bd5](https://github.com/Inalia-App/slidev-addon-inalia/commit/d4a8bd5))
+
+### ❤️ Contributors
+
+- Barbapapazes <e.soubiran25@gmail.com>
+
 ## v0.1.17
 
 [compare changes](https://github.com/Inalia-App/slidev-addon-inalia/compare/v0.1.16...v0.1.17)
