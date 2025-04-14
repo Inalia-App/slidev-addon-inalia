@@ -28,7 +28,7 @@ onUnmounted(() => {
     <h2 class="text-base font-semibold">
       Feedback Messages
     </h2>
-    <ol class="mt-4 text-base list-decimal list-inside">
+    <ol class="text-base mt-4 list-decimal list-inside">
       <li v-for="message in feedbackMessages" :key="message.message">
         {{ message.message }}
       </li>
