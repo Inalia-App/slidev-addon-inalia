@@ -1,4 +1,4 @@
-import type { Talk } from '../types'
+import type { Talk } from '../types/talk'
 import { inject } from 'vue'
 
 interface UseInaliaTalk {
