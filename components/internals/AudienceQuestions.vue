@@ -33,7 +33,7 @@ onUnmounted(() => {
       <h1 class="text-lg font-bold">
         Audience Questions for {{ talk?.title }}
       </h1>
-      <ol class="mt-4 text-base list-decimal list-inside">
+      <ol class="text-base mt-4 list-decimal list-inside">
         <li v-for="question in audienceQuestions" :key="question.question">
           {{ question.question }}
         </li>

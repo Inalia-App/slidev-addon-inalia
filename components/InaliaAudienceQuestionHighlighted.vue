@@ -20,7 +20,7 @@ onClickOutside(target, clearAudienceQuestion)
   <div v-if="audienceQuestion" class="flex items-center justify-center">
     <div class="absolute z-10 inset-0 bg-white/60 backdrop-blur-sm" />
 
-    <div ref="target" class="z-10 relative p-4 bg-white rounded-lg shadow-lg max-w-xl border border-gray-200 text-xl">
+    <div ref="target" class="z-10 relative p-4 bg-white rounded-lg shadow-lg min-w-lg max-w-xl border border-gray-200 text-xl">
       {{ audienceQuestion?.question }}
 
       <div class="text-right text-gray-500 italic mt-2">
