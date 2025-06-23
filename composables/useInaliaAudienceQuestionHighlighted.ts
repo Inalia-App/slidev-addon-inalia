@@ -6,6 +6,7 @@ import { useInaliaTalk } from './useInaliaTalk'
 
 interface UseInaliaAudienceQuestionHighlighted {
   audienceQuestion: DeepReadonly<Ref<AudienceQuestion | null>>
+  clearAudienceQuestion: () => void
   listen: () => void
   dispose: () => void
 }
@@ -20,6 +21,7 @@ export function useInaliaAudienceQuestionHighlighted(): UseInaliaAudienceQuestio
 
     return {
       audienceQuestion: readonly(audienceQuestion),
+      clearAudienceQuestion: () => {},
       listen: () => {},
       dispose: () => {},
     }
@@ -35,6 +37,9 @@ export function useInaliaAudienceQuestionHighlighted(): UseInaliaAudienceQuestio
       .listen('AudienceQuestionHighlighted', (question: AudienceQuestion) => {
         audienceQuestion.value = question
       })
+      .listen('AudienceQuestionUnhighlighted', () => {
+        clearAudienceQuestion()
+      })
   }
 
   function dispose(): void {
@@ -47,8 +52,13 @@ export function useInaliaAudienceQuestionHighlighted(): UseInaliaAudienceQuestio
       .stopListening('AudienceQuestionHighlighted')
   }
 
+  function clearAudienceQuestion(): void {
+    audienceQuestion.value = null
+  }
+
   return {
     audienceQuestion: readonly(audienceQuestion),
+    clearAudienceQuestion,
     listen,
     dispose,
   }
