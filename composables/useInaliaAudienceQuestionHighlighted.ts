@@ -2,6 +2,7 @@ import type { DeepReadonly, Ref } from 'vue'
 import type { AudienceQuestion } from '../types/audience-question'
 import { readonly, ref } from 'vue'
 import { talkChannel } from '../utils/channels'
+import { EVENT_AUDIENCE_QUESTION_HIGHLIGHTED, EVENT_AUDIENCE_QUESTION_UNHIGHLIGHTED } from '../utils/events'
 import { useInaliaTalk } from './useInaliaTalk'
 
 interface UseInaliaAudienceQuestionHighlighted {
@@ -34,10 +35,10 @@ export function useInaliaAudienceQuestionHighlighted(): UseInaliaAudienceQuestio
 
     window.Echo
       .private(talkChannel(talk.id))
-      .listen('AudienceQuestionHighlighted', (question: AudienceQuestion) => {
+      .listen(EVENT_AUDIENCE_QUESTION_HIGHLIGHTED, (question: AudienceQuestion) => {
         audienceQuestion.value = question
       })
-      .listen('AudienceQuestionUnhighlighted', () => {
+      .listen(EVENT_AUDIENCE_QUESTION_UNHIGHLIGHTED, () => {
         clearAudienceQuestion()
       })
   }
