@@ -12,7 +12,10 @@ interface UseInaliaAudienceQuestionHighlighted {
   dispose: () => void
 }
 
-export function useInaliaAudienceQuestionHighlighted(): UseInaliaAudienceQuestionHighlighted {
+interface useInaliaAudienceQuestionHighlightedParams {
+  onUnhighlighted?: () => void
+}
+export function useInaliaAudienceQuestionHighlighted(params: useInaliaAudienceQuestionHighlightedParams = {}): UseInaliaAudienceQuestionHighlighted {
   const { talk } = useInaliaTalk()
 
   const audienceQuestion = ref<AudienceQuestion | null>(null)
@@ -39,6 +42,10 @@ export function useInaliaAudienceQuestionHighlighted(): UseInaliaAudienceQuestio
         audienceQuestion.value = question
       })
       .listen(EVENT_AUDIENCE_QUESTION_UNHIGHLIGHTED, () => {
+        if (params.onUnhighlighted) {
+          return params.onUnhighlighted()
+        }
+
         clearAudienceQuestion()
       })
   }

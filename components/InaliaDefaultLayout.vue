@@ -13,7 +13,7 @@ defineProps({
 </script>
 
 <template>
-  <div class="h-full flex w-full flex-row gap-8">
+  <div class="h-full w-full flex flex-row gap-8">
     <div class="flex flex-col grow">
       <h1>
         <slot name="title" :question="question">
@@ -37,7 +37,7 @@ defineProps({
       </div>
     </template>
 
-    <div class="absolute op-40 bottom-2 left-1/2 -translate-x-1/2">
+    <div class="left-1/2 -translate-x-1/2 absolute op-40 bottom-2">
       <InaliaPoweredBy />
     </div>
   </div>
