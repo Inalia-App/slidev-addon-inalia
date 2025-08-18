@@ -19,7 +19,16 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: lts/*
+          cache: pnpm
+          registry-url: 'https://registry.npmjs.org'
 
       - run: npx changelogithub
+        continue-on-error: true
         env:
           GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
+
+      - name: Install dependencies
+        run: pnpm install
+
+      - name: Publish to npm
+        run: pnpm publish --access public --no-git-checks

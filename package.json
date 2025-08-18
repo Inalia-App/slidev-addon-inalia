@@ -59,7 +59,7 @@
     "export": "slidev export",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
-    "release": "bumpp && npm publish"
+    "release": "bumpp"
   },
   "dependencies": {
     "@slidev/cli": "^51.5.0",

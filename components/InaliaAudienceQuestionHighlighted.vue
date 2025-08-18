@@ -40,7 +40,7 @@ watch(isOpen, () => {
 <template>
   <DialogRoot v-model:open="isOpen">
     <DialogOverlay class="fixed inset-0 z-10 bg-white/60 backdrop-blur-sm data-[state=open]:animate-[fade-in_200ms_ease-out] data-[state=closed]:animate-[fade-out_200ms_ease-in]" />
-    <DialogContent class="fixed left-1/2 -translate-x-1/2 z-10 rounded-lg w-full data-[state=open]:animate-[fade-in_200ms_ease-out] data-[state=closed]:animate-[fade-out_200ms_ease-in] top-1/2 -translate-y-1/2 bg-white shadow-lg max-w-3xl border border-gray-200 py-4 px-8 focus:outline-none" :aria-describedby="undefined">
+    <DialogContent class="fixed z-10 data-[state=open]:animate-[fade-in_200ms_ease-out] data-[state=closed]:animate-[fade-out_200ms_ease-in] left-1/2 -translate-x-1/2 rounded-lg w-full top-1/2 -translate-y-1/2 bg-white shadow-lg max-w-3xl border border-gray-200 py-4 px-8 focus:outline-none" :aria-describedby="undefined">
       <DialogTitle class="text-xl leading-[1.2]">
         {{ audienceQuestion?.question }}
       </DialogTitle>
