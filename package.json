@@ -59,7 +59,7 @@
     "export": "slidev export",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
-    "release": "npm run lint && changelogen --release && npm publish && git push --follow-tags"
+    "release": "bumpp"
   },
   "dependencies": {
     "@slidev/cli": "^51.5.0",
@@ -78,7 +78,7 @@
   "devDependencies": {
     "@antfu/eslint-config": "^4.12.0",
     "@unocss/eslint-plugin": "^0.64.1",
-    "changelogen": "^0.5.7",
+    "bumpp": "^10.2.3",
     "eslint": "^9.24.0",
     "mkdist": "^1.6.0",
     "typescript": "^5.8.3",
