@@ -45,7 +45,7 @@ watch(isOpen, () => {
         {{ audienceQuestion?.question }}
       </DialogTitle>
 
-      <div class="text-right text-gray-500 text-lg italic mt-2">
+      <div class="text-lg text-right text-gray-500 italic mt-2">
         Anonymous
       </div>
     </DialogContent>
