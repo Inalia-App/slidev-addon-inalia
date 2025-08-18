@@ -27,7 +27,7 @@ defineProps({
     <template v-if="question.tiny_url">
       <div class="flex flex-col space-y-2 items-end">
         <div
-          class="inalia shrink-0 rounded-lg overflow-hidden w-40 h-40"
+          class="inalia rounded-lg shrink-0 overflow-hidden w-40 h-40"
         >
           <InaliaQR
             :url="question.tiny_url" class="block"
@@ -37,7 +37,7 @@ defineProps({
       </div>
     </template>
 
-    <div class="absolute op-40 bottom-2 left-1/2 -translate-x-1/2">
+    <div class="left-1/2 -translate-x-1/2 absolute op-40 bottom-2">
       <InaliaPoweredBy />
     </div>
   </div>

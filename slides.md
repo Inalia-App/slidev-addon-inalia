@@ -54,10 +54,10 @@ inalia:
   bar:
     barWidth: 30
 ---
-
+<!--
 <Inalia
   :questionId="4"
-/>
+/> -->
 
 ---
 layout: inalia-feedback
