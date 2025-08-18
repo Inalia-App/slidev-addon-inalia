@@ -1,6 +1,6 @@
 import process from 'node:process'
 import { readUser } from 'rc9'
-import { defineConfig } from 'vite'
+import { defineConfig, loadEnv } from 'vite'
 
 export default defineConfig({
   plugins: [
@@ -13,8 +13,9 @@ export default defineConfig({
           const userConfig = readUser('.inaliarc')
 
           if (userConfig && typeof userConfig === 'object') {
+            const envConfig = loadEnv('', process.cwd())
             // Inject all top-level keys from userConfig as VITE_ env vars (recursively for objects)
-            injectEnvVars(userConfig)
+            injectEnvVars(userConfig, envConfig)
           }
         },
       }
@@ -30,13 +31,14 @@ export default defineConfig({
   },
 })
 
-function injectEnvVars(obj: Record<string, any>, prefix = 'VITE_') {
+function injectEnvVars(obj: Record<string, any>, env: Record<string, any>, prefix = 'VITE_') {
   for (const [key, value] of Object.entries(obj)) {
     const envKey = prefix + key.toUpperCase()
     if (typeof value === 'object' && value !== null) {
-      injectEnvVars(value, `${envKey}_`)
+      injectEnvVars(value, env, `${envKey}_`)
     }
-    else if (value !== undefined) {
+    else if (value !== undefined && !(envKey in env)) {
+      // Avoid overwriting existing env vars (.env > ~/.inaliarc)
       process.env[envKey] = String(value)
     }
   }
