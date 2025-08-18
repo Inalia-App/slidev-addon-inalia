@@ -29,6 +29,9 @@ importers:
       pusher-js:
         specifier: 8.4.0-rc2
         version: 8.4.0-rc2
+      rc9:
+        specifier: ^2.1.2
+        version: 2.1.2
       reka-ui:
         specifier: ^2.3.2
         version: 2.3.2(typescript@5.8.3)(vue@3.5.13(typescript@5.8.3))
