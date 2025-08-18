@@ -28,7 +28,7 @@ export default defineAppSetup(async ({ app }) => {
     authorizer: (channel: { name: string }) => {
       return {
         authorize: (socketId: string, callback: (success: boolean, data: any) => void) => {
-          ofetch(`${import.meta.env.VITE_INALIA_ENDPOINT}/api/broadcasting/auth`, {
+          ofetch(`${import.meta.env.VITE_INALIA_ENDPOINT ?? 'https://inalia.app'}/api/broadcasting/auth`, {
             method: 'POST',
             body: {
               socket_id: socketId,
