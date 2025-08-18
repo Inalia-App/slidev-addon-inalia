@@ -7,6 +7,14 @@ export interface Talk {
     iso: string
     time_ago: string
   }
+  state: {
+    disabled: boolean
+    running: boolean
+    finished: boolean
+  }
+  slidev: {
+    run_to_continue: boolean
+  }
   urls: {
     details: string
     overview: string
