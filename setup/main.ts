@@ -19,8 +19,8 @@ export default defineAppSetup(async ({ app }) => {
   window.Pusher = Pusher
   window.Echo = new Echo({
     broadcaster: 'reverb',
-    key: import.meta.env.VITE_REVERB_APP_KEY,
-    wsHost: import.meta.env.VITE_REVERB_HOST,
+    key: import.meta.env.VITE_REVERB_APP_KEY ?? '9b9ehgq0ba2hjomeiuyu',
+    wsHost: import.meta.env.VITE_REVERB_HOST ?? 'ws.inalia.app',
     wsPort: import.meta.env.VITE_REVERB_PORT ?? 80,
     wssPort: import.meta.env.VITE_REVERB_PORT ?? 443,
     forceTLS: (import.meta.env.VITE_REVERB_SCHEME ?? 'https') === 'https',
