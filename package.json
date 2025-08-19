@@ -1,7 +1,7 @@
 {
   "name": "slidev-addon-inalia",
   "type": "module",
-  "version": "0.1.20",
+  "version": "0.2.0",
   "packageManager": "pnpm@10.8.1",
   "keywords": [
     "slidev",
