@@ -18,6 +18,7 @@ export interface Talk {
   urls: {
     details: string
     overview: string
+    dashboard: string
     tiny_overview: string
     tiny_feedback: string
   }
