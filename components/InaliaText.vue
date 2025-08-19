@@ -1,6 +1,6 @@
 <script lang="ts" setup>
 import type { DeepReadonly, PropType } from 'vue'
-import type { TextData } from '../types'
+import type { TextData } from '../types/data'
 
 defineProps({
   data: {

@@ -5,6 +5,8 @@ import type { Inalia } from '../types/inalia'
 import type { ChartType, MultipleSelectQuestion, Question, QuestionType, SingleSelectQuestion, TextQuestion } from '../types/question'
 import { computed, onMounted, readonly, ref, shallowRef, toRef, toValue, watch, watchEffect } from 'vue'
 import { fetchQuestion } from '../utils/api'
+import { answersChannel } from '../utils/channels'
+import { EVENT_ANSWER_CREATED } from '../utils/events'
 
 interface UseInaliaQuestionOptions {
   /**
@@ -111,7 +113,7 @@ export function useInaliaQuestion(defaultQuestionId: MaybeRefOrGetter<number>, o
     isStatic.value = true
   })
 
-  const eventName = computed(() => `questions.${question.value?.id}.answers`)
+  const eventName = computed(() => answersChannel(question.value?.id))
 
   onMounted(() => {
     if (isStatic.value) {
@@ -174,9 +176,9 @@ export function useInaliaQuestion(defaultQuestionId: MaybeRefOrGetter<number>, o
   }
 
   function startListening(): void {
-    window.Echo.private(eventName.value)
-
-      .listen('AnswerCreated', (event: Answer) => {
+    window.Echo
+      .private(eventName.value)
+      .listen(EVENT_ANSWER_CREATED, (event: Answer) => {
         if (question.value!.type === 'text') {
           (data.value as string[]).push((event as TextAnswer).value)
         }
@@ -217,7 +219,6 @@ export function useInaliaQuestion(defaultQuestionId: MaybeRefOrGetter<number>, o
     window.Echo.leave(eventName.value)
   }
 
-  // TODO: improve types like the `state` in Pinia Colada
   return {
     isStatic: readonly(isStatic),
 

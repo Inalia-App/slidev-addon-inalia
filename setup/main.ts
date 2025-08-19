@@ -4,15 +4,10 @@ import { ofetch } from 'ofetch'
 import Pusher from 'pusher-js'
 import { fetchTalk } from '../utils/api'
 
-/**
- * Initializes the Laravel Echo client for real-time event broadcasting
- * and sets up the necessary configurations for authentication and connection.
- */
 export default defineAppSetup(async ({ app }) => {
   if (!import.meta.env.VITE_REVERB_APP_KEY) {
     console.warn('Inalia is running in static mode. Set up environment variables to enable real-time features.')
 
-    app.provide('talk', null) // Can only be null in static mode.
     return
   }
 
@@ -50,6 +45,5 @@ export default defineAppSetup(async ({ app }) => {
     },
   })
 
-  const talk = await fetchTalk()
-  app.provide('talk', talk)
+  app.provide('talk', await fetchTalk())
 })

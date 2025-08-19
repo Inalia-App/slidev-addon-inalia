@@ -21,8 +21,6 @@ export function useInaliaAudienceQuestionHighlighted(params: useInaliaAudienceQu
   const audienceQuestion = ref<AudienceQuestion | null>(null)
 
   if (!talk) {
-    console.warn('Inalia is running in static mode. Audience question highlighting is disabled.')
-
     return {
       audienceQuestion: readonly(audienceQuestion),
       clearAudienceQuestion: () => {},
@@ -57,7 +55,8 @@ export function useInaliaAudienceQuestionHighlighted(params: useInaliaAudienceQu
 
     window.Echo
       .private(talkChannel(talk.id))
-      .stopListening('AudienceQuestionHighlighted')
+      .stopListening(EVENT_AUDIENCE_QUESTION_HIGHLIGHTED)
+      .stopListening(EVENT_AUDIENCE_QUESTION_UNHIGHLIGHTED)
   }
 
   function clearAudienceQuestion(): void {

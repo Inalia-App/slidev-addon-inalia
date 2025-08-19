@@ -1,6 +1,7 @@
 <script lang="ts" setup>
 import type { DeepReadonly, PropType } from 'vue'
-import type { ChartType, SelectData } from '../types'
+import type { SelectData } from '../types/data'
+import type { ChartType } from '../types/question'
 import InaliaChartBar from './InaliaChartBar.vue'
 import InaliaChartDonut from './InaliaChartDonut.vue'
 

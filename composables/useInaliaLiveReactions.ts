@@ -18,8 +18,6 @@ export function useInaliaLiveReactions(): UseInaliaLiveReactions {
   const liveReactions = ref<AugmentedLiveReaction[]>([])
 
   if (!talk) {
-    console.warn('Inalia is running in static mode. Live reactions are disabled.')
-
     return {
       liveReactions: readonly(liveReactions),
       listen: () => {},

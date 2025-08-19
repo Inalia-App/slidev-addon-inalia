@@ -1,7 +1,3 @@
-<script lang="ts" setup>
-
-</script>
-
 <template>
   <a href="https://inalia.app" target="_blank" class="border-0!">
     <span class="flex text-xs flex-row items-center gap-1">

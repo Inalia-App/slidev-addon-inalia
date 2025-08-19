@@ -7,7 +7,8 @@ interface UseInaliaTalk {
   run: () => Promise<void>
 }
 export function useInaliaTalk(): UseInaliaTalk {
-  const talk = inject<Talk | null>('talk', null) // Can only be null in static mode because the fetch is awaited in the setup function.
+  // If the talk is null, the addon is considered to be in static mode.
+  const talk = inject<Talk | null>('talk', null)
 
   async function run(): Promise<void> {
     await runTalk()

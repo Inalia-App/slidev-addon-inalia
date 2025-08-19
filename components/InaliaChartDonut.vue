@@ -1,6 +1,6 @@
 <script lang="ts" setup>
 import type { DeepReadonly, PropType } from 'vue'
-import type { SelectData } from '../types'
+import type { SelectData } from '../types/data'
 import { useSlideContext } from '@slidev/client'
 import { VisDonut, VisSingleContainer } from '@unovis/vue'
 

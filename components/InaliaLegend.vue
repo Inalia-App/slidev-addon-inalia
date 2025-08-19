@@ -1,6 +1,6 @@
 <script lang="ts" setup>
 import type { PropType } from 'vue'
-import type { SelectData } from '../types'
+import type { SelectData } from '../types/data'
 import { VisBulletLegend } from '@unovis/vue'
 import { computed } from 'vue'
 
