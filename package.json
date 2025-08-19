@@ -3,6 +3,9 @@
   "type": "module",
   "version": "0.2.1",
   "packageManager": "pnpm@10.15.0",
+  "repository": {
+    "url": "https://github.com/Inalia-App/slidev-addon-inalia"
+  },
   "keywords": [
     "slidev",
     "slidev-addon",
