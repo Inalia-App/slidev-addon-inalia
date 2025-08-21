@@ -81,6 +81,7 @@
   "devDependencies": {
     "@antfu/eslint-config": "^5.2.1",
     "@unocss/eslint-plugin": "^66.4.2",
+    "@vue/tsconfig": "^0.8.1",
     "bumpp": "^10.2.3",
     "eslint": "^9.33.0",
     "mkdist": "^2.3.0",
