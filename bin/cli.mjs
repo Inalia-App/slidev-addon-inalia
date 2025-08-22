@@ -4,7 +4,7 @@ import { access, readFile, writeFile } from 'node:fs/promises'
 import { createRequire } from 'node:module'
 import { resolve } from 'node:path'
 import process from 'node:process'
-import { createInterface } from 'node:readline'
+import * as p from '@clack/prompts'
 import { cac } from 'cac'
 import { installDependencies } from 'nypm'
 
@@ -12,21 +12,6 @@ const require = createRequire(import.meta.url)
 const packageJson = require('../package.json')
 
 const cli = cac('slidev-addon-inalia')
-
-function createReadlineInterface() {
-  return createInterface({
-    input: process.stdin,
-    output: process.stdout,
-  })
-}
-
-function question(rl, prompt) {
-  return new Promise((resolve) => {
-    rl.question(prompt, (answer) => {
-      resolve(answer.trim())
-    })
-  })
-}
 
 async function checkFileExists(filePath) {
   try {
@@ -46,7 +31,6 @@ VITE_INALIA_TALK_NUMBER=${talkNumber}
 
   const envPath = resolve(process.cwd(), '.env')
   await writeFile(envPath, envContent, 'utf8')
-  console.log('✅ Created .env file with your configuration')
 }
 
 async function updateSlidesFile() {
@@ -55,9 +39,7 @@ async function updateSlidesFile() {
   // Check if slides.md exists
   const slidesExists = await checkFileExists(slidesPath)
   if (!slidesExists) {
-    console.log('❌ slides.md not found in current directory')
-    console.log('Please run this command in your Slidev project directory')
-    return false
+    throw new Error('slides.md not found in current directory. Please run this command in your Slidev project directory.')
   }
 
   try {
@@ -65,7 +47,6 @@ async function updateSlidesFile() {
 
     // Check if addon is already configured
     if (content.includes('slidev-addon-inalia')) {
-      console.log('✅ slidev-addon-inalia is already configured in slides.md')
       return true
     }
 
@@ -120,115 +101,116 @@ addons:
     }
 
     await writeFile(slidesPath, newContent, 'utf8')
-    console.log('✅ Added slidev-addon-inalia to slides.md frontmatter')
     return true
   }
   catch (error) {
-    console.error('❌ Error updating slides.md:', error.message)
-    return false
+    throw new Error(`Error updating slides.md: ${error.message}`)
   }
 }
 
 async function installAddon() {
   try {
-    console.log('📦 Installing slidev-addon-inalia...')
     await installDependencies(['slidev-addon-inalia'], {
       cwd: process.cwd(),
       dev: false,
       packageManager: 'npm',
     })
-    console.log('✅ Successfully installed slidev-addon-inalia')
     return true
   }
   catch (error) {
-    console.error('❌ Error installing package:', error.message)
-    console.log('💡 You can manually install the package with:')
-    console.log('   npm install slidev-addon-inalia')
-    console.log('   or')
-    console.log('   pnpm add slidev-addon-inalia')
-    console.log('   or')
-    console.log('   yarn add slidev-addon-inalia')
-    return false
+    throw new Error(`Error installing package: ${error.message}. You can manually install with: npm install slidev-addon-inalia`)
   }
 }
 
 cli
   .command('[...args]', 'Setup Slidev Addon Inalia for your presentation')
   .action(async () => {
-    console.log('🎯 Welcome to Slidev Addon Inalia Setup!')
-    console.log('')
-
-    const rl = createReadlineInterface()
+    p.intro('🎯 Welcome to Slidev Addon Inalia Setup!')
 
     try {
       // Get username
-      const username = await question(rl, '👤 Enter your Inalia username: ')
-      if (!username) {
-        console.log('❌ Username is required')
-        rl.close()
-        process.exit(1)
+      const username = await p.text({
+        message: '👤 Enter your Inalia username:',
+        placeholder: 'your-username',
+        validate: (value) => {
+          if (!value.trim())
+            return 'Username is required'
+        },
+      })
+
+      if (p.isCancel(username)) {
+        p.cancel('Setup cancelled.')
+        process.exit(0)
       }
 
       // Get talk ID
-      const talkNumber = await question(rl, '🎤 Enter your talk ID: ')
-      if (!talkNumber) {
-        console.log('❌ Talk ID is required')
-        rl.close()
-        process.exit(1)
+      const talkNumber = await p.text({
+        message: '🎤 Enter your talk ID:',
+        placeholder: 'talk-123',
+        validate: (value) => {
+          if (!value.trim())
+            return 'Talk ID is required'
+        },
+      })
+
+      if (p.isCancel(talkNumber)) {
+        p.cancel('Setup cancelled.')
+        process.exit(0)
       }
 
       // Show token help and get token
-      console.log('')
-      console.log('🔑 To get your API token, visit: https://inalia.app/dashboard/settings/tokens')
-      console.log('')
-      const apiKey = await question(rl, '🔐 Enter your API token: ')
-      if (!apiKey) {
-        console.log('❌ API token is required')
-        rl.close()
-        process.exit(1)
+      p.note('🔑 To get your API token, visit: https://inalia.app/dashboard/settings/tokens')
+
+      const apiKey = await p.password({
+        message: '🔐 Enter your API token:',
+        validate: (value) => {
+          if (!value.trim())
+            return 'API token is required'
+        },
+      })
+
+      if (p.isCancel(apiKey)) {
+        p.cancel('Setup cancelled.')
+        process.exit(0)
       }
 
-      rl.close()
-
-      console.log('')
-      console.log('⚙️  Setting up your project...')
-      console.log('')
+      const s = p.spinner()
+      s.start('⚙️  Setting up your project...')
 
       // Create .env file
+      s.message('📝 Creating .env file...')
       await createEnvFile(username, talkNumber, apiKey)
 
       // Install the addon package
-      const installSuccess = await installAddon()
+      s.message('📦 Installing slidev-addon-inalia...')
+      let installSuccess = true
+      try {
+        await installAddon()
+      }
+      catch {
+        installSuccess = false
+      }
 
       // Update slides.md
-      const slidesSuccess = await updateSlidesFile()
-      if (!slidesSuccess) {
-        process.exit(1)
+      s.message('📝 Updating slides.md...')
+      await updateSlidesFile()
+
+      s.stop()
+
+      if (installSuccess) {
+        p.outro('🎉 Setup complete! Your Slidev presentation is now ready to use Inalia.')
+      }
+      else {
+        p.outro('⚠️  Setup partially complete! Please install the package manually.')
       }
 
-      console.log('')
-      if (installSuccess) {
-        console.log('🎉 Setup complete! Your Slidev presentation is now ready to use Inalia.')
-      }
-      else {
-        console.log('⚠️  Setup partially complete! Please install the package manually.')
-      }
-      console.log('')
-      console.log('Next steps:')
-      if (!installSuccess) {
-        console.log('1. Install the addon: npm install slidev-addon-inalia')
-        console.log('2. Run `npm run dev` to start your presentation')
-      }
-      else {
-        console.log('1. Run `npm run dev` to start your presentation')
-      }
-      console.log('2. Use <Inalia /> components in your slides')
-      console.log('3. Visit https://docs.inalia.app/slidev-addon-inalia for documentation')
-      console.log('')
+      p.note(`Next steps:
+${!installSuccess ? '1. Install the addon: npm install slidev-addon-inalia\n2. Run \`npm run dev\` to start your presentation' : '1. Run \`npm run dev\` to start your presentation'}
+2. Use <Inalia /> components in your slides
+3. Visit https://docs.inalia.app/slidev-addon-inalia for documentation`)
     }
     catch (error) {
-      console.error('❌ Setup failed:', error.message)
-      rl.close()
+      p.cancel(`❌ Setup failed: ${error.message}`)
       process.exit(1)
     }
   })
