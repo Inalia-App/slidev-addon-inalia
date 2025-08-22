@@ -34,7 +34,11 @@
   },
   "main": "./dist/index.mjs",
   "types": "./index.d.ts",
+  "bin": {
+    "slidev-addon-inalia": "./bin/cli.mjs"
+  },
   "files": [
+    "bin",
     "components",
     "composables",
     "dist",
@@ -69,7 +73,9 @@
     "@slidev/theme-default": "latest",
     "@unovis/ts": "1.4.3-beta.0",
     "@unovis/vue": "1.4.3-beta.0",
+    "cac": "^6.7.14",
     "laravel-echo": "^2.2.0",
+    "nypm": "^0.4.0",
     "ofetch": "^1.4.1",
     "pusher-js": "8.4.0-rc2",
     "rc9": "^2.1.2",
