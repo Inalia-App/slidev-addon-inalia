@@ -51,6 +51,7 @@
 
   8% {
     opacity: 1;
+    transform: translateY(-30px);
   }
 
   85% {
