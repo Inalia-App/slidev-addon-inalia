@@ -14,25 +14,10 @@
   "exports": {
     ".": {
       "types": "./index.d.ts",
-      "import": "./dist/index.mjs"
-    },
-    "./components/*": {
-      "import": "./dist/components/*"
-    },
-    "./composables/*": {
-      "types": "./dist/composables/*.d.ts",
-      "import": "./dist/composables/*.mjs"
-    },
-    "./utils/*": {
-      "types": "./dist/utils/*.d.ts",
-      "import": "./dist/utils/*.mjs"
-    },
-    "./types/*": {
-      "types": "./dist/types/*.d.ts",
-      "import": "./dist/types/*.mjs"
+      "import": "./dist/index.js"
     }
   },
-  "main": "./dist/index.mjs",
+  "main": "./dist/index.js",
   "types": "./index.d.ts",
   "files": [
     "components",
@@ -57,7 +42,7 @@
   },
   "scripts": {
     "build": "slidev build",
-    "prepack": "unbuild",
+    "prepack": "tsdown",
     "dev": "slidev --open",
     "export": "slidev export",
     "lint": "eslint .",
@@ -84,8 +69,9 @@
     "@vue/tsconfig": "^0.8.1",
     "bumpp": "^10.2.3",
     "eslint": "^9.33.0",
-    "mkdist": "^2.3.0",
+    "tsdown": "^0.14.2",
     "typescript": "^5.9.2",
-    "unbuild": "^3.6.1"
+    "unplugin-vue": "^7.0.1",
+    "vue-tsc": "^3.0.6"
   }
 }
