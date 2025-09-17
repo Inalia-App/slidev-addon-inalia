@@ -110,11 +110,7 @@ addons:
 
 async function installAddon() {
   try {
-    await installDependencies(['slidev-addon-inalia'], {
-      cwd: process.cwd(),
-      dev: false,
-      packageManager: 'npm',
-    })
+    await installDependencies(['slidev-addon-inalia'])
     return true
   }
   catch (error) {
@@ -159,7 +155,7 @@ cli
       }
 
       // Show token help and get token
-      p.note('🔑 To get your API token, visit: https://inalia.app/dashboard/settings/tokens')
+      p.note('🔑 To get your API token, visit: https://inalia.app/dashboard/settings/tokens', 'About API Token')
 
       const apiKey = await p.password({
         message: '🔐 Enter your API token:',
@@ -198,16 +194,20 @@ cli
       s.stop()
 
       if (installSuccess) {
-        p.outro('🎉 Setup complete! Your Slidev presentation is now ready to use Inalia.')
+        p.log.success('🎉 Setup complete! Your Slidev presentation is now ready to use Inalia.')
       }
       else {
-        p.outro('⚠️  Setup partially complete! Please install the package manually.')
+        p.log.warn('⚠️  Setup partially complete! Please install the package manually.')
       }
 
       p.note(`Next steps:
 ${!installSuccess ? '1. Install the addon: npm install slidev-addon-inalia\n2. Run \`npm run dev\` to start your presentation' : '1. Run \`npm run dev\` to start your presentation'}
 2. Use <Inalia /> components in your slides
-3. Visit https://docs.inalia.app/slidev-addon-inalia for documentation`)
+3. Visit https://docs.inalia.app/slidev-addon-inalia for documentation`, 'Next Steps')
+
+      p.outro('🚀 Happy presenting with Inalia!')
+
+      process.exit(0)
     }
     catch (error) {
       p.cancel(`❌ Setup failed: ${error.message}`)
