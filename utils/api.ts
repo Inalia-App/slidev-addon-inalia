@@ -3,7 +3,7 @@ import type { Talk } from '../types/talk'
 import { ofetch } from 'ofetch'
 
 export const api = ofetch.create({
-  baseURL: import.meta.env.VITE_INALIA_ENDPOINT,
+  baseURL: import.meta.env.VITE_INALIA_ENDPOINT ?? 'https://inalia.app',
   headers: {
     Accept: 'application/json',
     Authorization: `Bearer ${import.meta.env.VITE_INALIA_API_KEY}`,
