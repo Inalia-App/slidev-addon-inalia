@@ -2,7 +2,7 @@
   "name": "slidev-addon-inalia",
   "type": "module",
   "version": "0.2.6",
-  "packageManager": "pnpm@10.15.0",
+  "packageManager": "pnpm@10.15.1",
   "repository": {
     "url": "https://github.com/Inalia-App/slidev-addon-inalia"
   },
@@ -65,20 +65,21 @@
     "ofetch": "^1.4.1",
     "pusher-js": "8.4.0-rc2",
     "rc9": "^2.1.2",
-    "reka-ui": "^2.4.1",
+    "reka-ui": "^2.5.0",
     "uncrypto": "^0.1.3",
     "uqr": "^0.1.2",
-    "vue": "^3.5.18"
+    "vue": "^3.5.21"
   },
   "devDependencies": {
-    "@antfu/eslint-config": "^5.2.1",
-    "@unocss/eslint-plugin": "^66.4.2",
+    "@antfu/eslint-config": "^5.3.0",
+    "@unocss/eslint-plugin": "^66.5.1",
     "@vue/tsconfig": "^0.8.1",
     "bumpp": "^10.2.3",
-    "eslint": "^9.33.0",
-    "tsdown": "^0.14.2",
+    "eslint": "^9.35.0",
+    "taze": "^19.6.0",
+    "tsdown": "^0.15.2",
     "typescript": "^5.9.2",
     "unplugin-vue": "^7.0.1",
-    "vue-tsc": "^3.0.6"
+    "vue-tsc": "^3.0.7"
   }
 }
