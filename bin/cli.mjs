@@ -1,15 +1,12 @@
 #!/usr/bin/env node
 
 import { access, readFile, writeFile } from 'node:fs/promises'
-import { createRequire } from 'node:module'
 import { resolve } from 'node:path'
 import process from 'node:process'
 import * as p from '@clack/prompts'
 import { cac } from 'cac'
-import { installDependencies } from 'nypm'
-
-const require = createRequire(import.meta.url)
-const packageJson = require('../package.json')
+import { addDependency } from 'nypm'
+import packageJSON from '../package.json' with { type: 'json' }
 
 const cli = cac('slidev-addon-inalia')
 
@@ -63,7 +60,7 @@ async function updateSlidesFile() {
         // Add to existing addons array
         const updatedFrontmatter = existingFrontmatter.replace(
           /addons:\s*\[(.*?)\]/s,
-          (match, addons) => {
+          (_, addons) => {
             const cleanAddons = addons.trim()
             if (cleanAddons) {
               return `addons: [${cleanAddons}, slidev-addon-inalia]`
@@ -110,7 +107,9 @@ addons:
 
 async function installAddon() {
   try {
-    await installDependencies(['slidev-addon-inalia'])
+    await addDependency('slidev-addon-inalia', {
+      silent: true,
+    })
     return true
   }
   catch (error) {
@@ -191,7 +190,7 @@ cli
       s.message('📝 Updating slides.md...')
       await updateSlidesFile()
 
-      s.stop()
+      s.stop('✅ Setup tasks completed!')
 
       if (installSuccess) {
         p.log.success('🎉 Setup complete! Your Slidev presentation is now ready to use Inalia.')
@@ -216,6 +215,6 @@ ${!installSuccess ? '1. Install the addon: npm install slidev-addon-inalia\n2. R
   })
 
 cli.help()
-cli.version(packageJson.version)
+cli.version(packageJSON.version)
 
 cli.parse()
