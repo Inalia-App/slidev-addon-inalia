@@ -1,11 +1,11 @@
 import type { Talk } from '../types/talk'
 import { inject } from 'vue'
-import { demoTalk, runTalk } from '../utils/api'
+import { runTalk, startDemoMode, stopDemoMode } from '../utils/api'
 
 interface UseInaliaTalk {
   talk: Talk | null
   run: () => Promise<void>
-  demo: () => Promise<void>
+  toggleDemoMode: () => Promise<void>
 }
 export function useInaliaTalk(): UseInaliaTalk {
   // If the talk is null, the addon is considered to be in static mode.
@@ -17,8 +17,13 @@ export function useInaliaTalk(): UseInaliaTalk {
     window.location.reload()
   }
 
-  async function demo(): Promise<void> {
-    await demoTalk()
+  async function toggleDemoMode(): Promise<void> {
+    if (talk?.demo_mode) {
+      await stopDemoMode()
+    }
+    else {
+      await startDemoMode()
+    }
 
     window.location.reload()
   }
@@ -26,6 +31,6 @@ export function useInaliaTalk(): UseInaliaTalk {
   return {
     talk,
     run,
-    demo,
+    toggleDemoMode,
   }
 }
