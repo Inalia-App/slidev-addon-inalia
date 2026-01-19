@@ -11,6 +11,7 @@ export interface Talk {
     disabled: boolean
     running: boolean
     finished: boolean
+    demo: boolean
   }
   slidev: {
     run_to_continue: boolean

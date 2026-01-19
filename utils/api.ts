@@ -20,6 +20,12 @@ export async function runTalk(): Promise<void> {
   }).then(response => response.data)
 }
 
+export async function demoTalk(): Promise<void> {
+  return api(`/api/${import.meta.env.VITE_INALIA_USERNAME}/talks/${import.meta.env.VITE_INALIA_TALK_NUMBER}/demo`, {
+    method: 'POST',
+  }).then(response => response.data)
+}
+
 export async function fetchQuestion(questionNumber: number): Promise<Question> {
   return api<{ data: Question }>(`/api/${import.meta.env.VITE_INALIA_USERNAME}/talks/${import.meta.env.VITE_INALIA_TALK_NUMBER}/questions/${questionNumber}`).then(response => response.data)
 }

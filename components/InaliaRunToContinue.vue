@@ -1,10 +1,15 @@
 <script lang="ts" setup>
 const emit = defineEmits<{
   run: [void]
+  demo: [void]
 }>()
 
 function onRun() {
   emit('run')
+}
+
+function onDemo() {
+  emit('demo')
 }
 </script>
 
@@ -14,8 +19,14 @@ function onRun() {
       Run your talk to activate all functionalities.
     </p>
 
-    <button @click="onRun">
-      Run Talk
-    </button>
+    <div class="flex gap-2">
+      <button @click="onDemo">
+        Demo Mode
+      </button>
+
+      <button @click="onRun">
+        Run Talk
+      </button>
+    </div>
   </div>
 </template>
