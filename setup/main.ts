@@ -7,8 +7,8 @@ import { fetchTalk } from '../utils/api'
 
 export default defineAppSetup(async ({ app }) => {
   if (!import.meta.env.VITE_INALIA_API_KEY
-    && !import.meta.env.VITE_INALIA_USERNAME
-    && !import.meta.env.VITE_INALIA_TALK_NUMBER) {
+    || !import.meta.env.VITE_INALIA_USERNAME
+    || !import.meta.env.VITE_INALIA_TALK_NUMBER) {
     console.warn('Inalia running in static mode — real-time features are disabled.')
 
     // eslint-disable-next-line no-console
