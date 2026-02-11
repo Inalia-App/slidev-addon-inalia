@@ -1,4 +1,4 @@
 /// <reference types="./vite-env" />
 /// <reference types="./window" />
 
-export * from './dist/index.js'
+export * from './dist/index.d.ts'
