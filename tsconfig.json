@@ -4,19 +4,27 @@
     "baseUrl": "."
   },
   "include": [
+    "slidev.d.ts",
+    "index.ts",
+    "index.d.ts",
     "window.d.ts",
     "vite-env.d.ts",
-    "slidev.d.ts",
-    "index.d.ts",
-    "index.ts",
     "custom-nav-controls.vue",
     "global-bottom.vue",
     "setup/*.ts",
-    "types/*.ts",
-    "utils/*.ts",
-    "composables/*.ts",
     "layouts/*.vue",
     "components/*.vue",
-    "tests/**/*.ts"
+    "composables/*.ts",
+    "utils/*.ts",
+    "types/*.ts",
+    "tests/**/*.ts",
+    "lite.ts",
+    "lite.d.ts",
+    "vite-env-lite.d.ts",
+    "layouts/lite/*.vue",
+    "components/lite/*.vue",
+    "composables/lite/*.ts",
+    "types/lite/*.ts",
+    "utils/lite/*.ts"
   ]
 }

@@ -15,6 +15,10 @@
     ".": {
       "types": "./index.d.ts",
       "import": "./dist/index.js"
+    },
+    "./lite": {
+      "types": "./lite/index.d.ts",
+      "import": "./dist/lite.js"
     }
   },
   "main": "./dist/index.js",
@@ -48,6 +52,7 @@
     "build": "slidev build",
     "prepack": "tsdown",
     "dev": "slidev --open",
+    "dev:lite": "slidev --open slides.lite.md",
     "export": "slidev export",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
@@ -63,6 +68,7 @@
     "@slidev/theme-default": "latest",
     "@unovis/ts": "1.4.3-beta.0",
     "@unovis/vue": "1.4.3-beta.0",
+    "@vueuse/core": "^14.2.1",
     "cac": "^6.7.14",
     "laravel-echo": "^2.2.0",
     "nypm": "^0.4.0",
