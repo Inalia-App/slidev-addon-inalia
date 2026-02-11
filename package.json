@@ -42,6 +42,7 @@
     "tsconfig.json",
     "types",
     "utils",
+    "vite-env-lite.d.ts",
     "vite-env.d.ts",
     "vite.config.ts",
     "window.d.ts"

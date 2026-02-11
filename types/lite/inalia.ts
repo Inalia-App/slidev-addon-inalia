@@ -1,5 +1,5 @@
 import type { DeepReadonly, Ref, ShallowRef } from 'vue'
-import type { Data } from './data'
+import type { Data } from '../data'
 import type { Question } from './question'
 
 export interface InaliaLite {
