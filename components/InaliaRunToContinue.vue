@@ -1,4 +1,6 @@
 <script lang="ts" setup>
+import Alert from './internals/Alert.vue'
+
 const emit = defineEmits<{
   run: [void]
 }>()
@@ -9,13 +11,13 @@ function onRun() {
 </script>
 
 <template>
-  <div class="flex flex-row items-center bg-red-500 text-white p-4 justify-between">
-    <p>
-      Run your talk to activate all functionalities.
-    </p>
-
-    <button @click="onRun">
-      Run Talk
-    </button>
-  </div>
+  <Alert
+    message="Run your talk to activate all functionalities."
+  >
+    <template #actions>
+      <button @click="onRun">
+        Run Talk
+      </button>
+    </template>
+  </Alert>
 </template>

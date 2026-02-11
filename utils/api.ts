@@ -20,6 +20,17 @@ export async function runTalk(): Promise<void> {
   }).then(response => response.data)
 }
 
+export async function startDemoMode(): Promise<void> {
+  return api(`/api/${import.meta.env.VITE_INALIA_USERNAME}/talks/${import.meta.env.VITE_INALIA_TALK_NUMBER}/demo-mode`, {
+    method: 'POST',
+  }).then(response => response.data)
+}
+
+export async function stopDemoMode(): Promise<void> {
+  return api(`/api/${import.meta.env.VITE_INALIA_USERNAME}/talks/${import.meta.env.VITE_INALIA_TALK_NUMBER}/demo-mode`, {
+    method: 'DELETE',
+  }).then(response => response.data)
+}
 export async function fetchQuestion(questionNumber: number): Promise<Question> {
   return api<{ data: Question }>(`/api/${import.meta.env.VITE_INALIA_USERNAME}/talks/${import.meta.env.VITE_INALIA_TALK_NUMBER}/questions/${questionNumber}`).then(response => response.data)
 }

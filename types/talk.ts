@@ -7,6 +7,7 @@ export interface Talk {
     iso: string
     time_ago: string
   }
+  demo_mode: boolean
   state: {
     disabled: boolean
     running: boolean

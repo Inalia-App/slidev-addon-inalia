@@ -3,7 +3,7 @@ import IconButton from './components/internals/IconButton.vue'
 import VerticalDivider from './components/internals/VerticalDivider.vue'
 import { useInaliaTalk } from './composables/useInaliaTalk'
 
-const { talk } = useInaliaTalk()
+const { talk, toggleDemoMode } = useInaliaTalk()
 </script>
 
 <template>
@@ -18,6 +18,13 @@ const { talk } = useInaliaTalk()
     </IconButton>
     <IconButton title="Overview" as="a" :href="talk.urls.overview" target="_blank">
       <div class="i-carbon:product" />
+    </IconButton>
+    <VerticalDivider />
+    <IconButton
+      :title="talk.demo_mode ? 'Exit Demo Mode' : 'Enter Demo Mode'"
+      @click="toggleDemoMode"
+    >
+      <div class="i-carbon:debug" />
     </IconButton>
   </template>
 </template>

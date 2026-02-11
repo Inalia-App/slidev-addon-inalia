@@ -10,5 +10,9 @@ const { talk, run } = useInaliaTalk()
 <template>
   <InaliaLiveReactions class="w-full h-full relative" />
   <InaliaAudienceQuestionHighlighted class="absolute inset-0" />
-  <InaliaRunToContinue v-if="talk?.slidev.run_to_continue" class="absolute z-10 bottom-0 inset-x-0" @run="run" />
+  <InaliaRunToContinue
+    v-if="talk?.slidev.run_to_continue"
+    class="absolute z-10 bottom-0 inset-x-0"
+    @run="run"
+  />
 </template>
