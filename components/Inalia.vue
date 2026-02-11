@@ -1,6 +1,8 @@
-<script lang="ts" setup>
+<script lang="ts">
 import type { Data, SelectData, TextData } from '../types/data'
 import type { ChartType, QuestionType } from '../types/question'
+import { tv } from 'tailwind-variants'
+import { computed } from 'vue'
 import { useInaliaQuestion } from '../composables/useInaliaQuestion'
 import InaliaDefaultLayout from './InaliaDefaultLayout.vue'
 import InaliaLegend from './InaliaLegend.vue'
@@ -8,13 +10,36 @@ import InaliaLoading from './InaliaLoading.vue'
 import InaliaSelect from './InaliaSelect.vue'
 import InaliaText from './InaliaText.vue'
 
-const props = withDefaults(defineProps<{
+const inalia = tv({
+  slots: {
+    base: '',
+    textData: 'inalia overflow-auto inalia-data-text',
+    selectData: 'inalia h-full inalia-data-select',
+    legend: '',
+  },
+})
+
+export interface InaliaProps {
   questionId?: number
   question?: string
   type?: QuestionType
   chart?: ChartType
-  data?: Data // TODO: dynamic types depending on question type
-}>(), { questionId: 0 })
+  data?: Data
+  class?: any
+  ui?: Partial<typeof inalia.slots>
+}
+export interface InaliaEmits {}
+export interface InaliaSlots {
+  default?: (props: { isStatic: boolean, question: any, data: any }) => any
+}
+</script>
+
+<script lang="ts" setup>
+const props = withDefaults(defineProps<InaliaProps>(), { questionId: 0 })
+defineEmits<InaliaEmits>()
+defineSlots<InaliaSlots>()
+
+const ui = computed(() => inalia())
 
 const { isStatic, question, data } = useInaliaQuestion(() => props.questionId, {
   staticContent: {
@@ -28,7 +53,7 @@ const { isStatic, question, data } = useInaliaQuestion(() => props.questionId, {
 
 <template>
   <template v-if="question">
-    <InaliaDefaultLayout :question="question">
+    <InaliaDefaultLayout :question="question" :class="ui.base({ class: [props.ui?.base, props.class] })">
       <slot
         :is-static="isStatic"
         :question="question"
@@ -39,7 +64,7 @@ const { isStatic, question, data } = useInaliaQuestion(() => props.questionId, {
             question.type === 'text'
               && data
           "
-          class="inalia overflow-auto inalia-data-text"
+          :class="ui.textData({ class: props.ui?.textData })"
           :data="data as TextData"
         />
 
@@ -51,7 +76,7 @@ const { isStatic, question, data } = useInaliaQuestion(() => props.questionId, {
           "
           :data="data as SelectData"
           :chart="question.options.chart_type"
-          class="inalia h-full inalia-data-select"
+          :class="ui.selectData({ class: props.ui?.selectData })"
         />
 
         <InaliaLegend
@@ -61,6 +86,7 @@ const { isStatic, question, data } = useInaliaQuestion(() => props.questionId, {
               && data
           "
           :data="data as SelectData"
+          :class="ui.legend({ class: props.ui?.legend })"
         />
       </slot>
     </InaliaDefaultLayout>

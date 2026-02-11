@@ -2,6 +2,6 @@
 
 exports[`inaliaRunToContinue > renders default message 1`] = `
 "<div class="flex flex-row items-center bg-red-500 text-white p-4 justify-between">
-  <p> Run your talk to activate all functionalities. </p><button> Run Talk </button>
+  <p> Run your talk to activate all functionalities. </p><button class=""> Run Talk </button>
 </div>"
 `;

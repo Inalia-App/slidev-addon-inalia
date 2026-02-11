@@ -4,14 +4,14 @@ exports[`inaliaText > renders empty list when no data provided 1`] = `"<ul class
 
 exports[`inaliaText > renders multiple text items 1`] = `
 "<ul class="inalia inalia-data-text flex gap-x-8 gap-y-2 flex-wrap">
-  <li>First answer</li>
-  <li>Second answer</li>
-  <li>Third answer</li>
+  <li class="">First answer</li>
+  <li class="">Second answer</li>
+  <li class="">Third answer</li>
 </ul>"
 `;
 
 exports[`inaliaText > renders single text item 1`] = `
 "<ul class="inalia inalia-data-text flex gap-x-8 gap-y-2 flex-wrap">
-  <li>Hello World</li>
+  <li class="">Hello World</li>
 </ul>"
 `;

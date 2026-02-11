@@ -3,7 +3,7 @@
 exports[`inaliaDefaultLayout > renders custom title slot 1`] = `
 "<div class="h-full w-full flex flex-row gap-8">
   <div class="flex flex-col grow">
-    <h1>
+    <h1 class="">
       <h2 class="custom-title">Custom Title</h2>
     </h1>
     <div class="test-content">Test Content</div>
@@ -16,7 +16,7 @@ exports[`inaliaDefaultLayout > renders custom title slot 1`] = `
 exports[`inaliaDefaultLayout > renders layout with QR code when tiny_url provided 1`] = `
 "<div class="h-full w-full flex flex-row gap-8">
   <div class="flex flex-col grow">
-    <h1>What is your favorite color?</h1>
+    <h1 class="">What is your favorite color?</h1>
     <div class="test-content">Test Content</div>
   </div>
   <div class="flex flex-col space-y-2 items-end">
@@ -29,7 +29,7 @@ exports[`inaliaDefaultLayout > renders layout with QR code when tiny_url provide
 exports[`inaliaDefaultLayout > renders layout without QR code when no tiny_url 1`] = `
 "<div class="h-full w-full flex flex-row gap-8">
   <div class="flex flex-col grow">
-    <h1>What is your favorite color?</h1>
+    <h1 class="">What is your favorite color?</h1>
     <div class="test-content">Test Content</div>
   </div>
   <!--v-if-->

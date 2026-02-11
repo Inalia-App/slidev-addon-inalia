@@ -1,7 +1,7 @@
 // Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
-exports[`inaliaShortUrl > renders URL as link with target blank 1`] = `"<a href="https://example.com/test" target="_blank">example.com/test</a>"`;
+exports[`inaliaShortUrl > renders URL as link with target blank 1`] = `"<a href="https://example.com/test" target="_blank" class="">example.com/test</a>"`;
 
-exports[`inaliaShortUrl > renders short URL with http protocol 1`] = `"<a href="http://inalia.app/xyz789" target="_blank">inalia.app/xyz789</a>"`;
+exports[`inaliaShortUrl > renders short URL with http protocol 1`] = `"<a href="http://inalia.app/xyz789" target="_blank" class="">inalia.app/xyz789</a>"`;
 
-exports[`inaliaShortUrl > renders short URL with https protocol 1`] = `"<a href="https://inalia.app/abc123" target="_blank">inalia.app/abc123</a>"`;
+exports[`inaliaShortUrl > renders short URL with https protocol 1`] = `"<a href="https://inalia.app/abc123" target="_blank" class="">inalia.app/abc123</a>"`;
