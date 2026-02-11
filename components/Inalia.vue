@@ -53,7 +53,11 @@ const { isStatic, question, data } = useInaliaQuestion(() => props.questionId, {
 
 <template>
   <template v-if="question">
-    <InaliaDefaultLayout :question="question" :class="ui.base({ class: [props.ui?.base, props.class] })">
+    <InaliaDefaultLayout
+      :question="question.question"
+      :url="question.tiny_url"
+      :class="ui.base({ class: [props.ui?.base, props.class] })"
+    >
       <slot
         :is-static="isStatic"
         :question="question"
