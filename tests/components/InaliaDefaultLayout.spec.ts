@@ -1,6 +1,5 @@
 import { describe, expect, it } from 'vitest'
 import InaliaDefaultLayout from '../../components/InaliaDefaultLayout.vue'
-import InaliaPoweredBy from '../../components/InaliaPoweredBy.vue'
 import { renderComponent } from '../render'
 
 describe('inaliaDefaultLayout', () => {
