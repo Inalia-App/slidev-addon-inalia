@@ -1,0 +1,7 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`inaliaRunToContinue > renders default message 1`] = `
+"<div class="flex flex-row items-center bg-red-500 text-white p-4 justify-between">
+  <p> Run your talk to activate all functionalities. </p><button> Run Talk </button>
+</div>"
+`;

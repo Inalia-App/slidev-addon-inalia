@@ -1,0 +1,17 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`inaliaLegend > renders empty legend when no data 1`] = `"<div data-vis-bullet-legend="" class="inalia inalia-legend css-czc1aa-bullet-legend-component"></div>"`;
+
+exports[`inaliaLegend > renders legend with multiple items 1`] = `
+"<div data-vis-bullet-legend="" class="inalia inalia-legend css-czc1aa-bullet-legend-component">
+  <div class="css-1hu7fn8-legendItem" title="5 - Option A"><span class="css-1k21tua-legendItemBullet" style="box-sizing: content-box;"><svg width="100%" height="100%" viewBox="0 0 30 30"><path stroke="#FF0000" d="M15,0A15,15,0,1,1,-15,0A15,15,0,1,1,15,0" transform="translate(15, 15) scale(0.9333333333333333)" style="stroke-width: 1px; fill: #FF0000; fill-opacity: 1;"></path></svg></span><span class="css-mk1yb9-legendItemLabel inalia inalia-legend-text">5 - Option A</span></div>
+  <div class="css-1hu7fn8-legendItem" title="3 - Option B"><span class="css-1k21tua-legendItemBullet" style="box-sizing: content-box;"><svg width="100%" height="100%" viewBox="0 0 30 30"><path stroke="#00FF00" d="M15,0A15,15,0,1,1,-15,0A15,15,0,1,1,15,0" transform="translate(15, 15) scale(0.9333333333333333)" style="stroke-width: 1px; fill: #00FF00; fill-opacity: 1;"></path></svg></span><span class="css-mk1yb9-legendItemLabel inalia inalia-legend-text">3 - Option B</span></div>
+  <div class="css-1hu7fn8-legendItem" title="7 - Option C"><span class="css-1k21tua-legendItemBullet" style="box-sizing: content-box;"><svg width="100%" height="100%" viewBox="0 0 30 30"><path stroke="#0000FF" d="M15,0A15,15,0,1,1,-15,0A15,15,0,1,1,15,0" transform="translate(15, 15) scale(0.9333333333333333)" style="stroke-width: 1px; fill: #0000FF; fill-opacity: 1;"></path></svg></span><span class="css-mk1yb9-legendItemLabel inalia inalia-legend-text">7 - Option C</span></div>
+</div>"
+`;
+
+exports[`inaliaLegend > renders legend with single item 1`] = `
+"<div data-vis-bullet-legend="" class="inalia inalia-legend css-czc1aa-bullet-legend-component">
+  <div class="css-1hu7fn8-legendItem" title="5 - Option A"><span class="css-1k21tua-legendItemBullet" style="box-sizing: content-box;"><svg width="100%" height="100%" viewBox="0 0 30 30"><path stroke="#FF0000" d="M15,0A15,15,0,1,1,-15,0A15,15,0,1,1,15,0" transform="translate(15, 15) scale(0.9333333333333333)" style="stroke-width: 1px; fill: #FF0000; fill-opacity: 1;"></path></svg></span><span class="css-mk1yb9-legendItemLabel inalia inalia-legend-text">5 - Option A</span></div>
+</div>"
+`;
