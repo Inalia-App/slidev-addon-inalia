@@ -31,4 +31,5 @@ export * from './types/talk'
 
 export * from './utils/api'
 export * from './utils/channels'
+export * from './utils/constants'
 export * from './utils/events'
