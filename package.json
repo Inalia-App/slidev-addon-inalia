@@ -2,7 +2,7 @@
   "name": "slidev-addon-inalia",
   "type": "module",
   "version": "0.2.6",
-  "packageManager": "pnpm@10.15.1",
+  "packageManager": "pnpm@10.28.2",
   "repository": {
     "url": "https://github.com/Inalia-App/slidev-addon-inalia"
   },
@@ -34,6 +34,7 @@
     "global-bottom.vue",
     "index.d.ts",
     "layouts",
+    "lite.d.ts",
     "pages",
     "setup",
     "slidev.d.ts",
@@ -80,12 +81,12 @@
     "tailwind-variants": "^3.2.2",
     "uncrypto": "^0.1.3",
     "uqr": "^0.1.2",
-    "vue": "^3.5.21"
+    "vue": "^3.5.27"
   },
   "devDependencies": {
     "@antfu/eslint-config": "^5.3.0",
     "@unocss/eslint-plugin": "^66.5.1",
-    "@vitejs/plugin-vue": "^5.2.1",
+    "@vitejs/plugin-vue": "^6.0.4",
     "@vitest/ui": "^2.1.8",
     "@vue/test-utils": "^2.4.6",
     "@vue/tsconfig": "^0.8.1",
@@ -93,10 +94,10 @@
     "eslint": "^9.35.0",
     "jsdom": "^25.0.1",
     "taze": "^19.6.0",
-    "tsdown": "^0.15.2",
-    "typescript": "^5.9.2",
-    "unplugin-vue": "^7.0.1",
+    "tsdown": "^0.20.3",
+    "typescript": "^5.9.3",
+    "unplugin-vue": "^7.1.1",
     "vitest": "^2.1.8",
-    "vue-tsc": "^3.0.7"
+    "vue-tsc": "^3.2.4"
   }
 }

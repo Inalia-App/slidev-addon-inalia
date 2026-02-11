@@ -39,8 +39,6 @@ const props = withDefaults(defineProps<InaliaProps>(), { questionId: 0 })
 defineEmits<InaliaEmits>()
 defineSlots<InaliaSlots>()
 
-const ui = computed(() => inalia())
-
 const { isStatic, question, data } = useInaliaQuestion(() => props.questionId, {
   staticContent: {
     question: () => props.question,
@@ -49,6 +47,8 @@ const { isStatic, question, data } = useInaliaQuestion(() => props.questionId, {
     data: () => props.data,
   },
 })
+
+const ui = computed(() => inalia())
 </script>
 
 <template>

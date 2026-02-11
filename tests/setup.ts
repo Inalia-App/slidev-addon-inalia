@@ -11,7 +11,6 @@ window.IntersectionObserver = class IntersectionObserver {
 }
 
 // ResizeObserver polyfill for components that may observe element size changes
-// @ts-expect-error - incomplete implementation
 window.ResizeObserver = class ResizeObserver {
   constructor() {}
   observe(): void {}
