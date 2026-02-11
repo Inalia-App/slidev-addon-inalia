@@ -4,11 +4,12 @@ import Echo from 'laravel-echo'
 import { ofetch } from 'ofetch'
 import Pusher from 'pusher-js'
 import { fetchTalk } from '../utils/api'
+import { INALIA_API_KEY, INALIA_ENDPOINT, INALIA_TALK_NUMBER, INALIA_USERNAME } from '../utils/constants'
 
 export default defineAppSetup(async ({ app }) => {
-  if (!import.meta.env.VITE_INALIA_API_KEY
-    || !import.meta.env.VITE_INALIA_USERNAME
-    || !import.meta.env.VITE_INALIA_TALK_NUMBER) {
+  if (!INALIA_API_KEY
+    || !INALIA_USERNAME
+    || !INALIA_TALK_NUMBER) {
     console.warn('Inalia running in static mode — real-time features are disabled.')
 
     // eslint-disable-next-line no-console
@@ -36,7 +37,7 @@ export default defineAppSetup(async ({ app }) => {
     authorizer: (channel: { name: string }) => {
       return {
         authorize: (socketId: string, callback: ChannelAuthorizationCallback) => {
-          ofetch(`${import.meta.env.VITE_INALIA_ENDPOINT ?? 'https://inalia.app'}/api/broadcasting/auth`, {
+          ofetch(`${INALIA_ENDPOINT}/api/broadcasting/auth`, {
             method: 'POST',
             body: {
               socket_id: socketId,
@@ -44,7 +45,7 @@ export default defineAppSetup(async ({ app }) => {
             },
             headers: {
               Accept: 'application/json',
-              Authorization: `Bearer ${import.meta.env.VITE_INALIA_API_KEY}`,
+              Authorization: `Bearer ${INALIA_API_KEY}`,
             },
             onResponse: ({ response }) => {
               callback(null, response._data)
