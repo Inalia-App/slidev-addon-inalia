@@ -21,7 +21,7 @@ const inaliaDefaultLayout = tv({
 export interface InaliaDefaultLayoutProps {
   question: string
   url?: string
-  showUrl?: boolean
+  hideUrl?: boolean
   class?: any
   ui?: Partial<typeof inaliaDefaultLayout.slots>
 }
@@ -33,7 +33,7 @@ export interface InaliaDefaultLayoutSlots {
 </script>
 
 <script lang="ts" setup>
-const props = withDefaults(defineProps<InaliaDefaultLayoutProps>(), { showUrl: true })
+const props = withDefaults(defineProps<InaliaDefaultLayoutProps>(), { hideUrl: false })
 defineEmits<InaliaDefaultLayoutEmits>()
 defineSlots<InaliaDefaultLayoutSlots>()
 
@@ -59,7 +59,7 @@ const ui = computed(() => inaliaDefaultLayout())
             :url="props.url" :class="ui.qr({ class: props.ui?.qr })"
           />
         </div>
-        <InaliaShortUrl v-if="props.showUrl" :url="props.url" :class="ui.shortUrl({ class: props.ui?.shortUrl })" />
+        <InaliaShortUrl v-if="!props.hideUrl" :url="props.url" :class="ui.shortUrl({ class: props.ui?.shortUrl })" />
       </div>
     </template>
 

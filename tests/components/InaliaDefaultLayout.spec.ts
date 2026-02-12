@@ -33,7 +33,7 @@ describe('inaliaDefaultLayout', () => {
       props: {
         question: 'What is your favorite color?',
         url: 'https://inalia.app/abc123',
-        showUrl: false,
+        hideUrl: true,
       },
       slots: {
         default: '<div class="test-content">Test Content</div>',

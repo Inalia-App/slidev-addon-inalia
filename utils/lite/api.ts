@@ -1,13 +1,13 @@
 import type { Answer } from '../../types/lite/answer'
 import type { Question } from '../../types/lite/question'
 import { ofetch } from 'ofetch'
-import { INALIA_LITE_KEY, INALIA_LITE_TALK_ID, INALIA_LITE_URL } from './constants'
+import { INALIA_LITE_TOKEN, INALIA_LITE_TALK_ID, INALIA_LITE_URL } from './constants'
 
 export const api = ofetch.create({
   baseURL: `${INALIA_LITE_URL}/api`,
   headers: {
     Accept: 'application/json',
-    Authorization: `Bearer ${INALIA_LITE_KEY}`,
+    Authorization: `Bearer ${INALIA_LITE_TOKEN}`,
   },
 })
 

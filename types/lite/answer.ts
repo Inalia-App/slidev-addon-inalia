@@ -12,4 +12,5 @@ export interface BroadcastedAnswer {
   id: number
   questionId: number
   value: string
+  created_at: number
 }

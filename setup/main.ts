@@ -5,11 +5,11 @@ import { ofetch } from 'ofetch'
 import Pusher from 'pusher-js'
 import { fetchTalk } from '../utils/api'
 import { INALIA_API_KEY, INALIA_ENDPOINT, REVERB_APP_KEY, REVERB_HOST, REVERB_PORT, REVERB_SCHEME } from '../utils/constants'
-import { isStaticEnabled as isLiteStaticEnabled } from '../utils/lite/static'
-import { isStaticEnabled } from '../utils/static'
+import { isStaticTalk as isLiteStaticEnabled } from '../utils/lite/static'
+import { isStaticTalk } from '../utils/static'
 
 export default defineAppSetup(async ({ app }) => {
-  if (!isStaticEnabled) {
+  if (!isStaticTalk) {
     // eslint-disable-next-line no-console
     console.info('Inalia is active. Connecting to a talk...')
 
@@ -54,7 +54,8 @@ export default defineAppSetup(async ({ app }) => {
     console.info('Inalia Lite is active. Connecting to a talk...')
   }
   else {
-    console.warn('Inalia is running in static mode.')
+    // eslint-disable-next-line no-console
+    console.info('Inalia is running in static mode.')
     // eslint-disable-next-line no-console
     console.info('Documentation: https://docs.inalia.app/slidev-addon-inalia')
   }

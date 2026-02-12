@@ -1,5 +1,5 @@
-import { INALIA_LITE_KEY, INALIA_LITE_TALK_ID } from './constants'
+import { INALIA_LITE_TOKEN, INALIA_LITE_TALK_ID } from './constants'
 
-export const isStaticEnabled
+export const isStaticTalk
   = !INALIA_LITE_TALK_ID
-    || !INALIA_LITE_KEY
+    || !INALIA_LITE_TOKEN

@@ -1,5 +1,5 @@
 <script lang="ts">
-import type { Data } from '../../types/data'
+import type { Data, SelectData, TextData } from '../../types/data'
 import type { QuestionType } from '../../types/lite/question'
 import { tv } from 'tailwind-variants'
 import { computed } from 'vue'
@@ -38,7 +38,7 @@ const props = defineProps<InaliaLiteProps>()
 defineEmits<InaliaLiteEmits>()
 defineSlots<InaliaLiteSlots>()
 
-const { question, data } = useInaliaLiteQuestion(() => ({
+const { url, question, data } = useInaliaLiteQuestion(() => ({
   questionId: props.questionId,
   static: {
     question: props.question,
@@ -53,20 +53,21 @@ const ui = computed(() => inaliaLite())
 <template>
   <template v-if="question">
     <InaliaDefaultLayout
+      hide-url
       :question="question.question"
-      :url="createAnswersCreateUrl(question.id)"
+      :url="url"
       :class="ui.base({ class: [props.ui?.base, props.class] })"
     >
       <slot>
         <InaliaText
           v-if="question.type === 'text' && data"
-          :data="data"
+          :data="data as TextData"
           :class="ui.textData({ class: props.ui?.textData })"
         />
         <InaliaSelect
           v-else-if="question.type === 'single_select' && data"
           chart="donut"
-          :data="data"
+          :data="data as SelectData"
           :options="question.options.choices"
           :class="ui.selectData({ class: props.ui?.selectData })"
         />

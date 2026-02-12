@@ -1,9 +1,9 @@
 <script lang="ts">
 import { tv } from 'tailwind-variants'
-import { createTalkOverviewUrl } from 'utils/lite/urls'
 import { computed } from 'vue'
 import InaliaPoweredBy from '../../components/InaliaPoweredBy.vue'
 import InaliaQR from '../../components/InaliaQR.vue'
+import { createTalkOverviewUrl } from '../../utils/lite/urls'
 
 const inaliaLiteOverview = tv({
   slots: {
