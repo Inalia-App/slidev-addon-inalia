@@ -4,60 +4,59 @@ import Echo from 'laravel-echo'
 import { ofetch } from 'ofetch'
 import Pusher from 'pusher-js'
 import { fetchTalk } from '../utils/api'
-import { INALIA_API_KEY, INALIA_ENDPOINT, INALIA_TALK_NUMBER, INALIA_USERNAME } from '../utils/constants'
+import { INALIA_API_KEY, INALIA_ENDPOINT, REVERB_APP_KEY, REVERB_HOST, REVERB_PORT, REVERB_SCHEME } from '../utils/constants'
+import { isStaticTalk as isLiteStaticEnabled } from '../utils/lite/static'
+import { isStaticTalk } from '../utils/static'
 
 export default defineAppSetup(async ({ app }) => {
-  if (!INALIA_API_KEY
-    || !INALIA_USERNAME
-    || !INALIA_TALK_NUMBER) {
-    console.warn('Inalia running in static mode — real-time features are disabled.')
+  if (!isStaticTalk) {
+    // eslint-disable-next-line no-console
+    console.info('Inalia is active. Connecting to a talk...')
 
-    // eslint-disable-next-line no-console
-    console.info('To enable real-time functionality, add the following env vars to a .env file:')
-    // eslint-disable-next-line no-console
-    console.info('  VITE_INALIA_API_KEY, VITE_INALIA_USERNAME, VITE_INALIA_TALK_NUMBER')
-    // eslint-disable-next-line no-console
-    console.info('You can bootstrap configuration with: npx slidev-addon-inalia')
+    window.Pusher = Pusher
+    window.Echo = new Echo({
+      broadcaster: 'reverb',
+      key: REVERB_APP_KEY,
+      wsHost: REVERB_HOST,
+      wsPort: REVERB_PORT ?? 80,
+      wssPort: REVERB_PORT ?? 443,
+      forceTLS: REVERB_SCHEME === 'https',
+      enabledTransports: ['ws', 'wss'],
+      authorizer: (channel: { name: string }) => {
+        return {
+          authorize: (socketId: string, callback: ChannelAuthorizationCallback) => {
+            ofetch(`${INALIA_ENDPOINT}/api/broadcasting/auth`, {
+              method: 'POST',
+              body: {
+                socket_id: socketId,
+                channel_name: channel.name,
+              },
+              headers: {
+                Accept: 'application/json',
+                Authorization: `Bearer ${INALIA_API_KEY}`,
+              },
+              onResponse: ({ response }) => {
+                callback(null, response._data)
+              },
+              onRequestError: ({ error }) => {
+                callback(error, null)
+              },
+            })
+          },
+        }
+      },
+    })
 
+    app.provide('talk', await fetchTalk())
+  }
+  else if (!isLiteStaticEnabled) {
+    // eslint-disable-next-line no-console
+    console.info('Inalia Lite is active. Connecting to a talk...')
+  }
+  else {
+    // eslint-disable-next-line no-console
+    console.info('Inalia is running in static mode.')
     // eslint-disable-next-line no-console
     console.info('Documentation: https://docs.inalia.app/slidev-addon-inalia')
-
-    return
   }
-
-  window.Pusher = Pusher
-  window.Echo = new Echo({
-    broadcaster: 'reverb',
-    key: import.meta.env.VITE_REVERB_APP_KEY ?? '9b9ehgq0ba2hjomeiuyu',
-    wsHost: import.meta.env.VITE_REVERB_HOST ?? 'ws.inalia.app',
-    wsPort: import.meta.env.VITE_REVERB_PORT ?? 80,
-    wssPort: import.meta.env.VITE_REVERB_PORT ?? 443,
-    forceTLS: (import.meta.env.VITE_REVERB_SCHEME ?? 'https') === 'https',
-    enabledTransports: ['ws', 'wss'],
-    authorizer: (channel: { name: string }) => {
-      return {
-        authorize: (socketId: string, callback: ChannelAuthorizationCallback) => {
-          ofetch(`${INALIA_ENDPOINT}/api/broadcasting/auth`, {
-            method: 'POST',
-            body: {
-              socket_id: socketId,
-              channel_name: channel.name,
-            },
-            headers: {
-              Accept: 'application/json',
-              Authorization: `Bearer ${INALIA_API_KEY}`,
-            },
-            onResponse: ({ response }) => {
-              callback(null, response._data)
-            },
-            onRequestError: ({ error }) => {
-              callback(error, null)
-            },
-          })
-        },
-      }
-    },
-  })
-
-  app.provide('talk', await fetchTalk())
 })
