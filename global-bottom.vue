@@ -9,7 +9,7 @@ import { useInaliaTalk } from './composables/useInaliaTalk'
 const { talk, run } = useInaliaTalk()
 const { currentSlideRoute } = useNav()
 
-const isEmojiDisabled = computed(() => currentSlideRoute.value.meta?.slide?.frontmatter?.inalia?.emoji === false)
+const isEmojiDisabled = computed(() => (currentSlideRoute.value.meta.slide as any).frontmatter?.inalia?.emoji === false)
 </script>
 
 <template>
