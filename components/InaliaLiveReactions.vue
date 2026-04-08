@@ -1,6 +1,6 @@
 <script lang="ts">
 import { tv } from 'tailwind-variants'
-import { computed, onUnmounted, watch } from 'vue'
+import { computed, onUnmounted, ref, watch } from 'vue'
 import { useInaliaLiveReactions } from '../composables/useInaliaLiveReactions'
 
 const inaliaLiveReactions = tv({
@@ -30,28 +30,28 @@ const ui = computed(() => inaliaLiveReactions())
 
 const { liveReactions, listen, dispose } = useInaliaLiveReactions()
 
-let isListening = false
+const isListening = ref(false)
 
 watch(() => props.disabled, (disabled) => {
   if (disabled) {
-    if (isListening) {
+    if (isListening.value) {
       dispose()
-      isListening = false
+      isListening.value = false
     }
 
     return
   }
 
-  if (!isListening) {
+  if (!isListening.value) {
     listen()
-    isListening = true
+    isListening.value = true
   }
 }, { immediate: true })
 
 onUnmounted(() => {
-  if (isListening) {
+  if (isListening.value) {
     dispose()
-    isListening = false
+    isListening.value = false
   }
 })
 </script>
