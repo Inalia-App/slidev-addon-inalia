@@ -44,7 +44,7 @@ describe('inaliaLiveReactions', () => {
     expect(wrapper.text()).toContain('🔥')
   })
 
-  it('still listens and hides reactions when disabled', () => {
+  it('maintains subscription and hides reactions when disabled', () => {
     mocks.listen.mockClear()
     mocks.dispose.mockClear()
     mocks.liveReactionsValue = [
