@@ -34,7 +34,7 @@ interface UseInaliaQuestionOptions {
   }
 }
 
-export function useInaliaQuestion(defaultQuestionId: MaybeRefOrGetter<number>, options?: UseInaliaQuestionOptions): Inalia {
+export function useInaliaQuestion(defaultQuestionId: MaybeRefOrGetter<number | undefined>, options?: UseInaliaQuestionOptions): Inalia {
   const { staticContent } = options || {}
 
   const questionId = toRef(defaultQuestionId)
@@ -43,6 +43,9 @@ export function useInaliaQuestion(defaultQuestionId: MaybeRefOrGetter<number>, o
   const data = ref<Data>([])
 
   const isStatic = ref<boolean>(false)
+  const currentChannel = ref<string | null>(null)
+
+  let hasWarnedForMissingQuestionId = false
 
   // If static content is provided, use it instead of fetching the question.
   watchEffect(() => {
@@ -144,7 +147,27 @@ export function useInaliaQuestion(defaultQuestionId: MaybeRefOrGetter<number>, o
   })
 
   async function fetch(): Promise<void> {
-    question.value = await fetchQuestion(toValue(questionId))
+    const currentQuestionId = toValue(questionId)
+
+    if (currentQuestionId === undefined) {
+      if (question.value) {
+        stopListening()
+      }
+
+      question.value = null
+      data.value = []
+
+      if (!hasWarnedForMissingQuestionId) {
+        console.warn('[slidev-addon-inalia] `useInaliaQuestion` received an undefined question ID without static content. Skipping question fetch.')
+        hasWarnedForMissingQuestionId = true
+      }
+
+      return
+    }
+
+    hasWarnedForMissingQuestionId = false
+
+    question.value = await fetchQuestion(currentQuestionId)
 
     if (question.value.type === 'text') {
       data.value = question.value.answers.map(answer => answer.value) as TextData
@@ -176,8 +199,14 @@ export function useInaliaQuestion(defaultQuestionId: MaybeRefOrGetter<number>, o
   }
 
   function startListening(): void {
+    if (!eventName.value) {
+      return
+    }
+
+    currentChannel.value = eventName.value
+
     window.Echo
-      .private(eventName.value)
+      .private(currentChannel.value)
       .listen(EVENT_ANSWER_CREATED, (event: Answer) => {
         if (question.value!.type === 'text') {
           (data.value as string[]).push((event as TextAnswer).value)
@@ -216,7 +245,12 @@ export function useInaliaQuestion(defaultQuestionId: MaybeRefOrGetter<number>, o
   }
 
   function stopListening(): void {
-    window.Echo.leave(eventName.value)
+    if (!currentChannel.value) {
+      return
+    }
+
+    window.Echo.leave(currentChannel.value)
+    currentChannel.value = null
   }
 
   return {

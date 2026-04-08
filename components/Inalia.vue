@@ -35,7 +35,7 @@ export interface InaliaSlots {
 </script>
 
 <script lang="ts" setup>
-const props = withDefaults(defineProps<InaliaProps>(), { questionId: 0 })
+const props = defineProps<InaliaProps>()
 defineEmits<InaliaEmits>()
 defineSlots<InaliaSlots>()
 
