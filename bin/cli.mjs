@@ -10,6 +10,9 @@ import packageJSON from '../package.json' with { type: 'json' }
 
 const cli = cac('slidev-addon-inalia')
 
+const frontmatterRegex = /^---\n([\s\S]*?)\n---/
+const addonsRegex = /addons:\s*\[(.*?)\]/s
+
 async function checkFileExists(filePath) {
   try {
     await access(filePath)
@@ -48,7 +51,7 @@ async function updateSlidesFile() {
     }
 
     // Check if there's existing frontmatter
-    const frontmatterMatch = content.match(/^---\n([\s\S]*?)\n---/)
+    const frontmatterMatch = content.match(frontmatterRegex)
 
     let newContent
     if (frontmatterMatch) {
@@ -59,7 +62,7 @@ async function updateSlidesFile() {
       if (hasAddons) {
         // Add to existing addons array
         const updatedFrontmatter = existingFrontmatter.replace(
-          /addons:\s*\[(.*?)\]/s,
+          addonsRegex,
           (_, addons) => {
             const cleanAddons = addons.trim()
             if (cleanAddons) {

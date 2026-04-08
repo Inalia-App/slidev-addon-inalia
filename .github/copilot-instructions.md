@@ -4,6 +4,12 @@ Slidev Addon Inalia is the official addon for [Inalia](https://inalia.app) to ma
 
 **ALWAYS reference these instructions first** and only fall back to search or bash commands when you encounter unexpected information that does not match what's documented here.
 
+## Slidev Documentation
+
+- For Slidev framework questions, syntax, layouts, components, addon APIs, or CLI behavior, consult `https://sli.dev/llms.txt` before using broader web search.
+- Use `https://sli.dev/llms.txt` as an index to find the most relevant official Slidev page, then read only the linked sections needed for the task.
+- Prefer the official Slidev docs over assumptions when changing Slidev-specific behavior, but follow this repository's instructions when they are more specific.
+
 ## Working Effectively
 
 ### Environment Setup
@@ -33,8 +39,8 @@ Slidev Addon Inalia is the official addon for [Inalia](https://inalia.app) to ma
 
 ### Testing and Quality
 - Lint code: `pnpm run lint` -- Uses @antfu/eslint-config, takes ~5 seconds
+- Run tests: `pnpm run test` -- Uses Vitest for component and layout tests
 - Auto-fix linting: `pnpm run lint:fix`
-- **No unit tests** are configured in this project
 - **CRITICAL**: Always run `pnpm run lint` before committing or the CI (.github/workflows/ci.yml) will fail
 
 ### Environment Configuration
