@@ -28,9 +28,9 @@ defineSlots<InaliaLiveReactionsSlots>()
 
 const ui = inaliaLiveReactions()
 
-const { liveReactions, listen, dispose } = useInaliaLiveReactions({
-  disabled: () => props.disabled,
-})
+const { liveReactions, listen, dispose } = useInaliaLiveReactions(() => ({
+  disabled: props.disabled,
+}))
 
 onMounted(() => {
   listen()

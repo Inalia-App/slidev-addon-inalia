@@ -13,14 +13,16 @@ interface UseInaliaLiveReactions {
 }
 
 interface UseInaliaLiveReactionsParams {
-  disabled?: MaybeRefOrGetter<boolean>
+  disabled?: boolean
 }
 
-export function useInaliaLiveReactions(params: UseInaliaLiveReactionsParams = {}): UseInaliaLiveReactions {
+export function useInaliaLiveReactions(params: MaybeRefOrGetter<UseInaliaLiveReactionsParams>): UseInaliaLiveReactions {
   const { talk } = useInaliaTalk()
 
   const allLiveReactions = ref<AugmentedLiveReaction[]>([])
-  const liveReactions = computed(() => (toValue(params.disabled) ? [] : allLiveReactions.value))
+
+  const disabled = computed(() => toValue(params).disabled)
+  const liveReactions = computed(() => (disabled.value ? [] : allLiveReactions.value))
 
   if (!talk) {
     return {
