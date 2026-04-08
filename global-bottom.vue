@@ -1,14 +1,19 @@
 <script lang="ts" setup>
+import { useNav } from '@slidev/client'
+import { computed } from 'vue'
 import InaliaAudienceQuestionHighlighted from './components/InaliaAudienceQuestionHighlighted.vue'
 import InaliaLiveReactions from './components/InaliaLiveReactions.vue'
 import InaliaRunToContinue from './components/InaliaRunToContinue.vue'
 import { useInaliaTalk } from './composables/useInaliaTalk'
 
 const { talk, run } = useInaliaTalk()
+const { currentSlideRoute } = useNav()
+
+const isEmojiDisabled = computed(() => currentSlideRoute.value.meta?.slide?.frontmatter?.inalia?.emoji === false)
 </script>
 
 <template>
-  <InaliaLiveReactions class="w-full h-full relative" />
+  <InaliaLiveReactions :disabled="isEmojiDisabled" class="w-full h-full relative" />
   <InaliaAudienceQuestionHighlighted class="absolute inset-0" />
   <InaliaRunToContinue v-if="talk?.slidev.run_to_continue" class="absolute z-10 bottom-0 inset-x-0" @run="run" />
 </template>

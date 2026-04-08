@@ -1,6 +1,6 @@
 <script lang="ts">
 import { tv } from 'tailwind-variants'
-import { computed, onMounted, onUnmounted } from 'vue'
+import { computed, onUnmounted, watch } from 'vue'
 import { useInaliaLiveReactions } from '../composables/useInaliaLiveReactions'
 
 const inaliaLiveReactions = tv({
@@ -12,6 +12,7 @@ const inaliaLiveReactions = tv({
 
 export interface InaliaLiveReactionsProps {
   class?: any
+  disabled?: boolean
   ui?: Partial<typeof inaliaLiveReactions.slots>
 }
 export interface InaliaLiveReactionsEmits {}
@@ -19,7 +20,9 @@ export interface InaliaLiveReactionsSlots {}
 </script>
 
 <script lang="ts" setup>
-const props = defineProps<InaliaLiveReactionsProps>()
+const props = withDefaults(defineProps<InaliaLiveReactionsProps>(), {
+  disabled: false,
+})
 defineEmits<InaliaLiveReactionsEmits>()
 defineSlots<InaliaLiveReactionsSlots>()
 
@@ -27,16 +30,39 @@ const ui = computed(() => inaliaLiveReactions())
 
 const { liveReactions, listen, dispose } = useInaliaLiveReactions()
 
-onMounted(() => {
-  listen()
-})
+let isListening = false
+
+watch(() => props.disabled, (disabled) => {
+  if (disabled) {
+    if (isListening) {
+      dispose()
+      isListening = false
+    }
+
+    return
+  }
+
+  if (!isListening) {
+    listen()
+    isListening = true
+  }
+}, { immediate: true })
+
 onUnmounted(() => {
-  dispose()
+  if (isListening) {
+    dispose()
+    isListening = false
+  }
 })
 </script>
 
 <template>
-  <TransitionGroup tag="div" name="inalia-fade" :class="ui.base({ class: [props.ui?.base, props.class] })">
+  <TransitionGroup
+    v-if="!props.disabled"
+    tag="div"
+    name="inalia-fade"
+    :class="ui.base({ class: [props.ui?.base, props.class] })"
+  >
     <div
       v-for="liveReaction in liveReactions"
       :key="liveReaction.id"
