@@ -17,10 +17,10 @@ vi.mock('../../composables/useInaliaLiveReactions', async () => {
   const { computed } = await import('vue')
 
   return {
-    useInaliaLiveReactions: () => ({
+    useInaliaLiveReactions: (params?: { disabled?: { value: boolean } }) => ({
       dispose: mocks.dispose,
       listen: mocks.listen,
-      liveReactions: computed(() => mocks.liveReactionsValue),
+      liveReactions: computed(() => (params?.disabled?.value ? [] : mocks.liveReactionsValue)),
     }),
   }
 })
@@ -44,7 +44,7 @@ describe('inaliaLiveReactions', () => {
     expect(wrapper.text()).toContain('🔥')
   })
 
-  it('skips listening and hides reactions when disabled', () => {
+  it('still listens and hides reactions when disabled', () => {
     mocks.listen.mockClear()
     mocks.dispose.mockClear()
     mocks.liveReactionsValue = [
@@ -62,8 +62,8 @@ describe('inaliaLiveReactions', () => {
       },
     })
 
-    expect(mocks.listen).not.toHaveBeenCalled()
+    expect(mocks.listen).toHaveBeenCalledTimes(1)
     expect(wrapper.text()).not.toContain('🔥')
-    expect(wrapper.html()).toBe('<!--v-if-->')
+    expect(mocks.dispose).not.toHaveBeenCalled()
   })
 })

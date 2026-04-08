@@ -1,7 +1,7 @@
-import type { DeepReadonly, Ref } from 'vue'
+import type { ComputedRef, DeepReadonly, Ref } from 'vue'
 import type { AugmentedLiveReaction, LiveReaction } from '../types/live-reaction'
 import { randomUUID } from 'uncrypto'
-import { readonly, ref } from 'vue'
+import { computed, readonly, ref } from 'vue'
 import { talkChannel } from '../utils/channels'
 import { EVENT_LIVE_REACTION_SUBMITTED } from '../utils/events'
 import { useInaliaTalk } from './useInaliaTalk'
@@ -12,10 +12,15 @@ interface UseInaliaLiveReactions {
   dispose: () => void
 }
 
-export function useInaliaLiveReactions(): UseInaliaLiveReactions {
+interface UseInaliaLiveReactionsParams {
+  disabled?: Ref<boolean> | ComputedRef<boolean>
+}
+
+export function useInaliaLiveReactions(params: UseInaliaLiveReactionsParams = {}): UseInaliaLiveReactions {
   const { talk } = useInaliaTalk()
 
-  const liveReactions = ref<AugmentedLiveReaction[]>([])
+  const allLiveReactions = ref<AugmentedLiveReaction[]>([])
+  const liveReactions = computed(() => (params.disabled?.value ? [] : allLiveReactions.value))
 
   if (!talk) {
     return {
@@ -35,7 +40,7 @@ export function useInaliaLiveReactions(): UseInaliaLiveReactions {
       .listen(EVENT_LIVE_REACTION_SUBMITTED, (liveReaction: LiveReaction) => {
         const id = randomUUID()
 
-        liveReactions.value.push({
+        allLiveReactions.value.push({
           ...liveReaction,
           id,
           // Randomize the position and scale of the live reaction
@@ -49,7 +54,7 @@ export function useInaliaLiveReactions(): UseInaliaLiveReactions {
 
         // Automatically remove the live reaction after 3 seconds
         setTimeout(() => {
-          liveReactions.value = liveReactions.value.filter(liveReaction => liveReaction.id !== id)
+          allLiveReactions.value = allLiveReactions.value.filter(liveReaction => liveReaction.id !== id)
         }, 3000)
       })
   }
