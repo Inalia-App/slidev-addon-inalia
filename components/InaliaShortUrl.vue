@@ -24,8 +24,9 @@ defineSlots<InaliaShortUrlSlots>()
 
 const ui = computed(() => inaliaShortUrl())
 
+const httpRegex = /^https?:\/\//
 const textUrl = computed(() => {
-  return props.url.replace(/https?:\/\//, '')
+  return props.url.replace(httpRegex, '')
 })
 </script>
 
