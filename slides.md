@@ -41,6 +41,7 @@ layout: inalia-overview
 
 ---
 inalia:
+  emoji: false
   bar:
     barWidth: 30
 ---
