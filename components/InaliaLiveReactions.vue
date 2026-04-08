@@ -1,6 +1,6 @@
 <script lang="ts">
 import { tv } from 'tailwind-variants'
-import { computed, onMounted, onUnmounted } from 'vue'
+import { onMounted, onUnmounted } from 'vue'
 import { useInaliaLiveReactions } from '../composables/useInaliaLiveReactions'
 
 const inaliaLiveReactions = tv({
@@ -26,10 +26,10 @@ const props = withDefaults(defineProps<InaliaLiveReactionsProps>(), {
 defineEmits<InaliaLiveReactionsEmits>()
 defineSlots<InaliaLiveReactionsSlots>()
 
-const ui = computed(() => inaliaLiveReactions())
+const ui = inaliaLiveReactions()
 
 const { liveReactions, listen, dispose } = useInaliaLiveReactions({
-  disabled: computed(() => props.disabled),
+  disabled: () => props.disabled,
 })
 
 onMounted(() => {

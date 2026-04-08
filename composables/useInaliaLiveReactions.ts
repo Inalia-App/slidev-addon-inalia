@@ -1,7 +1,7 @@
-import type { ComputedRef, DeepReadonly, Ref } from 'vue'
+import type { DeepReadonly, MaybeRefOrGetter, Ref } from 'vue'
 import type { AugmentedLiveReaction, LiveReaction } from '../types/live-reaction'
 import { randomUUID } from 'uncrypto'
-import { computed, readonly, ref } from 'vue'
+import { computed, readonly, ref, toValue } from 'vue'
 import { talkChannel } from '../utils/channels'
 import { EVENT_LIVE_REACTION_SUBMITTED } from '../utils/events'
 import { useInaliaTalk } from './useInaliaTalk'
@@ -13,14 +13,14 @@ interface UseInaliaLiveReactions {
 }
 
 interface UseInaliaLiveReactionsParams {
-  disabled?: Ref<boolean> | ComputedRef<boolean>
+  disabled?: MaybeRefOrGetter<boolean>
 }
 
 export function useInaliaLiveReactions(params: UseInaliaLiveReactionsParams = {}): UseInaliaLiveReactions {
   const { talk } = useInaliaTalk()
 
   const allLiveReactions = ref<AugmentedLiveReaction[]>([])
-  const liveReactions = computed(() => (params.disabled?.value ? [] : allLiveReactions.value))
+  const liveReactions = computed(() => (toValue(params.disabled) ? [] : allLiveReactions.value))
 
   if (!talk) {
     return {

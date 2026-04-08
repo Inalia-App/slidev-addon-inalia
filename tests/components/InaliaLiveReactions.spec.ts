@@ -14,13 +14,13 @@ const mocks = vi.hoisted(() => ({
 }))
 
 vi.mock('../../composables/useInaliaLiveReactions', async () => {
-  const { computed } = await import('vue')
+  const { computed, toValue } = await import('vue')
 
   return {
-    useInaliaLiveReactions: (params?: { disabled?: { value: boolean } }) => ({
+    useInaliaLiveReactions: (params?: { disabled?: boolean | (() => boolean) }) => ({
       dispose: mocks.dispose,
       listen: mocks.listen,
-      liveReactions: computed(() => (params?.disabled?.value ? [] : mocks.liveReactionsValue)),
+      liveReactions: computed(() => (toValue(params?.disabled) ? [] : mocks.liveReactionsValue)),
     }),
   }
 })
