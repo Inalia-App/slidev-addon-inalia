@@ -15,14 +15,14 @@ Slidev Addon Inalia is the official addon for [Inalia](https://inalia.app) to ma
 
 ### Environment Setup
 - Node.js LTS
-- pnpm v10.15.0
+- pnpm latest version
 
 ### Bootstrap and Dependencies
 - Install dependencies: `pnpm install`
 
 ### Build Process
-- **Addon build**: `pnpm run prepack`
-- **Presentation build**: `pnpm run build`
+- Addon build: `pnpm run prepack`
+- Presentation build: `pnpm run build`
 
 ### Testing and Quality
 - Lint code: `pnpm run lint`
