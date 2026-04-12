@@ -19,6 +19,7 @@ export * from './composables/useInaliaAudienceQuestionHighlighted'
 export * from './composables/useInaliaLiveReactions'
 export * from './composables/useInaliaQRCode'
 export * from './composables/useInaliaQuestion'
+export * from './composables/useInaliaStatus'
 export * from './composables/useInaliaTalk'
 
 export * from './types/answer'
