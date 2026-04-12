@@ -60,7 +60,7 @@ let echoLeave: ReturnType<typeof vi.fn>
 
 const fetchQuestionMock = vi.mocked(fetchQuestion)
 
-function mountHost(initialQuestionId?: number, options: { talk?: Talk | null } = {}) {
+function mountHost(initialQuestionId?: number, options: { talk?: Talk | null, provideTalk?: boolean } = {}) {
   questionId = ref(initialQuestionId)
 
   const Host = defineComponent({
@@ -74,7 +74,7 @@ function mountHost(initialQuestionId?: number, options: { talk?: Talk | null } =
   return mount(Host, {
     global: {
       provide: {
-        talk: options.talk === undefined ? talk : options.talk,
+        ...(options.provideTalk === false ? {} : { talk: options.talk === undefined ? talk : options.talk }),
       },
     },
   })
@@ -145,8 +145,8 @@ describe('useInaliaQuestion', () => {
     wrapper.unmount()
   })
 
-  it('skips fetching when the talk is unavailable', async () => {
-    const wrapper = mountHost(question.id, { talk: null })
+  it('skips fetching when Inalia is not running', async () => {
+    const wrapper = mountHost(question.id, { provideTalk: false })
 
     await flushInalia()
 

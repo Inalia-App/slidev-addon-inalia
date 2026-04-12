@@ -3,11 +3,11 @@ import type { Answer, MultipleSelectAnswer, SingleSelectAnswer, TextAnswer } fro
 import type { Data, SelectData, TextData } from '../types/data'
 import type { Inalia } from '../types/inalia'
 import type { ChartType, MultipleSelectQuestion, Question, QuestionType, SingleSelectQuestion, TextQuestion } from '../types/question'
-import type { Talk } from '../types/talk'
-import { computed, inject, onMounted, readonly, ref, shallowRef, toRef, toValue, watch, watchEffect } from 'vue'
+import { computed, onMounted, readonly, ref, shallowRef, toRef, toValue, watch, watchEffect } from 'vue'
 import { fetchQuestion } from '../utils/api'
 import { answersChannel } from '../utils/channels'
 import { EVENT_ANSWER_CREATED } from '../utils/events'
+import { useInaliaStatus } from './useInaliaStatus'
 
 interface UseInaliaQuestionOptions {
   /**
@@ -38,7 +38,7 @@ interface UseInaliaQuestionOptions {
 export function useInaliaQuestion(defaultQuestionId: MaybeRefOrGetter<number | undefined>, options?: UseInaliaQuestionOptions): Inalia {
   const { staticContent } = options || {}
 
-  const talk = inject<Talk | null>('talk', null)
+  const { isRunning } = useInaliaStatus()
   const questionId = toRef(defaultQuestionId)
 
   const question = shallowRef<Question | null>(null)
@@ -121,7 +121,7 @@ export function useInaliaQuestion(defaultQuestionId: MaybeRefOrGetter<number | u
   const eventName = computed(() => answersChannel(question.value?.id))
 
   onMounted(() => {
-    if (isStatic.value || talk === null) {
+    if (isStatic.value || !isRunning) {
       return
     }
 
@@ -132,7 +132,7 @@ export function useInaliaQuestion(defaultQuestionId: MaybeRefOrGetter<number | u
   })
 
   watch(questionId, () => {
-    if (isStatic.value || talk === null) {
+    if (isStatic.value || !isRunning) {
       return
     }
 
@@ -149,7 +149,7 @@ export function useInaliaQuestion(defaultQuestionId: MaybeRefOrGetter<number | u
   })
 
   async function fetch(): Promise<void> {
-    if (talk === null) {
+    if (!isRunning) {
       return
     }
 
