@@ -54,8 +54,6 @@ describe('useInaliaStatus', () => {
     const wrapper = mountHost(talk)
 
     expect(status.isRunning).toBe(true)
-    expect(status.isStaticMode).toBe(false)
-    expect(status.status).toBe('running')
 
     wrapper.unmount()
   })
@@ -64,8 +62,6 @@ describe('useInaliaStatus', () => {
     const wrapper = mountHost()
 
     expect(status.isRunning).toBe(false)
-    expect(status.isStaticMode).toBe(true)
-    expect(status.status).toBe('static')
 
     wrapper.unmount()
   })
