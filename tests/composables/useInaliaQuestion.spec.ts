@@ -1,4 +1,5 @@
 import type { Question } from '../../types/question'
+import type { Talk } from '../../types/talk'
 import { mount } from '@vue/test-utils'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import { defineComponent, h, nextTick, ref } from 'vue'
@@ -25,6 +26,32 @@ const question: Question = {
   answers: [],
 }
 
+const talk: Talk = {
+  id: 42,
+  title: 'Composable testing talk',
+  description: 'A talk for question tests',
+  color: '#6b46c1',
+  scheduled_at: {
+    iso: '2026-04-10T12:00:00Z',
+    time_ago: 'just now',
+  },
+  state: {
+    disabled: false,
+    running: true,
+    finished: false,
+  },
+  slidev: {
+    run_to_continue: false,
+  },
+  urls: {
+    details: 'https://example.com/details',
+    overview: 'https://example.com/overview',
+    dashboard: 'https://example.com/dashboard',
+    tiny_overview: 'https://example.com/o',
+    tiny_feedback: 'https://example.com/f',
+  },
+}
+
 let questionId = ref<number | undefined>()
 let inalia: ReturnType<typeof useInaliaQuestion>
 let echoPrivate: ReturnType<typeof vi.fn>
@@ -33,7 +60,7 @@ let echoLeave: ReturnType<typeof vi.fn>
 
 const fetchQuestionMock = vi.mocked(fetchQuestion)
 
-function mountHost(initialQuestionId?: number) {
+function mountHost(initialQuestionId?: number, options: { talk?: Talk | null, provideTalk?: boolean } = {}) {
   questionId = ref(initialQuestionId)
 
   const Host = defineComponent({
@@ -44,7 +71,13 @@ function mountHost(initialQuestionId?: number) {
     },
   })
 
-  return mount(Host)
+  return mount(Host, {
+    global: {
+      provide: {
+        ...(options.provideTalk === false ? {} : { talk: options.talk === undefined ? talk : options.talk }),
+      },
+    },
+  })
 }
 
 async function flushInalia(): Promise<void> {
@@ -108,6 +141,19 @@ describe('useInaliaQuestion', () => {
     expect(echoLeave).toHaveBeenCalledWith(answersChannel(question.id))
     expect(inalia.question.value).toBeNull()
     expect(inalia.data.value).toEqual([])
+
+    wrapper.unmount()
+  })
+
+  it('skips fetching when Inalia is not running', async () => {
+    const wrapper = mountHost(question.id, { provideTalk: false })
+
+    await flushInalia()
+
+    expect(fetchQuestionMock).not.toHaveBeenCalled()
+    expect(inalia.question.value).toBeNull()
+    expect(inalia.data.value).toEqual([])
+    expect(echoPrivate).not.toHaveBeenCalled()
 
     wrapper.unmount()
   })

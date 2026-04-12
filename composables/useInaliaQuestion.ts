@@ -7,6 +7,7 @@ import { computed, onMounted, readonly, ref, shallowRef, toRef, toValue, watch, 
 import { fetchQuestion } from '../utils/api'
 import { answersChannel } from '../utils/channels'
 import { EVENT_ANSWER_CREATED } from '../utils/events'
+import { useInaliaStatus } from './useInaliaStatus'
 
 interface UseInaliaQuestionOptions {
   /**
@@ -37,6 +38,7 @@ interface UseInaliaQuestionOptions {
 export function useInaliaQuestion(defaultQuestionId: MaybeRefOrGetter<number | undefined>, options?: UseInaliaQuestionOptions): Inalia {
   const { staticContent } = options || {}
 
+  const { isRunning } = useInaliaStatus()
   const questionId = toRef(defaultQuestionId)
 
   const question = shallowRef<Question | null>(null)
@@ -119,7 +121,7 @@ export function useInaliaQuestion(defaultQuestionId: MaybeRefOrGetter<number | u
   const eventName = computed(() => answersChannel(question.value?.id))
 
   onMounted(() => {
-    if (isStatic.value) {
+    if (isStatic.value || !isRunning) {
       return
     }
 
@@ -130,7 +132,7 @@ export function useInaliaQuestion(defaultQuestionId: MaybeRefOrGetter<number | u
   })
 
   watch(questionId, () => {
-    if (isStatic.value) {
+    if (isStatic.value || !isRunning) {
       return
     }
 
@@ -147,6 +149,10 @@ export function useInaliaQuestion(defaultQuestionId: MaybeRefOrGetter<number | u
   })
 
   async function fetch(): Promise<void> {
+    if (!isRunning) {
+      return
+    }
+
     const currentQuestionId = toValue(questionId)
 
     if (currentQuestionId === undefined) {
