@@ -22,8 +22,10 @@ const talk: Talk = {
     run_to_continue: false,
   },
   urls: {
-    details: 'https://example.com/details',
-    join: 'https://example.com/join',
+    overview: 'https://example.com/overview',
+    dashboard: 'https://example.com/dashboard',
+    tiny_overview: 'https://example.com/t/overview',
+    tiny_feedback: 'https://example.com/t/feedback',
   },
 }
 
