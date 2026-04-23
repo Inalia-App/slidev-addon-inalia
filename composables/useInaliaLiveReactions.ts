@@ -12,8 +12,11 @@ interface UseInaliaLiveReactions {
   dispose: () => void
 }
 
+const DEFAULT_MAX_EMOJIS = 20
+
 interface UseInaliaLiveReactionsParams {
   disabled?: boolean
+  maxEmojis?: number
 }
 
 export function useInaliaLiveReactions(params: MaybeRefOrGetter<UseInaliaLiveReactionsParams>): UseInaliaLiveReactions {
@@ -22,6 +25,7 @@ export function useInaliaLiveReactions(params: MaybeRefOrGetter<UseInaliaLiveRea
   const allLiveReactions = ref<AugmentedLiveReaction[]>([])
 
   const disabled = computed(() => toValue(params).disabled)
+  const maxEmojis = computed(() => toValue(params).maxEmojis ?? DEFAULT_MAX_EMOJIS)
   const liveReactions = computed(() => (disabled.value ? [] : allLiveReactions.value))
 
   if (!talk) {
@@ -40,6 +44,10 @@ export function useInaliaLiveReactions(params: MaybeRefOrGetter<UseInaliaLiveRea
     window.Echo
       .private(talkChannel(talk.id))
       .listen(EVENT_LIVE_REACTION_SUBMITTED, (liveReaction: LiveReaction) => {
+        if (allLiveReactions.value.length >= maxEmojis.value) {
+          return
+        }
+
         const id = randomUUID()
 
         allLiveReactions.value.push({
