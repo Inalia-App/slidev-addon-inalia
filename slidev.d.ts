@@ -2,6 +2,7 @@ declare module '@slidev/types' {
   interface SlidevConfig {
     inalia?: {
       emoji?: boolean
+      emojiLimit?: number
       donut?: {
         cornerRadius?: number
         padAngle?: number

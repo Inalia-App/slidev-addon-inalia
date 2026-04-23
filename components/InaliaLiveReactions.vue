@@ -13,6 +13,7 @@ const inaliaLiveReactions = tv({
 export interface InaliaLiveReactionsProps {
   class?: any
   disabled?: boolean
+  maxEmojis?: number
   ui?: Partial<typeof inaliaLiveReactions.slots>
 }
 export interface InaliaLiveReactionsEmits {}
@@ -30,6 +31,7 @@ const ui = inaliaLiveReactions()
 
 const { liveReactions, listen, dispose } = useInaliaLiveReactions(() => ({
   disabled: props.disabled,
+  maxEmojis: props.maxEmojis,
 }))
 
 onMounted(() => {

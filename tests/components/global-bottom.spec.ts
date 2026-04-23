@@ -10,6 +10,7 @@ const mocks = vi.hoisted(() => ({
       },
     },
   } as any,
+  configs: {} as any,
   run: vi.fn(),
   talk: null as any,
 }))
@@ -21,6 +22,9 @@ vi.mock('@slidev/client', async () => {
     useNav: () => ({
       currentSlideRoute: computed(() => mocks.currentSlideRouteValue),
     }),
+    get configs() {
+      return mocks.configs
+    },
   }
 })
 
@@ -84,5 +88,33 @@ describe('global-bottom', () => {
     })
 
     expect(wrapper.get('[data-testid="live-reactions"]').text()).toBe('true')
+  })
+
+  it('passes maxEmojis from root front matter configs to live reactions', () => {
+    mocks.currentSlideRouteValue = {
+      meta: {
+        slide: {
+          frontmatter: {},
+        },
+      },
+    }
+    mocks.configs = { inalia: { emojiLimit: 5 } }
+
+    const wrapper = mount(GlobalBottom, {
+      global: {
+        stubs: {
+          InaliaAudienceQuestionHighlighted: true,
+          InaliaLiveReactions: {
+            props: ['maxEmojis'],
+            template: '<div data-testid="live-reactions">{{ maxEmojis }}</div>',
+          },
+          InaliaRunToContinue: true,
+        },
+      },
+    })
+
+    expect(wrapper.get('[data-testid="live-reactions"]').text()).toBe('5')
+
+    mocks.configs = {}
   })
 })

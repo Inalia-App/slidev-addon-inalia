@@ -40,10 +40,11 @@ let echoPrivate: ReturnType<typeof vi.fn>
 let echoListen: ReturnType<typeof vi.fn>
 let echoLeave: ReturnType<typeof vi.fn>
 
-function mountComponent(options: { disabled?: boolean, talk?: Talk | null } = {}) {
+function mountComponent(options: { disabled?: boolean, maxEmojis?: number, talk?: Talk | null } = {}) {
   return mount(InaliaLiveReactions, {
     props: {
       disabled: options.disabled ?? false,
+      ...(options.maxEmojis !== undefined && { maxEmojis: options.maxEmojis }),
     },
     global: {
       provide: {
@@ -137,5 +138,23 @@ describe('inaliaLiveReactions', () => {
     wrapper.unmount()
 
     expect(echoLeave).not.toHaveBeenCalled()
+  })
+
+  it('ignores new reactions when the number of displayed reactions reaches maxEmojis', async () => {
+    const wrapper = mountComponent({ maxEmojis: 2 })
+
+    emitLiveReaction({ emoji: '🔥' })
+    emitLiveReaction({ emoji: '🎉' })
+    await nextTick()
+
+    expect(wrapper.findAll('.inalia-live-reaction')).toHaveLength(2)
+
+    emitLiveReaction({ emoji: '🚀' })
+    await nextTick()
+
+    const reactions = wrapper.findAll('.inalia-live-reaction')
+    expect(reactions).toHaveLength(2)
+    expect(reactions[0].text()).toBe('🔥')
+    expect(reactions[1].text()).toBe('🎉')
   })
 })
