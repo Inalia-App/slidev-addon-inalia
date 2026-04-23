@@ -94,7 +94,7 @@ describe('global-bottom', () => {
   })
 
   it('passes maxEmojis from root front matter configs to live reactions', () => {
-    mocks.configs = { inalia: { emojiLimit: 5 } }
+    mocks.configs = { inalia: { emoji: { limit: 5 } } }
 
     const wrapper = mount(GlobalBottom, {
       global: {

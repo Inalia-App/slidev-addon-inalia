@@ -10,7 +10,8 @@ const { talk, run } = useInaliaTalk()
 const { currentSlideRoute } = useNav()
 
 const isEmojiDisabled = computed(() => (currentSlideRoute.value.meta.slide as any).frontmatter?.inalia?.emoji === false)
-const emojiLimit = computed(() => (configs as any).inalia?.emojiLimit)
+const emojiConfig = computed(() => (configs as any).inalia?.emoji)
+const emojiLimit = computed(() => typeof emojiConfig.value === 'object' && emojiConfig.value !== null ? emojiConfig.value.limit : undefined)
 </script>
 
 <template>
