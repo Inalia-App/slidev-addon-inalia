@@ -1,5 +1,5 @@
 import { mount } from '@vue/test-utils'
-import { describe, expect, it, vi } from 'vitest'
+import { beforeEach, describe, expect, it, vi } from 'vitest'
 import GlobalBottom from '../../global-bottom.vue'
 
 const mocks = vi.hoisted(() => ({
@@ -36,7 +36,8 @@ vi.mock('../../composables/useInaliaTalk', () => ({
 }))
 
 describe('global-bottom', () => {
-  it('passes disabled=false to live reactions by default', () => {
+  beforeEach(() => {
+    mocks.configs = {}
     mocks.currentSlideRouteValue = {
       meta: {
         slide: {
@@ -44,7 +45,9 @@ describe('global-bottom', () => {
         },
       },
     }
+  })
 
+  it('passes disabled=false to live reactions by default', () => {
     const wrapper = mount(GlobalBottom, {
       global: {
         stubs: {
@@ -91,13 +94,6 @@ describe('global-bottom', () => {
   })
 
   it('passes maxEmojis from root front matter configs to live reactions', () => {
-    mocks.currentSlideRouteValue = {
-      meta: {
-        slide: {
-          frontmatter: {},
-        },
-      },
-    }
     mocks.configs = { inalia: { emojiLimit: 5 } }
 
     const wrapper = mount(GlobalBottom, {
@@ -114,7 +110,5 @@ describe('global-bottom', () => {
     })
 
     expect(wrapper.get('[data-testid="live-reactions"]').text()).toBe('5')
-
-    mocks.configs = {}
   })
 })

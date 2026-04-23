@@ -44,7 +44,7 @@ function mountComponent(options: { disabled?: boolean, maxEmojis?: number, talk?
   return mount(InaliaLiveReactions, {
     props: {
       disabled: options.disabled ?? false,
-      ...(options.maxEmojis !== undefined && { maxEmojis: options.maxEmojis }),
+      maxEmojis: options.maxEmojis,
     },
     global: {
       provide: {
