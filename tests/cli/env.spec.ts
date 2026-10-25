@@ -3,7 +3,6 @@ import { mergeInaliaEnv } from '../../bin/env.mjs'
 
 const values = {
   VITE_INALIA_API_KEY: 'new-token',
-  VITE_INALIA_USERNAME: 'speaker',
   VITE_INALIA_TALK_NUMBER: '1',
 }
 
@@ -23,8 +22,14 @@ describe('setup environment', () => {
     )
   })
 
+  it('does not require a username and preserves obsolete configuration without using it', () => {
+    expect(mergeInaliaEnv('', values)).not.toContain('VITE_INALIA_USERNAME')
+    expect(mergeInaliaEnv('VITE_INALIA_USERNAME=old-speaker\n', values))
+      .toContain('VITE_INALIA_USERNAME=old-speaker')
+  })
+
   it('creates a new file and preserves CRLF in existing files', () => {
-    expect(mergeInaliaEnv('', values)).toContain('VITE_INALIA_USERNAME="speaker"')
+    expect(mergeInaliaEnv('', values)).toContain('VITE_INALIA_TALK_NUMBER="1"')
     expect(mergeInaliaEnv('OTHER=value\r\n', values)).not.toMatch(/(?<!\r)\n/)
   })
 })

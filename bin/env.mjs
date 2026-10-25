@@ -3,7 +3,7 @@ export function mergeInaliaEnv(content, values) {
   const remaining = new Map(Object.entries(values))
   const lines = content ? content.split(/\r?\n/) : []
   const updated = lines.map((line) => {
-    const match = line.match(/^\s*(?:export\s+)?(VITE_INALIA_API_KEY|VITE_INALIA_USERNAME|VITE_INALIA_TALK_NUMBER)\s*=/)
+    const match = line.match(/^\s*(?:export\s+)?(VITE_INALIA_API_KEY|VITE_INALIA_TALK_NUMBER)\s*=/)
     if (!match || !Object.hasOwn(values, match[1]))
       return line
     const key = match[1]
