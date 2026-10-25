@@ -107,6 +107,44 @@ afterEach(() => {
 })
 
 describe('useInaliaQuestion', () => {
+  it('ignores an older request that resolves after the current question', async () => {
+    let resolveFirst!: (value: Question) => void
+    fetchQuestionMock.mockImplementationOnce(() => new Promise((resolve) => {
+      resolveFirst = resolve
+    }))
+    const secondQuestion = { ...question, id: 8, number: 8 }
+    fetchQuestionMock.mockResolvedValueOnce(secondQuestion)
+    const wrapper = mountHost(question.id)
+    questionId.value = 8
+    await flushInalia()
+    expect(inalia.question.value?.id).toBe(8)
+
+    resolveFirst(question)
+    await flushInalia()
+    expect(inalia.question.value?.id).toBe(8)
+    wrapper.unmount()
+  })
+
+  it.each(['clear', 'unmount'])('ignores pending responses after %s', async (action) => {
+    let resolveRequest!: (value: Question) => void
+    fetchQuestionMock.mockImplementationOnce(() => new Promise((resolve) => {
+      resolveRequest = resolve
+    }))
+    const wrapper = mountHost(question.id)
+    if (action === 'clear')
+      questionId.value = undefined
+    else
+      wrapper.unmount()
+    await flushInalia()
+    resolveRequest(question)
+    await flushInalia()
+
+    expect(inalia.question.value).toBeNull()
+    expect(echoListen).not.toHaveBeenCalled()
+    if (action === 'clear')
+      wrapper.unmount()
+  })
+
   it('warns and skips fetching when the question ID is undefined without static content', async () => {
     const warn = vi.spyOn(console, 'warn').mockImplementation(() => {})
     const wrapper = mountHost()
