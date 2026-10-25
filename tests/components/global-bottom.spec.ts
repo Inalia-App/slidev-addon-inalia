@@ -1,15 +1,12 @@
 import { mount } from '@vue/test-utils'
-import { describe, expect, it, vi } from 'vitest'
+import { beforeEach, describe, expect, it, vi } from 'vitest'
 import GlobalBottom from '../../global-bottom.vue'
 
 const mocks = vi.hoisted(() => ({
   currentSlideRouteValue: {
-    meta: {
-      slide: {
-        frontmatter: {},
-      },
-    },
+    meta: { slide: { frontmatter: {} } },
   } as any,
+  configs: {} as any,
   run: vi.fn(),
   talk: null as any,
 }))
@@ -21,6 +18,9 @@ vi.mock('@slidev/client', async () => {
     useNav: () => ({
       currentSlideRoute: computed(() => mocks.currentSlideRouteValue),
     }),
+    get configs() {
+      return mocks.configs
+    },
   }
 })
 
@@ -31,58 +31,51 @@ vi.mock('../../composables/useInaliaTalk', () => ({
   }),
 }))
 
+function mountComponent() {
+  return mount(GlobalBottom, {
+    global: {
+      stubs: {
+        InaliaAudienceQuestionHighlighted: true,
+        InaliaLiveReactions: {
+          name: 'InaliaLiveReactions',
+          props: ['disabled', 'maxEmojis'],
+          template: '<div data-testid="live-reactions" />',
+        },
+        InaliaRunToContinue: true,
+      },
+    },
+  })
+}
+
 describe('global-bottom', () => {
-  it('passes disabled=false to live reactions by default', () => {
+  beforeEach(() => {
+    mocks.configs = {}
     mocks.currentSlideRouteValue = {
-      meta: {
-        slide: {
-          frontmatter: {},
-        },
-      },
+      meta: { slide: { frontmatter: {} } },
     }
-
-    const wrapper = mount(GlobalBottom, {
-      global: {
-        stubs: {
-          InaliaAudienceQuestionHighlighted: true,
-          InaliaLiveReactions: {
-            props: ['disabled'],
-            template: '<div data-testid="live-reactions">{{ disabled }}</div>',
-          },
-          InaliaRunToContinue: true,
-        },
-      },
-    })
-
-    expect(wrapper.get('[data-testid="live-reactions"]').text()).toBe('false')
   })
 
-  it('passes disabled=true when slide frontmatter sets inalia.emoji to false', () => {
-    mocks.currentSlideRouteValue = {
-      meta: {
-        slide: {
-          frontmatter: {
-            inalia: {
-              emoji: false,
-            },
-          },
-        },
-      },
-    }
+  it.each([
+    { root: undefined, slide: undefined, disabled: false, limit: undefined },
+    { root: true, slide: undefined, disabled: false, limit: undefined },
+    { root: false, slide: undefined, disabled: true, limit: undefined },
+    { root: false, slide: true, disabled: false, limit: undefined },
+    { root: false, slide: {}, disabled: false, limit: undefined },
+    { root: {}, slide: undefined, disabled: false, limit: undefined },
+    { root: { limit: 5 }, slide: undefined, disabled: false, limit: 5 },
+    { root: { limit: 5 }, slide: false, disabled: true, limit: 5 },
+    { root: { limit: 5 }, slide: true, disabled: false, limit: 5 },
+    { root: { limit: 0 }, slide: undefined, disabled: false, limit: 0 },
+    { root: null, slide: undefined, disabled: false, limit: undefined },
+    { root: undefined, slide: false, disabled: true, limit: undefined },
+  ])('resolves root $root and slide $slide', ({ root, slide, disabled, limit }) => {
+    mocks.configs = { inalia: { emoji: root } }
+    mocks.currentSlideRouteValue.meta.slide.frontmatter = { inalia: { emoji: slide } }
 
-    const wrapper = mount(GlobalBottom, {
-      global: {
-        stubs: {
-          InaliaAudienceQuestionHighlighted: true,
-          InaliaLiveReactions: {
-            props: ['disabled'],
-            template: '<div data-testid="live-reactions">{{ disabled }}</div>',
-          },
-          InaliaRunToContinue: true,
-        },
-      },
-    })
+    const wrapper = mountComponent()
+    const reactions = wrapper.findComponent({ name: 'InaliaLiveReactions' })
 
-    expect(wrapper.get('[data-testid="live-reactions"]').text()).toBe('true')
+    expect(reactions.props('disabled')).toBe(disabled)
+    expect(reactions.props('maxEmojis')).toBe(limit)
   })
 })

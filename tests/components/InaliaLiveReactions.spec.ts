@@ -40,10 +40,11 @@ let echoPrivate: ReturnType<typeof vi.fn>
 let echoListen: ReturnType<typeof vi.fn>
 let echoLeave: ReturnType<typeof vi.fn>
 
-function mountComponent(options: { disabled?: boolean, talk?: Talk | null } = {}) {
+function mountComponent(options: { disabled?: boolean, maxEmojis?: number, talk?: Talk | null } = {}) {
   return mount(InaliaLiveReactions, {
     props: {
       disabled: options.disabled ?? false,
+      maxEmojis: options.maxEmojis,
     },
     global: {
       provide: {
@@ -127,6 +128,78 @@ describe('inaliaLiveReactions', () => {
 
     expect(wrapper.text()).toContain('🔥')
     expect(echoPrivate).toHaveBeenCalledTimes(1)
+  })
+
+  it('caps a synchronous burst at 20 by default without scheduling overflow', async () => {
+    const wrapper = mountComponent()
+
+    for (let i = 0; i < 25; i++) {
+      emitLiveReaction({ emoji: '🔥' })
+    }
+    await nextTick()
+
+    expect(wrapper.findAll('.inalia-live-reaction')).toHaveLength(20)
+    expect(vi.getTimerCount()).toBe(20)
+  })
+
+  it('drops overflow rather than queuing it and accepts new reactions after expiry', async () => {
+    const wrapper = mountComponent({ maxEmojis: 2 })
+    emitLiveReaction({ emoji: '🔥' })
+    emitLiveReaction({ emoji: '🎉' })
+    emitLiveReaction({ emoji: '🚀' })
+    await nextTick()
+
+    expect(wrapper.findAll('.inalia-live-reaction').map(node => node.text())).toEqual(['🔥', '🎉'])
+    expect(vi.getTimerCount()).toBe(2)
+
+    await vi.advanceTimersByTimeAsync(3000)
+    expect(wrapper.findAll('.inalia-live-reaction')).toHaveLength(0)
+
+    emitLiveReaction({ emoji: '✅' })
+    await nextTick()
+    expect(wrapper.findAll('.inalia-live-reaction').map(node => node.text())).toEqual(['✅'])
+  })
+
+  it.each([
+    { limit: 0, expected: 0 },
+    { limit: -2, expected: 0 },
+    { limit: 1.9, expected: 1 },
+    { limit: Number.NaN, expected: 20 },
+    { limit: Number.POSITIVE_INFINITY, expected: 20 },
+    { limit: Number.NEGATIVE_INFINITY, expected: 20 },
+    // Frontmatter is not runtime type-checked.
+    { limit: '2' as unknown as number, expected: 20 },
+    { limit: null as unknown as number, expected: 20 },
+  ])('normalizes limit $limit to $expected', async ({ limit, expected }) => {
+    const wrapper = mountComponent({ maxEmojis: limit })
+    for (let i = 0; i < 25; i++) {
+      emitLiveReaction({ emoji: '🔥' })
+    }
+    await nextTick()
+
+    expect(wrapper.findAll('.inalia-live-reaction')).toHaveLength(expected)
+    expect(vi.getTimerCount()).toBe(expected)
+  })
+
+  it('uses updated limits without resubscribing', async () => {
+    const wrapper = mountComponent({ maxEmojis: 1 })
+    emitLiveReaction({ emoji: '🔥' })
+    await wrapper.setProps({ maxEmojis: 2 })
+    emitLiveReaction({ emoji: '🎉' })
+    emitLiveReaction({ emoji: '🚀' })
+    await nextTick()
+
+    expect(wrapper.findAll('.inalia-live-reaction')).toHaveLength(2)
+    expect(echoPrivate).toHaveBeenCalledTimes(1)
+  })
+
+  it('also caps the existing hidden buffer while disabled', async () => {
+    const wrapper = mountComponent({ disabled: true, maxEmojis: 1 })
+    emitLiveReaction({ emoji: '🔥' })
+    emitLiveReaction({ emoji: '🚀' })
+    await wrapper.setProps({ disabled: false })
+
+    expect(wrapper.findAll('.inalia-live-reaction').map(node => node.text())).toEqual(['🔥'])
   })
 
   it('does not subscribe in static mode', () => {
