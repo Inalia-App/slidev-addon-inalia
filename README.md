@@ -9,6 +9,15 @@ Slidev Addon Inalia is the official addon for [Inalia](https://inalia.app) to ma
 
 Documentation for Slidev Addon Inalia can be found on the [official documentation](https://docs.inalia.app/slidev-addon-inalia).
 
+## Live versus static mode
+
+`useInaliaStatus().isLive` indicates whether the addon has a configured, loaded
+talk and can use live features. It does not indicate whether the talk is currently
+running: use `useInaliaTalk().talk?.state.running` for that.
+
+The former `isRunning` status property remains as a deprecated alias of
+`isLive` for compatibility.
+
 ## Contributing
 
 Contributions are welcome! Feel free to submit a pull request or open an issue.
