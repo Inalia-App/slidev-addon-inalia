@@ -16,6 +16,7 @@
     "utils/*.ts",
     "composables/*.ts",
     "layouts/*.vue",
-    "components/*.vue"
+    "components/*.vue",
+    "tests/**/*.ts"
   ]
 }

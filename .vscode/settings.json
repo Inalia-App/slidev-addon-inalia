@@ -83,5 +83,8 @@
     "scss",
     "pcss",
     "postcss"
+  ],
+  "cSpell.words": [
+    "INALIA"
   ]
 }

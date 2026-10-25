@@ -1,0 +1,17 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`inaliaText > renders empty list when no data provided 1`] = `"<ul class="inalia inalia-data-text flex gap-x-8 gap-y-2 flex-wrap"></ul>"`;
+
+exports[`inaliaText > renders multiple text items 1`] = `
+"<ul class="inalia inalia-data-text flex gap-x-8 gap-y-2 flex-wrap">
+  <li class="">First answer</li>
+  <li class="">Second answer</li>
+  <li class="">Third answer</li>
+</ul>"
+`;
+
+exports[`inaliaText > renders single text item 1`] = `
+"<ul class="inalia inalia-data-text flex gap-x-8 gap-y-2 flex-wrap">
+  <li class="">Hello World</li>
+</ul>"
+`;

@@ -3,10 +3,11 @@ import type { Answer, MultipleSelectAnswer, SingleSelectAnswer, TextAnswer } fro
 import type { Data, SelectData, TextData } from '../types/data'
 import type { Inalia } from '../types/inalia'
 import type { ChartType, MultipleSelectQuestion, Question, QuestionType, SingleSelectQuestion, TextQuestion } from '../types/question'
-import { computed, onMounted, readonly, ref, shallowRef, toRef, toValue, watch, watchEffect } from 'vue'
+import { computed, inject, onMounted, onScopeDispose, readonly, ref, shallowRef, toRef, toValue, watch, watchEffect } from 'vue'
 import { fetchQuestion } from '../utils/api'
 import { answersChannel } from '../utils/channels'
 import { EVENT_ANSWER_CREATED } from '../utils/events'
+import { useInaliaStatus } from './useInaliaStatus'
 
 interface UseInaliaQuestionOptions {
   /**
@@ -34,15 +35,28 @@ interface UseInaliaQuestionOptions {
   }
 }
 
-export function useInaliaQuestion(defaultQuestionId: MaybeRefOrGetter<number>, options?: UseInaliaQuestionOptions): Inalia {
+export function useInaliaQuestion(defaultQuestionId: MaybeRefOrGetter<number | undefined>, options?: UseInaliaQuestionOptions): Inalia {
   const { staticContent } = options || {}
 
+  const { isLive } = useInaliaStatus()
+  const username = inject<string | undefined>('username', undefined)
   const questionId = toRef(defaultQuestionId)
 
   const question = shallowRef<Question | null>(null)
   const data = ref<Data>([])
 
   const isStatic = ref<boolean>(false)
+  const currentChannel = ref<string | null>(null)
+  let currentHandler: ((event: Answer) => void) | null = null
+
+  onScopeDispose(stopListening)
+
+  let hasWarnedForMissingQuestionId = false
+  let requestVersion = 0
+
+  onScopeDispose(() => {
+    requestVersion++
+  })
 
   // If static content is provided, use it instead of fetching the question.
   watchEffect(() => {
@@ -116,7 +130,7 @@ export function useInaliaQuestion(defaultQuestionId: MaybeRefOrGetter<number>, o
   const eventName = computed(() => answersChannel(question.value?.id))
 
   onMounted(() => {
-    if (isStatic.value) {
+    if (isStatic.value || !isLive) {
       return
     }
 
@@ -127,7 +141,7 @@ export function useInaliaQuestion(defaultQuestionId: MaybeRefOrGetter<number>, o
   })
 
   watch(questionId, () => {
-    if (isStatic.value) {
+    if (isStatic.value || !isLive) {
       return
     }
 
@@ -135,16 +149,58 @@ export function useInaliaQuestion(defaultQuestionId: MaybeRefOrGetter<number>, o
   })
 
   watchEffect(() => {
+    stopListening()
     if (isStatic.value || !question.value) {
       return
     }
 
-    stopListening()
     startListening()
   })
 
   async function fetch(): Promise<void> {
-    question.value = await fetchQuestion(toValue(questionId))
+    if (!isLive) {
+      return
+    }
+
+    const version = ++requestVersion
+    const currentQuestionId = toValue(questionId)
+
+    if (currentQuestionId === undefined) {
+      if (question.value) {
+        stopListening()
+      }
+
+      question.value = null
+      data.value = []
+
+      if (!hasWarnedForMissingQuestionId) {
+        console.warn('[slidev-addon-inalia] `useInaliaQuestion` received an undefined question ID without static content. Skipping question fetch.')
+        hasWarnedForMissingQuestionId = true
+      }
+
+      return
+    }
+
+    hasWarnedForMissingQuestionId = false
+
+    let fetchedQuestion: Question
+    try {
+      if (!username)
+        throw new Error('Inalia account has not been initialized.')
+
+      fetchedQuestion = await fetchQuestion(username, currentQuestionId)
+    }
+    catch (error) {
+      if (version === requestVersion && currentQuestionId === toValue(questionId))
+        console.warn('[slidev-addon-inalia] Could not load question.', error)
+      return
+    }
+
+    // Watchers are scheduled: also compare the ID in case it changed this tick.
+    if (version !== requestVersion || currentQuestionId !== toValue(questionId))
+      return
+
+    question.value = fetchedQuestion
 
     if (question.value.type === 'text') {
       data.value = question.value.answers.map(answer => answer.value) as TextData
@@ -176,14 +232,33 @@ export function useInaliaQuestion(defaultQuestionId: MaybeRefOrGetter<number>, o
   }
 
   function startListening(): void {
-    window.Echo
-      .private(eventName.value)
-      .listen(EVENT_ANSWER_CREATED, (event: Answer) => {
-        if (question.value!.type === 'text') {
-          (data.value as string[]).push((event as TextAnswer).value)
+    if (!eventName.value) {
+      return
+    }
+
+    currentChannel.value = eventName.value
+
+    currentHandler = (event: Answer) => {
+      if (question.value!.type === 'text') {
+        (data.value as string[]).push((event as TextAnswer).value)
+      }
+      else if (question.value!.type === 'single_select') {
+        const choice = question.value!.options.choices.find(choice => choice.value === (event as SingleSelectAnswer).value)
+        if (!choice) {
+          return
         }
-        else if (question.value!.type === 'single_select') {
-          const choice = question.value!.options.choices.find(choice => choice.value === (event as SingleSelectAnswer).value)
+
+        const index = (data.value as SelectData).findIndex(answer => answer.label === choice.text)
+
+        if (index === -1) {
+          return
+        }
+
+        (data.value[index] as SelectData[number]).count++
+      }
+      else if (question.value!.type === 'multiple_select') {
+        for (const value of (event as MultipleSelectAnswer).value) {
+          const choice = question.value!.options.choices.find(choice => choice.value === value)
           if (!choice) {
             return
           }
@@ -196,27 +271,25 @@ export function useInaliaQuestion(defaultQuestionId: MaybeRefOrGetter<number>, o
 
           (data.value[index] as SelectData[number]).count++
         }
-        else if (question.value!.type === 'multiple_select') {
-          for (const value of (event as MultipleSelectAnswer).value) {
-            const choice = question.value!.options.choices.find(choice => choice.value === value)
-            if (!choice) {
-              return
-            }
+      }
+    }
 
-            const index = (data.value as SelectData).findIndex(answer => answer.label === choice.text)
-
-            if (index === -1) {
-              return
-            }
-
-            (data.value[index] as SelectData[number]).count++
-          }
-        }
-      })
+    window.Echo.private(currentChannel.value)
+      .listen(EVENT_ANSWER_CREATED, currentHandler)
   }
 
   function stopListening(): void {
-    window.Echo.leave(eventName.value)
+    if (!currentChannel.value) {
+      return
+    }
+
+    // The Echo channel is shared: remove only this instance's callback.
+    if (currentHandler) {
+      window.Echo.private(currentChannel.value)
+        .stopListening(EVENT_ANSWER_CREATED, currentHandler)
+    }
+    currentHandler = null
+    currentChannel.value = null
   }
 
   return {

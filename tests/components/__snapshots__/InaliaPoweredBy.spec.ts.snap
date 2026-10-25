@@ -1,0 +1,3 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`inaliaPoweredBy > renders Powered by Inalia link 1`] = `"<a href="https://inalia.app" target="_blank" class="border-0!"><span class="flex text-xs flex-row items-center gap-1"> Powered by Inalia <img src="https://inalia.app/favicon.svg" alt="Inalia Logo" class="size-4"></span></a>"`;

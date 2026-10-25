@@ -22,6 +22,7 @@ const { talk, toggleDemoMode } = useInaliaTalk()
     <VerticalDivider />
     <IconButton
       :title="talk.demo_mode ? 'Exit Demo Mode' : 'Enter Demo Mode'"
+      :aria-pressed="talk.demo_mode"
       @click="toggleDemoMode"
     >
       <div class="i-carbon:debug" />

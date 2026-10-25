@@ -1,0 +1,7 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`inaliaLoading > renders loading state 1`] = `
+"<div class="h-full flex w-full items-center justify-center">
+  <p>Loading...</p>
+</div>"
+`;

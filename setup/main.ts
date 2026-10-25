@@ -1,20 +1,20 @@
 import type { ChannelAuthorizationCallback } from 'pusher-js'
 import { defineAppSetup } from '@slidev/types'
 import Echo from 'laravel-echo'
-import { ofetch } from 'ofetch'
 import Pusher from 'pusher-js'
-import { fetchTalk } from '../utils/api'
+import { fetchTalk, fetchUsername } from '../utils/api'
+import { authorizeChannel } from '../utils/authorize'
+import { INALIA_API_KEY, INALIA_TALK_NUMBER } from '../utils/constants'
 
 export default defineAppSetup(async ({ app }) => {
-  if (!import.meta.env.VITE_INALIA_API_KEY
-    && !import.meta.env.VITE_INALIA_USERNAME
-    && !import.meta.env.VITE_INALIA_TALK_NUMBER) {
+  if (!INALIA_API_KEY
+    || !INALIA_TALK_NUMBER) {
     console.warn('Inalia running in static mode — real-time features are disabled.')
 
     // eslint-disable-next-line no-console
     console.info('To enable real-time functionality, add the following env vars to a .env file:')
     // eslint-disable-next-line no-console
-    console.info('  VITE_INALIA_API_KEY, VITE_INALIA_USERNAME, VITE_INALIA_TALK_NUMBER')
+    console.info('  VITE_INALIA_API_KEY, VITE_INALIA_TALK_NUMBER')
     // eslint-disable-next-line no-console
     console.info('You can bootstrap configuration with: npx slidev-addon-inalia')
 
@@ -23,6 +23,9 @@ export default defineAppSetup(async ({ app }) => {
 
     return
   }
+
+  const username = await fetchUsername()
+  app.provide('username', username)
 
   window.Pusher = Pusher
   window.Echo = new Echo({
@@ -36,27 +39,12 @@ export default defineAppSetup(async ({ app }) => {
     authorizer: (channel: { name: string }) => {
       return {
         authorize: (socketId: string, callback: ChannelAuthorizationCallback) => {
-          ofetch(`${import.meta.env.VITE_INALIA_ENDPOINT ?? 'https://inalia.app'}/api/broadcasting/auth`, {
-            method: 'POST',
-            body: {
-              socket_id: socketId,
-              channel_name: channel.name,
-            },
-            headers: {
-              Accept: 'application/json',
-              Authorization: `Bearer ${import.meta.env.VITE_INALIA_API_KEY}`,
-            },
-            onResponse: ({ response }) => {
-              callback(null, response._data)
-            },
-            onRequestError: ({ error }) => {
-              callback(error, null)
-            },
-          })
+          void authorizeChannel(channel.name, socketId, callback)
         },
       }
     },
   })
 
-  app.provide('talk', await fetchTalk())
+  const talk = await fetchTalk(username)
+  app.provide('talk', talk)
 })
