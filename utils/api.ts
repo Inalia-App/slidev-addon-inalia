@@ -1,7 +1,7 @@
 import type { Question } from '../types/question'
 import type { Talk } from '../types/talk'
 import { ofetch } from 'ofetch'
-import { INALIA_API_KEY, INALIA_ENDPOINT, INALIA_OAUTH, INALIA_OAUTH_SESSION, INALIA_TALK_NUMBER, INALIA_USERNAME } from './constants'
+import { INALIA_API_KEY, INALIA_ENDPOINT, INALIA_OAUTH, INALIA_OAUTH_SESSION, INALIA_TALK_NUMBER } from './constants'
 
 export const api = ofetch.create({
   baseURL: INALIA_OAUTH ? '/_inalia' : INALIA_ENDPOINT,
@@ -12,11 +12,6 @@ export const api = ofetch.create({
 })
 
 export async function fetchUsername(): Promise<string> {
-  if (INALIA_OAUTH) {
-    if (!INALIA_USERNAME?.trim())
-      throw new Error('Inalia OAuth requires VITE_INALIA_USERNAME.')
-    return INALIA_USERNAME.trim()
-  }
   const response = await api<{ data?: { username?: string | null } }>('/api/me')
   const username = response.data?.username
   if (typeof username !== 'string' || !username.trim())

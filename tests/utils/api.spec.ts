@@ -13,6 +13,7 @@ beforeEach(() => {
 
 afterEach(() => {
   vi.unstubAllEnvs()
+  vi.unstubAllGlobals()
 })
 
 describe('account discovery', () => {
@@ -45,6 +46,25 @@ describe('account discovery', () => {
     const { fetchUsername } = await import('../../utils/api')
 
     await expect(fetchUsername()).rejects.toThrow('Inalia account discovery failed: username is missing.')
+    expect(request).toHaveBeenCalledExactlyOnceWith('/api/me')
+  })
+
+  it('discovers the OAuth owner through the local proxy without a configured username', async () => {
+    vi.stubGlobal('__INALIA_OAUTH_MODE__', true)
+    vi.stubEnv('VITE_INALIA_USERNAME', undefined)
+    request.mockResolvedValueOnce({ data: { username: 'oauth-owner' } })
+    const { fetchUsername } = await import('../../utils/api')
+
+    expect(await fetchUsername()).toBe('oauth-owner')
+    expect(request).toHaveBeenCalledExactlyOnceWith('/api/me')
+  })
+
+  it('ignores stale username configuration in OAuth mode', async () => {
+    vi.stubGlobal('__INALIA_OAUTH_MODE__', true)
+    request.mockResolvedValueOnce({ data: { username: 'actual-owner' } })
+    const { fetchUsername } = await import('../../utils/api')
+
+    expect(await fetchUsername()).toBe('actual-owner')
     expect(request).toHaveBeenCalledExactlyOnceWith('/api/me')
   })
 

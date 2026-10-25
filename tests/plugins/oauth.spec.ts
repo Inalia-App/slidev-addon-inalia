@@ -1,15 +1,22 @@
 // @vitest-environment node
-import { afterEach, describe, expect, it, vi } from 'vitest'
-import { allowedProxyRequest, inaliaOAuthPlugin, isLocalRequest } from '../../bin/oauth/plugin.mjs'
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
+import { allowedProxyRequest, inaliaOAuthPlugin, isLocalRequest } from '../../plugins/oauth'
 
-const { environment } = vi.hoisted(() => ({ environment: { VITE_INALIA_AUTH: 'oauth', VITE_INALIA_API_KEY: 'old-secret' } }))
+const { environment } = vi.hoisted(() => ({ environment: {} as Record<string, string> }))
 vi.mock('vite', () => ({ loadEnv: () => environment }))
-vi.mock('../../bin/oauth/client.mjs', () => ({ accessToken: async () => 'upstream-only-secret' }))
+vi.mock('../../plugins/oauth/client', () => ({ accessToken: async () => 'upstream-only-secret' }))
 
+beforeEach(() => {
+  for (const key of Object.keys(environment))
+    delete environment[key]
+})
 afterEach(() => vi.unstubAllGlobals())
 
 describe('local OAuth proxy', () => {
   it('permits only the addon REST and channel authorization operations', () => {
+    expect(allowedProxyRequest('GET', '/me')).toBe(true)
+    expect(allowedProxyRequest('POST', '/me')).toBe(false)
+    expect(allowedProxyRequest('GET', '/speaker/talks')).toBe(false)
     expect(allowedProxyRequest('GET', '/speaker/talks/1')).toBe(true)
     expect(allowedProxyRequest('GET', '/speaker/talks/1/questions/2')).toBe(true)
     expect(allowedProxyRequest('POST', '/speaker/talks/1/run')).toBe(true)
@@ -22,7 +29,7 @@ describe('local OAuth proxy', () => {
   it('rejects LAN callers, DNS rebinding, cross-origin requests and missing capabilities', () => {
     const request = {
       socket: { remoteAddress: '127.0.0.1' },
-      headers: { host: 'localhost:3030', origin: 'http://localhost:3030', 'x-inalia-session': 'session' },
+      headers: { 'host': 'localhost:3030', 'origin': 'http://localhost:3030', 'x-inalia-session': 'session' },
     }
     expect(isLocalRequest(request, 'session')).toBe(true)
     expect(isLocalRequest(request, 'wrong-session')).toBe(false)
@@ -31,14 +38,35 @@ describe('local OAuth proxy', () => {
     expect(isLocalRequest({ ...request, headers: { ...request.headers, origin: 'https://attacker.example' } }, 'session')).toBe(false)
   })
 
-  it('does not include a session capability or legacy API key in OAuth builds', () => {
+  it.each([undefined, '', '   '])('defaults to OAuth without an API key (%s)', (key) => {
+    if (key !== undefined)
+      environment.VITE_INALIA_API_KEY = key
+    const config = inaliaOAuthPlugin().config({}, { command: 'serve', mode: 'development' })
+    expect(config.define.__INALIA_OAUTH_MODE__).toBe('true')
+    expect(JSON.parse(config.define.__INALIA_OAUTH_SESSION__)).toMatch(/^[a-f0-9]{64}$/)
+  })
+
+  it('uses API-token authentication when a key exists, ignoring the obsolete mode setting', () => {
+    environment.VITE_INALIA_API_KEY = 'api-secret'
+    environment.VITE_INALIA_AUTH = 'oauth'
+    const plugin = inaliaOAuthPlugin()
+    const config = plugin.config({}, { command: 'serve', mode: 'development' })
+    expect(config.define.__INALIA_OAUTH_MODE__).toBe('false')
+    expect(config.define.__INALIA_OAUTH_SESSION__).toBe('""')
+    expect(config.define).not.toHaveProperty('import.meta.env.VITE_INALIA_API_KEY')
+    const use = vi.fn()
+    plugin.configureServer({ middlewares: { use } })
+    expect(use).not.toHaveBeenCalled()
+  })
+
+  it('does not include a session capability or API key in OAuth builds', () => {
     const fetcher = vi.fn()
     vi.stubGlobal('fetch', fetcher)
     const plugin = inaliaOAuthPlugin()
     const config = plugin.config({}, { command: 'build', mode: 'production' })
     expect(config.define.__INALIA_OAUTH_SESSION__).toBe('""')
     expect(config.define['import.meta.env.VITE_INALIA_API_KEY']).toBe('""')
-    expect(JSON.stringify(config)).not.toContain('old-secret')
+    expect(config.define.__INALIA_OAUTH_MODE__).toBe('true')
     expect(fetcher).not.toHaveBeenCalled()
   })
 
@@ -52,8 +80,10 @@ describe('local OAuth proxy', () => {
     const middleware = use.mock.calls[0][0]
     const response = { statusCode: 200, setHeader: vi.fn(), end: vi.fn() }
     await middleware({
-      method: 'GET', url: '/_inalia/api/speaker/talks/1', socket: { remoteAddress: '127.0.0.1' },
-      headers: { host: 'localhost:3030', origin: 'http://localhost:3030', 'x-inalia-session': JSON.parse(config.define.__INALIA_OAUTH_SESSION__) },
+      method: 'GET',
+      url: '/_inalia/api/speaker/talks/1',
+      socket: { remoteAddress: '127.0.0.1' },
+      headers: { 'host': 'localhost:3030', 'origin': 'http://localhost:3030', 'x-inalia-session': JSON.parse(config.define.__INALIA_OAUTH_SESSION__) },
     }, response, vi.fn())
     expect(fetcher.mock.calls[0][0]).toBe('https://inalia.app/api/slidev/speaker/talks/1')
     expect(fetcher.mock.calls[0][1].headers.Authorization).toBe('Bearer upstream-only-secret')
