@@ -26,6 +26,7 @@
     "bin",
     "components",
     "composables",
+    "custom-nav-controls.vue",
     "dist",
     "global-bottom.vue",
     "index.d.ts",
