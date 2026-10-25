@@ -5,6 +5,19 @@
 
 Slidev Addon Inalia is the official addon for [Inalia](https://inalia.app) to make Slidev presentations interactive.
 
+## Live configuration
+
+Run `npx slidev-addon-inalia` in your Slidev project, or configure:
+
+```dotenv
+VITE_INALIA_API_KEY=YOUR_DEDICATED_TOKEN
+VITE_INALIA_TALK_NUMBER=YOUR_TALK_NUMBER
+```
+
+The addon resolves your username from the token via `GET /api/me`. Your backend must support this endpoint before updating the addon.
+
+Use a dedicated token with **read** permission (also **write** to run talks from the deck). Without the token or talk number, the addon stays in static mode. Tokens are exposed in browser-delivered JavaScript: do not publicly host a live-configured deck.
+
 ## Official Documentation
 
 Documentation for Slidev Addon Inalia can be found on the [official documentation](https://docs.inalia.app/slidev-addon-inalia).

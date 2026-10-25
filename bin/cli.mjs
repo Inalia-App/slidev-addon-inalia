@@ -10,7 +10,7 @@ import { addDependency } from 'nypm'
 import packageJSON from '../package.json' with { type: 'json' }
 import { mergeInaliaEnv } from './env.mjs'
 import { addInaliaAddon } from './frontmatter.mjs'
-import { listTalks } from './talks.mjs'
+import { fetchUsername, listTalks } from './talks.mjs'
 
 const cli = cac('slidev-addon-inalia')
 
@@ -35,12 +35,11 @@ async function readEnvFile() {
   }
 }
 
-async function createEnvFile(username, talkNumber, apiKey) {
+async function createEnvFile(talkNumber, apiKey) {
   const envPath = resolve(process.cwd(), '.env')
   const content = await readEnvFile()
   const envContent = mergeInaliaEnv(content, {
     VITE_INALIA_API_KEY: apiKey,
-    VITE_INALIA_USERNAME: username,
     VITE_INALIA_TALK_NUMBER: talkNumber,
   })
   await writeFile(envPath, envContent, { encoding: 'utf8', mode: 0o600 })
@@ -86,21 +85,6 @@ cli
     p.intro('🎯 Welcome to Slidev Addon Inalia Setup!')
 
     try {
-      // Get username
-      const username = await p.text({
-        message: '👤 Enter your Inalia username:',
-        placeholder: 'your-username',
-        validate: (value) => {
-          if (!value.trim())
-            return 'Username is required'
-        },
-      })
-
-      if (p.isCancel(username)) {
-        p.cancel('Setup cancelled.')
-        process.exit(0)
-      }
-
       // Get talk ID
       const talkNumber = await p.text({
         message: '🎤 Enter your talk ID:',
@@ -137,7 +121,7 @@ cli
 
       // Create .env file
       s.message('📝 Creating .env file...')
-      await createEnvFile(username, talkNumber, apiKey)
+      await createEnvFile(talkNumber, apiKey)
 
       // Install the addon package
       s.message('📦 Installing slidev-addon-inalia...')
@@ -185,19 +169,7 @@ cli
     try {
       const env = parseEnv(await readEnvFile())
       const configured = key => (process.env[key] ?? env[key] ?? '').replace(/\\\$/g, '$').trim()
-      let username = configured('VITE_INALIA_USERNAME')
       let apiKey = configured('VITE_INALIA_API_KEY')
-
-      if (!username) {
-        username = await p.text({
-          message: '👤 Enter your Inalia username:',
-          validate: value => value.trim() ? undefined : 'Username is required',
-        })
-        if (p.isCancel(username)) {
-          p.cancel('Selection cancelled. No files changed.')
-          return
-        }
-      }
       if (!apiKey) {
         p.note('Create a token with read permission at https://inalia.app/profile/tokens', 'API token')
         apiKey = await p.password({
@@ -211,6 +183,7 @@ cli
       }
 
       const endpoint = configured('VITE_INALIA_ENDPOINT') || 'https://inalia.app'
+      const username = await fetchUsername(endpoint, apiKey)
       const talks = await listTalks(endpoint, username, apiKey)
       if (!talks.length) {
         p.log.warn('No talks found. Create a talk in Inalia, then run this command again.')
@@ -230,7 +203,7 @@ cli
         return
       }
 
-      await createEnvFile(username, talkNumber, apiKey)
+      await createEnvFile(talkNumber, apiKey)
       p.outro('Talk saved to .env. Restart Slidev to use it.')
     }
     catch (error) {

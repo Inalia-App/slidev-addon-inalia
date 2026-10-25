@@ -2,20 +2,19 @@ import type { ChannelAuthorizationCallback } from 'pusher-js'
 import { defineAppSetup } from '@slidev/types'
 import Echo from 'laravel-echo'
 import Pusher from 'pusher-js'
-import { fetchTalk } from '../utils/api'
+import { fetchTalk, fetchUsername } from '../utils/api'
 import { authorizeChannel } from '../utils/authorize'
-import { INALIA_API_KEY, INALIA_TALK_NUMBER, INALIA_USERNAME } from '../utils/constants'
+import { INALIA_API_KEY, INALIA_TALK_NUMBER } from '../utils/constants'
 
 export default defineAppSetup(async ({ app }) => {
   if (!INALIA_API_KEY
-    || !INALIA_USERNAME
     || !INALIA_TALK_NUMBER) {
     console.warn('Inalia running in static mode — real-time features are disabled.')
 
     // eslint-disable-next-line no-console
     console.info('To enable real-time functionality, add the following env vars to a .env file:')
     // eslint-disable-next-line no-console
-    console.info('  VITE_INALIA_API_KEY, VITE_INALIA_USERNAME, VITE_INALIA_TALK_NUMBER')
+    console.info('  VITE_INALIA_API_KEY, VITE_INALIA_TALK_NUMBER')
     // eslint-disable-next-line no-console
     console.info('You can bootstrap configuration with: npx slidev-addon-inalia')
 
@@ -24,6 +23,9 @@ export default defineAppSetup(async ({ app }) => {
 
     return
   }
+
+  const username = await fetchUsername()
+  app.provide('username', username)
 
   window.Pusher = Pusher
   window.Echo = new Echo({
@@ -43,5 +45,6 @@ export default defineAppSetup(async ({ app }) => {
     },
   })
 
-  app.provide('talk', await fetchTalk())
+  const talk = await fetchTalk(username)
+  app.provide('talk', talk)
 })
