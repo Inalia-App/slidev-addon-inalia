@@ -56,16 +56,14 @@ describe('useInaliaStatus', () => {
       ...talk,
       state: { disabled: false, running: false, finished: true },
     })
-    expect(status.isLive).toBe(true)
-    expect(status.isRunning).toBe(true)
+    expect(status).toEqual({ isLive: true })
     wrapper.unmount()
   })
 
   it('returns live when a talk is available', () => {
     const wrapper = mountHost(talk)
 
-    expect(status.isLive).toBe(true)
-    expect(status.isRunning).toBe(status.isLive)
+    expect(status).toEqual({ isLive: true })
 
     wrapper.unmount()
   })
@@ -73,8 +71,7 @@ describe('useInaliaStatus', () => {
   it('returns static when no talk is available', () => {
     const wrapper = mountHost()
 
-    expect(status.isLive).toBe(false)
-    expect(status.isRunning).toBe(status.isLive)
+    expect(status).toEqual({ isLive: false })
 
     wrapper.unmount()
   })

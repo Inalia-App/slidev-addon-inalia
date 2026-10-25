@@ -4,8 +4,6 @@ import { inject } from 'vue'
 interface UseInaliaStatus {
   /** Whether Inalia has a configured, loaded talk (rather than static mode). */
   isLive: boolean
-  /** @deprecated Use isLive. This flag does not represent talk.state.running. */
-  isRunning: boolean
 }
 
 export function useInaliaStatus(): UseInaliaStatus {
@@ -15,6 +13,5 @@ export function useInaliaStatus(): UseInaliaStatus {
 
   return {
     isLive,
-    isRunning: isLive,
   }
 }

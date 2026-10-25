@@ -15,9 +15,6 @@ Documentation for Slidev Addon Inalia can be found on the [official documentatio
 talk and can use live features. It does not indicate whether the talk is currently
 running: use `useInaliaTalk().talk?.state.running` for that.
 
-The former `isRunning` status property remains as a deprecated alias of
-`isLive` for compatibility.
-
 ## Contributing
 
 Contributions are welcome! Feel free to submit a pull request or open an issue.
