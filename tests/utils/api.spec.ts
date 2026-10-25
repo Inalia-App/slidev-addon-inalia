@@ -15,6 +15,27 @@ afterEach(() => {
   vi.unstubAllEnvs()
 })
 
+describe('demo mode', () => {
+  it('uses the discovered account and supports empty mutation responses', async () => {
+    request.mockResolvedValue(undefined)
+    const { startDemoMode, stopDemoMode } = await import('../../utils/api')
+
+    await expect(startDemoMode('owner/name')).resolves.toBeUndefined()
+    await expect(stopDemoMode('owner/name')).resolves.toBeUndefined()
+
+    expect(request).toHaveBeenCalledWith('/api/owner%2Fname/talks/7/demo-mode', { method: 'POST' })
+    expect(request).toHaveBeenCalledWith('/api/owner%2Fname/talks/7/demo-mode', { method: 'DELETE' })
+  })
+
+  it.each(['startDemoMode', 'stopDemoMode'] as const)('propagates %s failures', async (method) => {
+    const error = new Error('Forbidden')
+    request.mockRejectedValueOnce(error)
+    const api = await import('../../utils/api')
+
+    await expect(api[method]('current-owner')).rejects.toBe(error)
+  })
+})
+
 describe('account discovery', () => {
   it('uses the explicitly supplied token owner for all routes', async () => {
     request.mockImplementation(async (path: string) => {

@@ -2,6 +2,7 @@ import type { Talk } from '../../types/talk'
 
 export const mockTalk: Talk = {
   id: 1,
+  demo_mode: false,
   title: 'Test Talk',
   description: 'A test presentation',
   color: '#3b82f6',

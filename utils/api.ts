@@ -34,6 +34,18 @@ export async function runTalk(username: string): Promise<void> {
   }).then(response => response.data)
 }
 
+export async function startDemoMode(username: string): Promise<void> {
+  await api(`${talkPath(username)}/demo-mode`, {
+    method: 'POST',
+  })
+}
+
+export async function stopDemoMode(username: string): Promise<void> {
+  await api(`${talkPath(username)}/demo-mode`, {
+    method: 'DELETE',
+  })
+}
+
 export async function fetchQuestion(username: string, questionNumber: number): Promise<Question> {
   return api<{ data: Question }>(`${talkPath(username)}/questions/${questionNumber}`).then(response => response.data)
 }
