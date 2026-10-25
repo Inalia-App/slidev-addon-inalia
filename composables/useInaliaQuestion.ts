@@ -3,7 +3,7 @@ import type { Answer, MultipleSelectAnswer, SingleSelectAnswer, TextAnswer } fro
 import type { Data, SelectData, TextData } from '../types/data'
 import type { Inalia } from '../types/inalia'
 import type { ChartType, MultipleSelectQuestion, Question, QuestionType, SingleSelectQuestion, TextQuestion } from '../types/question'
-import { computed, onMounted, readonly, ref, shallowRef, toRef, toValue, watch, watchEffect } from 'vue'
+import { computed, onMounted, onScopeDispose, readonly, ref, shallowRef, toRef, toValue, watch, watchEffect } from 'vue'
 import { fetchQuestion } from '../utils/api'
 import { answersChannel } from '../utils/channels'
 import { EVENT_ANSWER_CREATED } from '../utils/events'
@@ -46,6 +46,9 @@ export function useInaliaQuestion(defaultQuestionId: MaybeRefOrGetter<number | u
 
   const isStatic = ref<boolean>(false)
   const currentChannel = ref<string | null>(null)
+  let currentHandler: ((event: Answer) => void) | null = null
+
+  onScopeDispose(stopListening)
 
   let hasWarnedForMissingQuestionId = false
 
@@ -140,11 +143,11 @@ export function useInaliaQuestion(defaultQuestionId: MaybeRefOrGetter<number | u
   })
 
   watchEffect(() => {
+    stopListening()
     if (isStatic.value || !question.value) {
       return
     }
 
-    stopListening()
     startListening()
   })
 
@@ -211,14 +214,27 @@ export function useInaliaQuestion(defaultQuestionId: MaybeRefOrGetter<number | u
 
     currentChannel.value = eventName.value
 
-    window.Echo
-      .private(currentChannel.value)
-      .listen(EVENT_ANSWER_CREATED, (event: Answer) => {
-        if (question.value!.type === 'text') {
-          (data.value as string[]).push((event as TextAnswer).value)
+    currentHandler = (event: Answer) => {
+      if (question.value!.type === 'text') {
+        (data.value as string[]).push((event as TextAnswer).value)
+      }
+      else if (question.value!.type === 'single_select') {
+        const choice = question.value!.options.choices.find(choice => choice.value === (event as SingleSelectAnswer).value)
+        if (!choice) {
+          return
         }
-        else if (question.value!.type === 'single_select') {
-          const choice = question.value!.options.choices.find(choice => choice.value === (event as SingleSelectAnswer).value)
+
+        const index = (data.value as SelectData).findIndex(answer => answer.label === choice.text)
+
+        if (index === -1) {
+          return
+        }
+
+        (data.value[index] as SelectData[number]).count++
+      }
+      else if (question.value!.type === 'multiple_select') {
+        for (const value of (event as MultipleSelectAnswer).value) {
+          const choice = question.value!.options.choices.find(choice => choice.value === value)
           if (!choice) {
             return
           }
@@ -231,23 +247,11 @@ export function useInaliaQuestion(defaultQuestionId: MaybeRefOrGetter<number | u
 
           (data.value[index] as SelectData[number]).count++
         }
-        else if (question.value!.type === 'multiple_select') {
-          for (const value of (event as MultipleSelectAnswer).value) {
-            const choice = question.value!.options.choices.find(choice => choice.value === value)
-            if (!choice) {
-              return
-            }
+      }
+    }
 
-            const index = (data.value as SelectData).findIndex(answer => answer.label === choice.text)
-
-            if (index === -1) {
-              return
-            }
-
-            (data.value[index] as SelectData[number]).count++
-          }
-        }
-      })
+    window.Echo.private(currentChannel.value)
+      .listen(EVENT_ANSWER_CREATED, currentHandler)
   }
 
   function stopListening(): void {
@@ -255,7 +259,12 @@ export function useInaliaQuestion(defaultQuestionId: MaybeRefOrGetter<number | u
       return
     }
 
-    window.Echo.leave(currentChannel.value)
+    // The Echo channel is shared: remove only this instance's callback.
+    if (currentHandler) {
+      window.Echo.private(currentChannel.value)
+        .stopListening(EVENT_ANSWER_CREATED, currentHandler)
+    }
+    currentHandler = null
     currentChannel.value = null
   }
 
