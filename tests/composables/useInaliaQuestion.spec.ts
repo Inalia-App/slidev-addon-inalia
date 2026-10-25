@@ -76,6 +76,7 @@ function mountHost(initialQuestionId?: number, options: { talk?: Talk | null, pr
   return mount(Host, {
     global: {
       provide: {
+        username: 'current-owner',
         ...(options.provideTalk === false ? {} : { talk: options.talk === undefined ? talk : options.talk }),
       },
     },
@@ -190,7 +191,7 @@ describe('useInaliaQuestion', () => {
 
     await flushInalia()
 
-    expect(fetchQuestionMock).toHaveBeenCalledWith(question.id)
+    expect(fetchQuestionMock).toHaveBeenCalledWith('current-owner', question.id)
     expect(echoPrivate).toHaveBeenCalledWith(answersChannel(question.id))
 
     questionId.value = undefined

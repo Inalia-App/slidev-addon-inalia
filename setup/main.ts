@@ -2,7 +2,7 @@ import type { ChannelAuthorizationCallback } from 'pusher-js'
 import { defineAppSetup } from '@slidev/types'
 import Echo from 'laravel-echo'
 import Pusher from 'pusher-js'
-import { fetchTalk } from '../utils/api'
+import { fetchTalk, fetchUsername } from '../utils/api'
 import { authorizeChannel } from '../utils/authorize'
 import { INALIA_API_KEY, INALIA_TALK_NUMBER } from '../utils/constants'
 
@@ -24,6 +24,9 @@ export default defineAppSetup(async ({ app }) => {
     return
   }
 
+  const username = await fetchUsername()
+  app.provide('username', username)
+
   window.Pusher = Pusher
   window.Echo = new Echo({
     broadcaster: 'reverb',
@@ -42,5 +45,6 @@ export default defineAppSetup(async ({ app }) => {
     },
   })
 
-  app.provide('talk', await fetchTalk())
+  const talk = await fetchTalk(username)
+  app.provide('talk', talk)
 })

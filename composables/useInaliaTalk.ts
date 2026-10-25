@@ -9,9 +9,13 @@ interface UseInaliaTalk {
 export function useInaliaTalk(): UseInaliaTalk {
   // If the talk is null, the addon is considered to be in static mode.
   const talk = inject<Talk | null>('talk', null)
+  const username = inject<string | undefined>('username', undefined)
 
   async function run(): Promise<void> {
-    await runTalk()
+    if (!username)
+      throw new Error('Inalia account has not been initialized.')
+
+    await runTalk(username)
 
     window.location.reload()
   }

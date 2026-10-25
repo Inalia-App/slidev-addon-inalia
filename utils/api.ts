@@ -11,31 +11,29 @@ export const api = ofetch.create({
   },
 })
 
-let usernamePromise: Promise<string> | undefined
+export async function fetchUsername(): Promise<string> {
+  const response = await api<{ data?: { username?: string | null } }>('/api/me')
+  const username = response.data?.username
+  if (typeof username !== 'string' || !username.trim())
+    throw new Error('Inalia account discovery failed: username is missing.')
 
-async function fetchUsername(): Promise<string> {
-  usernamePromise ??= api<{ data: { username: string } }>('/api/me')
-    .then(response => response.data.username)
-    .catch((error) => {
-      usernamePromise = undefined
-      throw error
-    })
-  return usernamePromise
+  return username
 }
 
-export async function fetchTalk(): Promise<Talk> {
-  const username = encodeURIComponent(await fetchUsername())
-  return api<{ data: Talk }>(`/api/${username}/talks/${INALIA_TALK_NUMBER}`).then(response => response.data)
+function talkPath(username: string): string {
+  return `/api/${encodeURIComponent(username)}/talks/${INALIA_TALK_NUMBER}`
 }
 
-export async function runTalk(): Promise<void> {
-  const username = encodeURIComponent(await fetchUsername())
-  return api(`/api/${username}/talks/${INALIA_TALK_NUMBER}/run`, {
+export async function fetchTalk(username: string): Promise<Talk> {
+  return api<{ data: Talk }>(talkPath(username)).then(response => response.data)
+}
+
+export async function runTalk(username: string): Promise<void> {
+  return api(`${talkPath(username)}/run`, {
     method: 'POST',
   }).then(response => response.data)
 }
 
-export async function fetchQuestion(questionNumber: number): Promise<Question> {
-  const username = encodeURIComponent(await fetchUsername())
-  return api<{ data: Question }>(`/api/${username}/talks/${INALIA_TALK_NUMBER}/questions/${questionNumber}`).then(response => response.data)
+export async function fetchQuestion(username: string, questionNumber: number): Promise<Question> {
+  return api<{ data: Question }>(`${talkPath(username)}/questions/${questionNumber}`).then(response => response.data)
 }

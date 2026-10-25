@@ -16,15 +16,17 @@ afterEach(() => {
 })
 
 describe('account discovery', () => {
-  it('uses the token owner for all routes and shares one account lookup', async () => {
+  it('uses the explicitly supplied token owner for all routes', async () => {
     request.mockImplementation(async (path: string) => {
       if (path === '/api/me')
         return { data: { username: 'current-owner' } }
       return { data: { number: 7 } }
     })
-    const { fetchTalk, fetchQuestion, runTalk } = await import('../../utils/api')
+    const { fetchUsername, fetchTalk, fetchQuestion, runTalk } = await import('../../utils/api')
 
-    await Promise.all([fetchTalk(), fetchQuestion(2), runTalk()])
+    const username = await fetchUsername()
+    expect(username).toBe('current-owner')
+    await Promise.all([fetchTalk(username), fetchQuestion(username, 2), runTalk(username)])
 
     expect(request.mock.calls.filter(([path]) => path === '/api/me')).toHaveLength(1)
     expect(request).toHaveBeenCalledWith('/api/current-owner/talks/7')
@@ -32,17 +34,45 @@ describe('account discovery', () => {
     expect(request).toHaveBeenCalledWith('/api/current-owner/talks/7/run', { method: 'POST' })
   })
 
-  it('propagates discovery errors without requesting a talk and allows retry', async () => {
+  it.each([
+    {},
+    { data: {} },
+    { data: { username: null } },
+    { data: { username: '' } },
+    { data: { username: '   ' } },
+  ])('rejects account discovery without a valid username: %j', async (response) => {
+    request.mockResolvedValueOnce(response)
+    const { fetchUsername } = await import('../../utils/api')
+
+    await expect(fetchUsername()).rejects.toThrow('Inalia account discovery failed: username is missing.')
+    expect(request).toHaveBeenCalledExactlyOnceWith('/api/me')
+  })
+
+  it('propagates account discovery errors', async () => {
     const error = new Error('Unauthorized')
     request.mockRejectedValueOnce(error)
+    const { fetchUsername } = await import('../../utils/api')
+
+    await expect(fetchUsername()).rejects.toBe(error)
+    expect(request).toHaveBeenCalledTimes(1)
+  })
+
+  it('encodes the supplied username in route paths', async () => {
+    request.mockResolvedValueOnce({ data: { number: 7 } })
     const { fetchTalk } = await import('../../utils/api')
 
-    await expect(fetchTalk()).rejects.toBe(error)
-    expect(request).toHaveBeenCalledTimes(1)
+    await fetchTalk('owner/name')
 
-    request.mockResolvedValueOnce({ data: { username: 'owner' } })
-      .mockResolvedValueOnce({ data: { number: 7 } })
-    await expect(fetchTalk()).resolves.toEqual({ number: 7 })
-    expect(request).toHaveBeenLastCalledWith('/api/owner/talks/7')
+    expect(request).toHaveBeenLastCalledWith('/api/owner%2Fname/talks/7')
+  })
+
+  it('keeps requests for different accounts independent', async () => {
+    request.mockResolvedValue({ data: { number: 7 } })
+    const { fetchTalk } = await import('../../utils/api')
+
+    await Promise.all([fetchTalk('first-owner'), fetchTalk('second-owner')])
+
+    expect(request).toHaveBeenCalledWith('/api/first-owner/talks/7')
+    expect(request).toHaveBeenCalledWith('/api/second-owner/talks/7')
   })
 })
