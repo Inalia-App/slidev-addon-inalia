@@ -22,6 +22,7 @@ const talk: Talk = {
     run_to_continue: false,
   },
   urls: {
+    details: 'https://example.com/details',
     overview: 'https://example.com/overview',
     dashboard: 'https://example.com/dashboard',
     tiny_overview: 'https://example.com/t/overview',
@@ -50,10 +51,21 @@ function mountHost(providedTalk?: Talk | null) {
 }
 
 describe('useInaliaStatus', () => {
-  it('returns running when a talk is available', () => {
+  it('distinguishes live configuration from the talk running state', () => {
+    const wrapper = mountHost({
+      ...talk,
+      state: { disabled: false, running: false, finished: true },
+    })
+    expect(status.isLive).toBe(true)
+    expect(status.isRunning).toBe(true)
+    wrapper.unmount()
+  })
+
+  it('returns live when a talk is available', () => {
     const wrapper = mountHost(talk)
 
-    expect(status.isRunning).toBe(true)
+    expect(status.isLive).toBe(true)
+    expect(status.isRunning).toBe(status.isLive)
 
     wrapper.unmount()
   })
@@ -61,7 +73,8 @@ describe('useInaliaStatus', () => {
   it('returns static when no talk is available', () => {
     const wrapper = mountHost()
 
-    expect(status.isRunning).toBe(false)
+    expect(status.isLive).toBe(false)
+    expect(status.isRunning).toBe(status.isLive)
 
     wrapper.unmount()
   })
