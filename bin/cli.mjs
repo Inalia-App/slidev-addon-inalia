@@ -7,6 +7,7 @@ import * as p from '@clack/prompts'
 import { cac } from 'cac'
 import { addDependency } from 'nypm'
 import packageJSON from '../package.json' with { type: 'json' }
+import { mergeInaliaEnv } from './env.mjs'
 import { addInaliaAddon } from './frontmatter.mjs'
 
 const cli = cac('slidev-addon-inalia')
@@ -22,13 +23,21 @@ async function checkFileExists(filePath) {
 }
 
 async function createEnvFile(username, talkNumber, apiKey) {
-  const envContent = `VITE_INALIA_API_KEY=${apiKey}
-VITE_INALIA_USERNAME=${username}
-VITE_INALIA_TALK_NUMBER=${talkNumber}
-`
-
   const envPath = resolve(process.cwd(), '.env')
-  await writeFile(envPath, envContent, 'utf8')
+  let content = ''
+  try {
+    content = await readFile(envPath, 'utf8')
+  }
+  catch (error) {
+    if (error.code !== 'ENOENT')
+      throw error
+  }
+  const envContent = mergeInaliaEnv(content, {
+    VITE_INALIA_API_KEY: apiKey,
+    VITE_INALIA_USERNAME: username,
+    VITE_INALIA_TALK_NUMBER: talkNumber,
+  })
+  await writeFile(envPath, envContent, { encoding: 'utf8', mode: 0o600 })
 }
 
 async function updateSlidesFile() {
