@@ -16,6 +16,13 @@ describe('setup environment', () => {
     expect(mergeInaliaEnv(result, values)).toBe(result)
   })
 
+  it('can update only the talk number without changing credentials', () => {
+    const content = '# Settings\nVITE_INALIA_API_KEY=secret\nVITE_INALIA_USERNAME=speaker\nVITE_INALIA_TALK_NUMBER=1\n'
+    expect(mergeInaliaEnv(content, { VITE_INALIA_TALK_NUMBER: '2' })).toBe(
+      '# Settings\nVITE_INALIA_API_KEY=secret\nVITE_INALIA_USERNAME=speaker\nVITE_INALIA_TALK_NUMBER="2"\n',
+    )
+  })
+
   it('creates a new file and preserves CRLF in existing files', () => {
     expect(mergeInaliaEnv('', values)).toContain('VITE_INALIA_USERNAME="speaker"')
     expect(mergeInaliaEnv('OTHER=value\r\n', values)).not.toMatch(/(?<!\r)\n/)
