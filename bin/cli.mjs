@@ -8,11 +8,9 @@ import { cac } from 'cac'
 import { addDependency } from 'nypm'
 import packageJSON from '../package.json' with { type: 'json' }
 import { mergeInaliaEnv } from './env.mjs'
+import { addInaliaAddon } from './frontmatter.mjs'
 
 const cli = cac('slidev-addon-inalia')
-
-const frontmatterRegex = /^---\n([\s\S]*?)\n---/
-const addonsRegex = /addons:\s*\[(.*?)\]/s
 
 async function checkFileExists(filePath) {
   try {
@@ -54,60 +52,7 @@ async function updateSlidesFile() {
   try {
     const content = await readFile(slidesPath, 'utf8')
 
-    // Check if addon is already configured
-    if (content.includes('slidev-addon-inalia')) {
-      return true
-    }
-
-    // Check if there's existing frontmatter
-    const frontmatterMatch = content.match(frontmatterRegex)
-
-    let newContent
-    if (frontmatterMatch) {
-      // Update existing frontmatter
-      const existingFrontmatter = frontmatterMatch[1]
-      const hasAddons = existingFrontmatter.includes('addons:')
-
-      if (hasAddons) {
-        // Add to existing addons array
-        const updatedFrontmatter = existingFrontmatter.replace(
-          addonsRegex,
-          (_, addons) => {
-            const cleanAddons = addons.trim()
-            if (cleanAddons) {
-              return `addons: [${cleanAddons}, slidev-addon-inalia]`
-            }
-            else {
-              return 'addons: [slidev-addon-inalia]'
-            }
-          },
-        )
-
-        if (updatedFrontmatter === existingFrontmatter) {
-          // No existing addons array, add one
-          const newFrontmatter = `${existingFrontmatter}\naddons:\n  - slidev-addon-inalia`
-          newContent = content.replace(frontmatterMatch[0], `---\n${newFrontmatter}\n---`)
-        }
-        else {
-          newContent = content.replace(frontmatterMatch[0], `---\n${updatedFrontmatter}\n---`)
-        }
-      }
-      else {
-        // Add addons section to existing frontmatter
-        const newFrontmatter = `${existingFrontmatter}\naddons:\n  - slidev-addon-inalia`
-        newContent = content.replace(frontmatterMatch[0], `---\n${newFrontmatter}\n---`)
-      }
-    }
-    else {
-      // Add frontmatter at the beginning
-      const frontmatter = `---
-addons:
-  - slidev-addon-inalia
----
-
-`
-      newContent = frontmatter + content
-    }
+    const newContent = addInaliaAddon(content)
 
     await writeFile(slidesPath, newContent, 'utf8')
     return true

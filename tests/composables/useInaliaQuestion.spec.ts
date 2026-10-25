@@ -6,6 +6,7 @@ import { defineComponent, h, nextTick, ref } from 'vue'
 import { useInaliaQuestion } from '../../composables/useInaliaQuestion'
 import { fetchQuestion } from '../../utils/api'
 import { answersChannel } from '../../utils/channels'
+import { EVENT_ANSWER_CREATED } from '../../utils/events'
 
 vi.mock('../../utils/api', () => ({
   fetchQuestion: vi.fn(),
@@ -57,6 +58,7 @@ let inalia: ReturnType<typeof useInaliaQuestion>
 let echoPrivate: ReturnType<typeof vi.fn>
 let echoListen: ReturnType<typeof vi.fn>
 let echoLeave: ReturnType<typeof vi.fn>
+let echoStopListening: ReturnType<typeof vi.fn>
 
 const fetchQuestionMock = vi.mocked(fetchQuestion)
 
@@ -91,8 +93,10 @@ beforeEach(() => {
   fetchQuestionMock.mockReset()
 
   echoListen = vi.fn()
+  echoStopListening = vi.fn()
   echoPrivate = vi.fn(() => ({
     listen: echoListen,
+    stopListening: echoStopListening,
   }))
   echoLeave = vi.fn()
 
@@ -107,6 +111,24 @@ afterEach(() => {
 })
 
 describe('useInaliaQuestion', () => {
+  it('removes only its own listener on unmount', async () => {
+    fetchQuestionMock.mockResolvedValue(question)
+    const first = mountHost(question.id)
+    await flushInalia()
+    const firstHandler = echoListen.mock.calls[0][1]
+    const second = mountHost(question.id)
+    await flushInalia()
+    const secondHandler = echoListen.mock.calls[1][1]
+
+    first.unmount()
+    expect(echoStopListening).toHaveBeenCalledWith(EVENT_ANSWER_CREATED, firstHandler)
+    expect(echoStopListening).not.toHaveBeenCalledWith(EVENT_ANSWER_CREATED, secondHandler)
+    expect(echoLeave).not.toHaveBeenCalled()
+
+    second.unmount()
+    expect(echoStopListening).toHaveBeenCalledWith(EVENT_ANSWER_CREATED, secondHandler)
+  })
+
   it('warns and skips fetching when the question ID is undefined without static content', async () => {
     const warn = vi.spyOn(console, 'warn').mockImplementation(() => {})
     const wrapper = mountHost()
@@ -122,7 +144,7 @@ describe('useInaliaQuestion', () => {
     wrapper.unmount()
   })
 
-  it('clears the current question and leaves the previous channel when the question ID becomes undefined', async () => {
+  it('clears the current question and removes its listener when the question ID becomes undefined', async () => {
     fetchQuestionMock.mockResolvedValue(question)
 
     const warn = vi.spyOn(console, 'warn').mockImplementation(() => {})
@@ -138,7 +160,8 @@ describe('useInaliaQuestion', () => {
 
     expect(fetchQuestionMock).toHaveBeenCalledTimes(1)
     expect(warn).toHaveBeenCalledWith(warningMessage)
-    expect(echoLeave).toHaveBeenCalledWith(answersChannel(question.id))
+    expect(echoStopListening).toHaveBeenCalledWith(EVENT_ANSWER_CREATED, echoListen.mock.calls[0][1])
+    expect(echoLeave).not.toHaveBeenCalled()
     expect(inalia.question.value).toBeNull()
     expect(inalia.data.value).toEqual([])
 

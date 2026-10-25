@@ -1,10 +1,10 @@
 import type { ChannelAuthorizationCallback } from 'pusher-js'
 import { defineAppSetup } from '@slidev/types'
 import Echo from 'laravel-echo'
-import { ofetch } from 'ofetch'
 import Pusher from 'pusher-js'
 import { fetchTalk } from '../utils/api'
-import { INALIA_API_KEY, INALIA_ENDPOINT, INALIA_TALK_NUMBER, INALIA_USERNAME } from '../utils/constants'
+import { authorizeChannel } from '../utils/authorize'
+import { INALIA_API_KEY, INALIA_TALK_NUMBER, INALIA_USERNAME } from '../utils/constants'
 
 export default defineAppSetup(async ({ app }) => {
   if (!INALIA_API_KEY
@@ -37,23 +37,7 @@ export default defineAppSetup(async ({ app }) => {
     authorizer: (channel: { name: string }) => {
       return {
         authorize: (socketId: string, callback: ChannelAuthorizationCallback) => {
-          ofetch(`${INALIA_ENDPOINT}/api/broadcasting/auth`, {
-            method: 'POST',
-            body: {
-              socket_id: socketId,
-              channel_name: channel.name,
-            },
-            headers: {
-              Accept: 'application/json',
-              Authorization: `Bearer ${INALIA_API_KEY}`,
-            },
-            onResponse: ({ response }) => {
-              callback(null, response._data)
-            },
-            onRequestError: ({ error }) => {
-              callback(error, null)
-            },
-          })
+          void authorizeChannel(channel.name, socketId, callback)
         },
       }
     },
