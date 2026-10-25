@@ -51,6 +51,11 @@ export function useInaliaQuestion(defaultQuestionId: MaybeRefOrGetter<number | u
   onScopeDispose(stopListening)
 
   let hasWarnedForMissingQuestionId = false
+  let requestVersion = 0
+
+  onScopeDispose(() => {
+    requestVersion++
+  })
 
   // If static content is provided, use it instead of fetching the question.
   watchEffect(() => {
@@ -156,6 +161,7 @@ export function useInaliaQuestion(defaultQuestionId: MaybeRefOrGetter<number | u
       return
     }
 
+    const version = ++requestVersion
     const currentQuestionId = toValue(questionId)
 
     if (currentQuestionId === undefined) {
@@ -176,7 +182,21 @@ export function useInaliaQuestion(defaultQuestionId: MaybeRefOrGetter<number | u
 
     hasWarnedForMissingQuestionId = false
 
-    question.value = await fetchQuestion(currentQuestionId)
+    let fetchedQuestion: Question
+    try {
+      fetchedQuestion = await fetchQuestion(currentQuestionId)
+    }
+    catch (error) {
+      if (version === requestVersion && currentQuestionId === toValue(questionId))
+        console.warn('[slidev-addon-inalia] Could not load question.', error)
+      return
+    }
+
+    // Watchers are scheduled: also compare the ID in case it changed this tick.
+    if (version !== requestVersion || currentQuestionId !== toValue(questionId))
+      return
+
+    question.value = fetchedQuestion
 
     if (question.value.type === 'text') {
       data.value = question.value.answers.map(answer => answer.value) as TextData
