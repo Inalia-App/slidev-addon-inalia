@@ -23,6 +23,7 @@
     "slidev-addon-inalia": "./dist/cli/index.mjs"
   },
   "files": [
+    "bin/oauth",
     "components",
     "composables",
     "custom-nav-controls.vue",

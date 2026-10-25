@@ -2,6 +2,7 @@ import process from 'node:process'
 import { readUser } from 'rc9'
 import { defineConfig, loadEnv } from 'vite'
 import { publicBuildDefines } from './utils/public-build'
+import { inaliaOAuthPlugin } from './bin/oauth/plugin.mjs'
 
 export default defineConfig({
   plugins: [
@@ -28,6 +29,7 @@ export default defineConfig({
         },
       }
     })(),
+    inaliaOAuthPlugin(),
   ],
 
   optimizeDeps: {

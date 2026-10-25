@@ -28,6 +28,20 @@ describe('setup environment', () => {
       .toContain('VITE_INALIA_USERNAME=old-speaker')
   })
 
+  it('clears an old API key when switching to OAuth without changing unrelated settings', () => {
+    const result = mergeInaliaEnv('VITE_INALIA_API_KEY=old-secret\nOTHER=keep\n', {
+      ...values, VITE_INALIA_API_KEY: '', VITE_INALIA_AUTH: 'oauth', VITE_INALIA_ENDPOINT: 'https://inalia.app',
+    })
+    expect(result).not.toContain('old-secret')
+    expect(result).toContain('VITE_INALIA_API_KEY=""')
+    expect(result).toContain('VITE_INALIA_AUTH="oauth"')
+    expect(result).toContain('OTHER=keep')
+  })
+
+  it('preserves managed keys not included in a partial update', () => {
+    expect(mergeInaliaEnv('VITE_INALIA_API_KEY=keep\n', { VITE_INALIA_AUTH: 'token' })).toContain('VITE_INALIA_API_KEY=keep')
+  })
+
   it('creates a new file and preserves CRLF in existing files', () => {
     expect(mergeInaliaEnv('', values)).toContain('VITE_INALIA_TALK_NUMBER="1"')
     expect(mergeInaliaEnv('OTHER=value\r\n', values)).not.toMatch(/(?<!\r)\n/)

@@ -7,6 +7,7 @@ import { parseEnv } from 'node:util'
 import * as p from '@clack/prompts'
 import { cac } from 'cac'
 import { addDependency } from 'nypm'
+import { login, logout } from '../bin/oauth/client.mjs'
 import packageJSON from '../package.json' with { type: 'json' }
 import { mergeInaliaEnv } from './env'
 import { addInaliaAddon } from './frontmatter'
@@ -35,11 +36,14 @@ async function readEnvFile(): Promise<string> {
   }
 }
 
-async function createEnvFile(talkNumber: string, apiKey: string): Promise<void> {
+async function createEnvFile(talkNumber: string, apiKey: string, auth?: string, endpoint?: string, username?: string): Promise<void> {
   const envPath = resolve(process.cwd(), '.env')
   const content = await readEnvFile()
   const envContent = mergeInaliaEnv(content, {
     VITE_INALIA_API_KEY: apiKey,
+    ...(auth === undefined ? {} : { VITE_INALIA_AUTH: auth }),
+    ...(endpoint === undefined ? {} : { VITE_INALIA_ENDPOINT: endpoint }),
+    ...(username === undefined ? {} : { VITE_INALIA_USERNAME: username }),
     VITE_INALIA_TALK_NUMBER: talkNumber,
   })
   await writeFile(envPath, envContent, { encoding: 'utf8', mode: 0o600 })
@@ -80,8 +84,39 @@ async function installAddon(): Promise<boolean> {
 }
 
 cli
+  .command('login', 'Sign in to Inalia with OAuth (credentials stay outside the deck)')
+  .option('--endpoint <url>', 'Inalia origin', { default: 'https://inalia.app' })
+  .option('--no-open', 'Print the login URL without opening a browser')
+  .option('--read-only', 'Request live read access without permission to start talks')
+  .action(async (options) => {
+    try {
+      await login({ endpoint: options.endpoint, open: options.open, readOnly: options.readOnly, onUrl: p.log.info })
+      p.log.success('Signed in. Set VITE_INALIA_AUTH=oauth in your deck and restart Slidev.')
+    }
+    catch (error) {
+      p.log.error(error instanceof Error ? error.message : String(error))
+      process.exitCode = 1
+    }
+  })
+
+cli
+  .command('logout', 'Revoke the current OAuth token and remove local credentials')
+  .option('--endpoint <url>', 'Inalia origin', { default: 'https://inalia.app' })
+  .action(async (options) => {
+    try {
+      await logout(options.endpoint)
+      p.log.success('Signed out of Inalia.')
+    }
+    catch (error) {
+      p.log.error(error instanceof Error ? error.message : String(error))
+      process.exitCode = 1
+    }
+  })
+
+cli
   .command('[...args]', 'Setup Slidev Addon Inalia for your presentation')
-  .action(async () => {
+  .option('--endpoint <url>', 'Inalia origin', { default: 'https://inalia.app' })
+  .action(async (_args, options) => {
     p.intro('🎯 Welcome to Slidev Addon Inalia Setup!')
 
     try {
@@ -100,20 +135,42 @@ cli
         process.exit(0)
       }
 
-      // Show token help and get token
-      p.note('🔑 To get your API token, visit: https://inalia.app/profile/tokens', 'About API Token')
-
-      const apiKey = await p.password({
-        message: '🔐 Enter your API token:',
-        validate: (value) => {
-          if (!value.trim())
-            return 'API token is required'
-        },
+      const auth = await p.select({
+        message: 'How would you like to connect?',
+        options: [
+          { value: 'oauth', label: 'Sign in with Inalia (recommended for local presentations)' },
+          { value: 'token', label: 'Use an existing API token (legacy)' },
+        ],
       })
-
-      if (p.isCancel(apiKey)) {
+      if (p.isCancel(auth)) {
         p.cancel('Setup cancelled.')
-        process.exit(0)
+        return
+      }
+      let username: string | undefined
+      let apiKey = ''
+      if (auth === 'oauth') {
+        await login({ endpoint: options.endpoint, onUrl: p.log.info })
+        const owner = await p.text({
+          message: 'Enter your Inalia username:',
+          validate: value => value.trim() ? undefined : 'Username is required',
+        })
+        if (p.isCancel(owner)) {
+          p.cancel('Setup cancelled.')
+          return
+        }
+        username = owner.trim()
+      }
+      else {
+        p.note('API tokens are exposed to the presentation browser. Never publish a deck containing one.', 'Legacy API token')
+        const token = await p.password({
+          message: 'Enter your API token:',
+          validate: value => value.trim() ? undefined : 'API token is required',
+        })
+        if (p.isCancel(token)) {
+          p.cancel('Setup cancelled.')
+          return
+        }
+        apiKey = token
       }
 
       const s = p.spinner()
@@ -121,7 +178,7 @@ cli
 
       // Create .env file
       s.message('📝 Creating .env file...')
-      await createEnvFile(talkNumber, apiKey)
+      await createEnvFile(talkNumber, apiKey, auth, options.endpoint, username)
 
       // Install the addon package
       s.message('📦 Installing slidev-addon-inalia...')

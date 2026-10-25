@@ -4,19 +4,20 @@ import Echo from 'laravel-echo'
 import Pusher from 'pusher-js'
 import { fetchTalk, fetchUsername } from '../utils/api'
 import { authorizeChannel } from '../utils/authorize'
-import { INALIA_API_KEY, INALIA_TALK_NUMBER } from '../utils/constants'
+import { INALIA_AUTHENTICATED, INALIA_OAUTH, INALIA_TALK_NUMBER, INALIA_USERNAME } from '../utils/constants'
 
 export default defineAppSetup(async ({ app }) => {
-  if (!INALIA_API_KEY
+  if (!INALIA_AUTHENTICATED
+    || (INALIA_OAUTH && !INALIA_USERNAME)
     || !INALIA_TALK_NUMBER) {
     console.warn('Inalia running in static mode — real-time features are disabled.')
 
     // eslint-disable-next-line no-console
     console.info('To enable real-time functionality, add the following env vars to a .env file:')
     // eslint-disable-next-line no-console
-    console.info('  VITE_INALIA_API_KEY, VITE_INALIA_TALK_NUMBER')
+    console.info('  VITE_INALIA_TALK_NUMBER and VITE_INALIA_API_KEY (or VITE_INALIA_AUTH=oauth with VITE_INALIA_USERNAME)')
     // eslint-disable-next-line no-console
-    console.info('You can bootstrap configuration with: npx slidev-addon-inalia')
+    console.info('Bootstrap with: npx slidev-addon-inalia. OAuth requires a local Slidev dev server; exports use static data.')
 
     // eslint-disable-next-line no-console
     console.info('Documentation: https://docs.inalia.app/slidev-addon-inalia')

@@ -1,11 +1,11 @@
 import type { ChannelAuthorizationCallback } from 'pusher-js'
 import { ofetch } from 'ofetch'
-import { INALIA_API_KEY, INALIA_ENDPOINT } from './constants'
+import { INALIA_API_KEY, INALIA_ENDPOINT, INALIA_OAUTH, INALIA_OAUTH_SESSION } from './constants'
 
 export async function authorizeChannel(channelName: string, socketId: string, callback: ChannelAuthorizationCallback): Promise<void> {
   let data: Parameters<ChannelAuthorizationCallback>[1]
   try {
-    data = await ofetch(`${INALIA_ENDPOINT}/api/broadcasting/auth`, {
+    data = await ofetch(INALIA_OAUTH ? '/_inalia/api/broadcasting/auth' : `${INALIA_ENDPOINT}/api/broadcasting/auth`, {
       method: 'POST',
       retry: 0,
       body: {
@@ -14,7 +14,7 @@ export async function authorizeChannel(channelName: string, socketId: string, ca
       },
       headers: {
         Accept: 'application/json',
-        Authorization: `Bearer ${INALIA_API_KEY}`,
+        ...(INALIA_OAUTH ? { 'X-Inalia-Session': INALIA_OAUTH_SESSION } : { Authorization: `Bearer ${INALIA_API_KEY}` }),
       },
     })
   }
