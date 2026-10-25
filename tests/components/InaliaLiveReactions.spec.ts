@@ -9,6 +9,7 @@ import { EVENT_LIVE_REACTION_SUBMITTED } from '../../utils/events'
 
 const talk: Talk = {
   id: 42,
+  demo_mode: false,
   title: 'Testing live reactions',
   description: 'A talk just for tests',
   color: '#6b46c1',
