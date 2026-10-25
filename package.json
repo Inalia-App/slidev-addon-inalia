@@ -20,10 +20,9 @@
   "main": "./dist/index.js",
   "types": "./index.d.ts",
   "bin": {
-    "slidev-addon-inalia": "./bin/cli.mjs"
+    "slidev-addon-inalia": "./dist/cli/index.mjs"
   },
   "files": [
-    "bin",
     "components",
     "composables",
     "custom-nav-controls.vue",
@@ -47,7 +46,9 @@
   },
   "scripts": {
     "build": "slidev build",
-    "prepack": "tsdown",
+    "prepack": "tsdown && pnpm run build:cli",
+    "build:cli": "tsdown --config cli/tsdown.config.ts",
+    "typecheck:cli": "tsc --project cli/tsconfig.json",
     "dev": "slidev --open",
     "export": "slidev export",
     "lint": "eslint .",

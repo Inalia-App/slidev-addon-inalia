@@ -1,6 +1,6 @@
 import { ofetch } from 'ofetch'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
-import { fetchUsername, listTalks } from '../../bin/talks.mjs'
+import { fetchUsername, listTalks } from '../../cli/talks'
 
 vi.mock('ofetch', () => ({ ofetch: vi.fn() }))
 

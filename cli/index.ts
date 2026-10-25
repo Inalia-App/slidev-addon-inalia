@@ -8,13 +8,13 @@ import * as p from '@clack/prompts'
 import { cac } from 'cac'
 import { addDependency } from 'nypm'
 import packageJSON from '../package.json' with { type: 'json' }
-import { mergeInaliaEnv } from './env.mjs'
-import { addInaliaAddon } from './frontmatter.mjs'
-import { fetchUsername, listTalks } from './talks.mjs'
+import { mergeInaliaEnv } from './env'
+import { addInaliaAddon } from './frontmatter'
+import { fetchUsername, listTalks } from './talks'
 
 const cli = cac('slidev-addon-inalia')
 
-async function checkFileExists(filePath) {
+async function checkFileExists(filePath: string): Promise<boolean> {
   try {
     await access(filePath)
     return true
@@ -24,18 +24,18 @@ async function checkFileExists(filePath) {
   }
 }
 
-async function readEnvFile() {
+async function readEnvFile(): Promise<string> {
   try {
     return await readFile(resolve(process.cwd(), '.env'), 'utf8')
   }
   catch (error) {
-    if (error.code !== 'ENOENT')
+    if (!(error instanceof Error && 'code' in error && error.code === 'ENOENT'))
       throw error
     return ''
   }
 }
 
-async function createEnvFile(talkNumber, apiKey) {
+async function createEnvFile(talkNumber: string, apiKey: string): Promise<void> {
   const envPath = resolve(process.cwd(), '.env')
   const content = await readEnvFile()
   const envContent = mergeInaliaEnv(content, {
@@ -45,7 +45,7 @@ async function createEnvFile(talkNumber, apiKey) {
   await writeFile(envPath, envContent, { encoding: 'utf8', mode: 0o600 })
 }
 
-async function updateSlidesFile() {
+async function updateSlidesFile(): Promise<boolean> {
   const slidesPath = resolve(process.cwd(), 'slides.md')
 
   // Check if slides.md exists
@@ -63,11 +63,11 @@ async function updateSlidesFile() {
     return true
   }
   catch (error) {
-    throw new Error(`Error updating slides.md: ${error.message}`)
+    throw new Error(`Error updating slides.md: ${error instanceof Error ? error.message : String(error)}`)
   }
 }
 
-async function installAddon() {
+async function installAddon(): Promise<boolean> {
   try {
     await addDependency('slidev-addon-inalia', {
       silent: true,
@@ -75,7 +75,7 @@ async function installAddon() {
     return true
   }
   catch (error) {
-    throw new Error(`Error installing package: ${error.message}. You can manually install with: npm install slidev-addon-inalia`)
+    throw new Error(`Error installing package: ${error instanceof Error ? error.message : String(error)}. You can manually install with: npm install slidev-addon-inalia`)
   }
 }
 
@@ -156,7 +156,7 @@ ${!installSuccess ? '1. Install the addon: npm install slidev-addon-inalia\n2. R
       process.exit(0)
     }
     catch (error) {
-      p.cancel(`❌ Setup failed: ${error.message}`)
+      p.cancel(`❌ Setup failed: ${error instanceof Error ? error.message : String(error)}`)
       process.exit(1)
     }
   })
@@ -168,18 +168,19 @@ cli
 
     try {
       const env = parseEnv(await readEnvFile())
-      const configured = key => (process.env[key] ?? env[key] ?? '').replace(/\\\$/g, '$').trim()
+      const configured = (key: string): string => (process.env[key] ?? env[key] ?? '').replace(/\\\$/g, '$').trim()
       let apiKey = configured('VITE_INALIA_API_KEY')
       if (!apiKey) {
         p.note('Create a token with read permission at https://inalia.app/profile/tokens', 'API token')
-        apiKey = await p.password({
+        const token = await p.password({
           message: '🔐 Enter your API token:',
           validate: value => value.trim() ? undefined : 'API token is required',
         })
-        if (p.isCancel(apiKey)) {
+        if (p.isCancel(token)) {
           p.cancel('Selection cancelled. No files changed.')
           return
         }
+        apiKey = token
       }
 
       const endpoint = configured('VITE_INALIA_ENDPOINT') || 'https://inalia.app'
@@ -207,7 +208,7 @@ cli
       p.outro('Talk saved to .env. Restart Slidev to use it.')
     }
     catch (error) {
-      p.cancel(`Selection failed: ${error.message}`)
+      p.cancel(`Selection failed: ${error instanceof Error ? error.message : String(error)}`)
       process.exitCode = 1
     }
   })

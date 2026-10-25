@@ -1,8 +1,14 @@
 import { ofetch } from 'ofetch'
 
+export interface Talk {
+  number: string | number
+  title: string
+  scheduled_at?: string
+}
+
 const trailingSlash = /\/$/
 
-export async function fetchUsername(endpoint, apiKey) {
+export async function fetchUsername(endpoint: string, apiKey: string): Promise<string> {
   const url = new URL(`${endpoint.replace(trailingSlash, '')}/api/me`)
   if (!['http:', 'https:'].includes(url.protocol))
     throw new Error('VITE_INALIA_ENDPOINT must be an HTTP(S) server origin.')
@@ -20,7 +26,7 @@ export async function fetchUsername(endpoint, apiKey) {
   return username
 }
 
-export async function listTalks(endpoint, username, apiKey) {
+export async function listTalks(endpoint: string, username: string, apiKey: string): Promise<Talk[]> {
   const url = new URL(`${endpoint.replace(trailingSlash, '')}/api/${encodeURIComponent(username.trim())}/talks`)
   if (!['http:', 'https:'].includes(url.protocol))
     throw new Error('VITE_INALIA_ENDPOINT must be an HTTP(S) server origin.')
@@ -32,7 +38,7 @@ export async function listTalks(endpoint, username, apiKey) {
   }).catch(() => {
     throw new Error('Could not list talks. Check the endpoint, username, token read permission, and account access.')
   })
-  if (!Array.isArray(response?.data) || response.data.some(talk => !talk || talk.number == null || typeof talk.title !== 'string'))
+  if (!Array.isArray(response?.data) || response.data.some((talk: Talk | null) => !talk || talk.number == null || typeof talk.title !== 'string'))
     throw new Error('Unexpected talk list response. Check your Inalia server version.')
   return response.data
 }

@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest'
 import { parse } from 'yaml'
-import { addInaliaAddon } from '../../bin/frontmatter.mjs'
+import { addInaliaAddon } from '../../cli/frontmatter'
 
 describe('setup frontmatter', () => {
   it.each([

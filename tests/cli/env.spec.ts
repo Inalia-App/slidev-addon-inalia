@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { mergeInaliaEnv } from '../../bin/env.mjs'
+import { mergeInaliaEnv } from '../../cli/env'
 
 const values = {
   VITE_INALIA_API_KEY: 'new-token',

@@ -1,8 +1,10 @@
-import { isMap, isSeq, parseDocument } from 'yaml'
+import { isMap, isScalar, isSeq, parseDocument } from 'yaml'
 
-export function addInaliaAddon(content) {
+const frontmatterPattern = /^\uFEFF?---\r?\n([\s\S]*?)\r?\n---(?=\r?\n|$)/
+
+export function addInaliaAddon(content: string): string {
   const eol = content.includes('\r\n') ? '\r\n' : '\n'
-  const match = content.match(/^(?:\uFEFF)?---\r?\n([\s\S]*?)\r?\n---(?=\r?\n|$)/)
+  const match = content.match(frontmatterPattern)
   const doc = parseDocument(match ? match[1] : '')
   if (doc.errors.length)
     throw new Error(`Invalid slide frontmatter: ${doc.errors[0].message}`)
@@ -14,7 +16,7 @@ export function addInaliaAddon(content) {
     throw new Error('Frontmatter addons must be a YAML sequence.')
 
   // Slidev accepts both the full package name and its shorthand.
-  if (addons?.items.some(item => ['inalia', 'slidev-addon-inalia'].includes(item?.value)))
+  if (addons?.items.some(item => isScalar(item) && ['inalia', 'slidev-addon-inalia'].includes(item.value as string)))
     return content
 
   if (addons)
