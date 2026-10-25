@@ -1,7 +1,9 @@
 <script lang="ts">
 import type { DeepReadonly } from 'vue'
 import type { SelectData } from '../types/data'
-import { VisDonut, VisSingleContainer } from '@unovis/vue'
+import { defineChart } from '@tanstack/charts'
+import { pie, polar, radialArc } from '@tanstack/charts/polar'
+import { Chart } from '@tanstack/charts/vue'
 import { tv } from 'tailwind-variants'
 import { computed } from 'vue'
 
@@ -27,24 +29,29 @@ defineSlots<InaliaChartDonutSlots>()
 
 const ui = computed(() => inaliaChartDonut())
 
-const cornerRadius = 4
-const padAngle = 0.04
-const arcWidth = 30
-const showBackground = false
-
-const value = (d: SelectData[number]) => d.count
-const color = (d: SelectData[number]) => d.color
+const definition = computed(() => defineChart({
+  marks: [
+    polar({
+      marks: [
+        radialArc(pie(props.data, { value: 'count', gapAngle: 0.04 }), {
+          innerRadius: ({ radius }) => Math.max(0, radius - 30),
+          cornerRadius: 4,
+          fill: d => d.color,
+        }),
+      ],
+      scales: { angle: null, radius: null },
+    }),
+  ],
+  scales: { x: null, y: null },
+  margin: 0,
+}))
 </script>
 
 <template>
-  <VisSingleContainer :data="data" :class="ui.base({ class: [props.ui?.base, props.class] })">
-    <VisDonut
-      :value="value"
-      :color="color"
-      :corner-radius="cornerRadius"
-      :pad-angle="padAngle"
-      :arc-width="arcWidth"
-      :show-background="showBackground"
-    />
-  </VisSingleContainer>
+  <Chart
+    :definition="definition"
+    :height="300"
+    aria-label="Audience response proportions"
+    :class="ui.base({ class: [props.ui?.base, props.class] })"
+  />
 </template>

@@ -1,6 +1,5 @@
 <script lang="ts">
 import type { SelectData } from '../types/data'
-import { VisBulletLegend } from '@unovis/vue'
 import { tv } from 'tailwind-variants'
 import { computed } from 'vue'
 
@@ -25,10 +24,13 @@ defineEmits<InaliaLegendEmits>()
 defineSlots<InaliaLegendSlots>()
 
 const ui = computed(() => inaliaLegend())
-
-const items = computed(() => props.data.map(d => ({ name: `${d.count} - ${d.label}`, color: d.color })))
 </script>
 
 <template>
-  <VisBulletLegend :items="items" :class="ui.base({ class: [props.ui?.base, props.class] })" label-class-name="inalia inalia-legend-text" />
+  <div role="list" :class="ui.base({ class: [props.ui?.base, props.class] })">
+    <div v-for="(item, index) in data" :key="index" role="listitem" class="inalia-legend-item">
+      <span class="inalia-legend-bullet" :style="{ backgroundColor: item.color }" aria-hidden="true" />
+      <span class="inalia inalia-legend-text">{{ item.count }} - {{ item.label }}</span>
+    </div>
+  </div>
 </template>
