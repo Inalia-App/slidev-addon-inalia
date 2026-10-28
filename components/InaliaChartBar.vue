@@ -1,7 +1,10 @@
 <script lang="ts">
 import type { DeepReadonly } from 'vue'
 import type { SelectData } from '../types/data'
-import { VisStackedBar, VisXYContainer } from '@unovis/vue'
+import { barY, defineChart } from '@tanstack/charts'
+import { scaleBand } from '@tanstack/charts/scales/band'
+import { scaleLinear } from '@tanstack/charts/scales/linear'
+import { Chart } from '@tanstack/charts/vue'
 import { tv } from 'tailwind-variants'
 import { computed } from 'vue'
 
@@ -27,23 +30,29 @@ defineSlots<InaliaChartBarSlots>()
 
 const ui = computed(() => inaliaChartBar())
 
-const barWidth = 30
-const barPadding = 0.1
-const roundedCorners = 4
-
-const x = (d: SelectData[number], index: number) => index
-const y = (d: SelectData[number]) => d.count
-const color = (d: SelectData[number]) => d.color
+const definition = computed(() => defineChart({
+  marks: [
+    barY(props.data.map(d => ({ ...d })), {
+      x: (_datum, { index }) => index,
+      y: 'count',
+      fill: d => d.color,
+      maxThickness: 30,
+      radius: 4,
+    }),
+  ],
+  scales: {
+    x: { scale: () => scaleBand<number>().padding(0.1), axis: false },
+    y: { scale: scaleLinear, axis: false },
+  },
+  margin: 0,
+}))
 </script>
 
 <template>
-  <VisXYContainer :data="data" :class="ui.base({ class: [props.ui?.base, props.class] })">
-    <VisStackedBar
-      :x="x"
-      :y="y"
-      :color="color"
-      :bar-width="barWidth"
-      :bar-padding="barPadding" :rounded-corners="roundedCorners"
-    />
-  </VisXYContainer>
+  <Chart
+    :definition="definition"
+    :height="300"
+    aria-label="Audience response counts"
+    :class="ui.base({ class: [props.ui?.base, props.class] })"
+  />
 </template>

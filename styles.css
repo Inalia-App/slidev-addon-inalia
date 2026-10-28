@@ -16,10 +16,26 @@
 }
 
 .slidev-layout .inalia.inalia-legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem 1rem;
   position: absolute;
   bottom: 2.5rem;
   left: 3.5rem;
   right: 3.5rem;
+}
+
+.inalia-legend-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.inalia-legend-bullet {
+  width: 0.75rem;
+  height: 0.75rem;
+  flex-shrink: 0;
+  border-radius: 50%;
 }
 
 .slidev-layout .inalia.inalia-legend-text {

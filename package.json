@@ -58,8 +58,7 @@
   "dependencies": {
     "@slidev/cli": "^52.11.5",
     "@slidev/theme-default": "latest",
-    "@unovis/ts": "1.4.3-beta.0",
-    "@unovis/vue": "1.4.3-beta.0",
+    "@tanstack/charts": "1.1.0",
     "laravel-echo": "^2.2.0",
     "ofetch": "^1.4.1",
     "pusher-js": "8.4.0-rc2",
