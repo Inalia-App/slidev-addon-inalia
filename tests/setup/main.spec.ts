@@ -67,7 +67,7 @@ describe('deck startup', () => {
   it('does not discover the account in static mode', async () => {
     vi.stubEnv('VITE_INALIA_API_KEY', '')
     vi.spyOn(console, 'warn').mockImplementation(() => {})
-    vi.spyOn(console, 'info').mockImplementation(() => {})
+    const info = vi.spyOn(console, 'info').mockImplementation(() => {})
     const { default: setup } = await import('../../setup/main')
 
     await setup({ app: { provide: vi.fn() } } as any)
@@ -75,6 +75,8 @@ describe('deck startup', () => {
     expect(fetchUsername).not.toHaveBeenCalled()
     expect(echo).not.toHaveBeenCalled()
     expect(fetchTalk).not.toHaveBeenCalled()
+    expect(info).toHaveBeenCalledWith('Bootstrap with: npx inalia slidev setup. OAuth requires a local Slidev dev server; exports use static data.')
+    expect(info.mock.calls.flat().join('\n')).not.toContain('npx slidev-addon-inalia')
   })
 
   it('stops startup if account discovery fails', async () => {

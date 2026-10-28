@@ -15,7 +15,7 @@ export default defineAppSetup(async ({ app }) => {
     // eslint-disable-next-line no-console
     console.info('  VITE_INALIA_TALK_NUMBER (OAuth by default), plus VITE_INALIA_API_KEY only for API-token authentication')
     // eslint-disable-next-line no-console
-    console.info('Bootstrap with: npx slidev-addon-inalia setup. OAuth requires a local Slidev dev server; exports use static data.')
+    console.info('Bootstrap with: npx inalia slidev setup. OAuth requires a local Slidev dev server; exports use static data.')
 
     // eslint-disable-next-line no-console
     console.info('Documentation: https://docs.inalia.app/slidev-addon-inalia')
