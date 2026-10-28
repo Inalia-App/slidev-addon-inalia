@@ -1,4 +1,4 @@
-export const INALIA_ENDPOINT = import.meta.env.VITE_INALIA_ENDPOINT ?? 'https://inalia.app'
+export const INALIA_ENDPOINT = import.meta.env.VITE_INALIA_ENDPOINT ?? 'https://api.inalia.app'
 // The local session is a dev-server capability, never an OAuth access token.
 export const INALIA_OAUTH = typeof __INALIA_OAUTH_MODE__ !== 'undefined' && __INALIA_OAUTH_MODE__
 export const INALIA_OAUTH_SESSION = typeof __INALIA_OAUTH_SESSION__ !== 'undefined' ? __INALIA_OAUTH_SESSION__ : ''

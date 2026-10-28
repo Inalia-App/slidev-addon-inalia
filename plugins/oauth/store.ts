@@ -17,7 +17,7 @@ export interface StoredCredentials extends Credentials {
   endpoint: string
 }
 
-export function normalizeEndpoint(value = 'https://inalia.app'): string {
+export function normalizeEndpoint(value = 'https://api.inalia.app'): string {
   const url = new URL(value)
   const loopback = ['localhost', '127.0.0.1', '[::1]'].includes(url.hostname)
   if ((url.protocol !== 'https:' && !(url.protocol === 'http:' && loopback))

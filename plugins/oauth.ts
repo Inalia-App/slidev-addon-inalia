@@ -66,7 +66,7 @@ interface OAuthPlugin extends Plugin {
 }
 
 export function inaliaOAuthPlugin(): OAuthPlugin {
-  let endpoint = 'https://inalia.app'
+  let endpoint = 'https://api.inalia.app'
   let enabled = false
   let session = ''
   return {
@@ -76,7 +76,7 @@ export function inaliaOAuthPlugin(): OAuthPlugin {
       enabled = !env.VITE_INALIA_API_KEY?.trim()
       session = enabled && command === 'serve' ? randomBytes(32).toString('hex') : ''
       if (enabled)
-        endpoint = normalizeEndpoint(env.VITE_INALIA_ENDPOINT || 'https://inalia.app')
+        endpoint = normalizeEndpoint(env.VITE_INALIA_ENDPOINT || undefined)
       return {
         define: {
           __INALIA_OAUTH_SESSION__: JSON.stringify(session),

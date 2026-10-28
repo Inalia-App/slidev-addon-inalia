@@ -42,6 +42,10 @@ function tokenResponse(scope = 'slidev:read') {
 }
 
 describe('addon OAuth credentials', () => {
+  it('defaults to the hosted API origin', () => {
+    expect(normalizeEndpoint()).toBe('https://api.inalia.app')
+  })
+
   it('rejects insecure origins and OAuth endpoint substitution', () => {
     for (const value of ['http://inalia.example', 'https://user:secret@inalia.example', 'https://inalia.example/path', 'https://inalia.example/?query=1'])
       expect(() => normalizeEndpoint(value)).toThrow()

@@ -93,7 +93,7 @@ describe('local OAuth proxy', () => {
       socket: { remoteAddress: '127.0.0.1' },
       headers: { 'host': 'localhost:3030', 'origin': 'http://localhost:3030', 'x-inalia-session': JSON.parse(config.define.__INALIA_OAUTH_SESSION__) },
     }, response, vi.fn())
-    expect(fetcher.mock.calls[0][0]).toBe('https://inalia.app/api/slidev/speaker/talks/1')
+    expect(fetcher.mock.calls[0][0]).toBe('https://api.inalia.app/api/slidev/speaker/talks/1')
     expect(fetcher.mock.calls[0][1].headers.Authorization).toBe('Bearer upstream-only-secret')
     expect(response.end).toHaveBeenCalledWith('{"data":{"number":1}}')
     expect(JSON.stringify(response.end.mock.calls)).not.toContain('upstream-only-secret')
@@ -116,7 +116,7 @@ describe('local OAuth proxy', () => {
       async* [Symbol.asyncIterator]() {},
     }
     await middleware(request, response, vi.fn())
-    expect(fetcher).toHaveBeenCalledWith('https://inalia.app/api/slidev/Barbapapazes/talks/1/demo-mode', expect.objectContaining({
+    expect(fetcher).toHaveBeenCalledWith('https://api.inalia.app/api/slidev/Barbapapazes/talks/1/demo-mode', expect.objectContaining({
       method,
       headers: expect.objectContaining({ Authorization: 'Bearer upstream-only-secret' }),
       body: undefined,
