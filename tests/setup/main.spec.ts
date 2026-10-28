@@ -22,6 +22,7 @@ beforeEach(() => {
 
 afterEach(() => {
   vi.unstubAllEnvs()
+  vi.unstubAllGlobals()
   vi.restoreAllMocks()
 })
 
@@ -46,6 +47,21 @@ describe('deck startup', () => {
     expect(fetchTalk).toHaveBeenCalledExactlyOnceWith('current-owner')
     expect(provide).toHaveBeenCalledWith('username', 'current-owner')
     expect(provide).toHaveBeenCalledWith('talk', { number: 7 })
+  })
+
+  it('starts OAuth without a username environment variable', async () => {
+    vi.stubGlobal('__INALIA_OAUTH_MODE__', true)
+    vi.stubGlobal('__INALIA_OAUTH_SESSION__', 'local-session')
+    vi.stubEnv('VITE_INALIA_API_KEY', '')
+    vi.stubEnv('VITE_INALIA_USERNAME', undefined)
+    const { default: setup } = await import('../../setup/main')
+    const provide = vi.fn()
+
+    await setup({ app: { provide } } as any)
+
+    expect(fetchUsername).toHaveBeenCalledTimes(1)
+    expect(fetchTalk).toHaveBeenCalledExactlyOnceWith('current-owner')
+    expect(provide).toHaveBeenCalledWith('username', 'current-owner')
   })
 
   it('does not discover the account in static mode', async () => {
