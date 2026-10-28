@@ -18,6 +18,16 @@ const isEmojiDisabled = computed(() => {
 </script>
 
 <template>
+  <div
+    v-if="talk?.demo_mode"
+    role="status"
+    class="absolute top-2 inset-x-0 z-50 flex justify-center pointer-events-none"
+  >
+    <div class="flex items-center gap-1.5 rounded-full bg-amber-100 text-amber-900 px-3 py-1 text-xs font-medium shadow-sm">
+      <span class="i-carbon:debug" aria-hidden="true" />
+      <span>Debug mode enabled</span>
+    </div>
+  </div>
   <InaliaLiveReactions :disabled="isEmojiDisabled" :max-emojis="emojiLimit" class="w-full h-full relative" />
   <InaliaAudienceQuestionHighlighted class="absolute inset-0" />
   <InaliaRunToContinue v-if="talk?.slidev.run_to_continue" class="absolute z-10 bottom-0 inset-x-0" @run="run" />

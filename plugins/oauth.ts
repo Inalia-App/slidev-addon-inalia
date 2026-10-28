@@ -13,6 +13,7 @@ const LOOPBACK = new Set(['127.0.0.1', '::1', '::ffff:127.0.0.1'])
 const talkPath = '/[\\w-]+/talks/[1-9]\\d*'
 const readPath = new RegExp(`^${talkPath}(?:/questions/[1-9]\\d*)?$`)
 const runPath = new RegExp(`^${talkPath}/run$`)
+const demoModePath = new RegExp(`^${talkPath}/demo-mode$`)
 const socketId = /^\d+\.\d+$/
 const channelName = /^private-(?:talks\.\d+|questions\.\d+\.answers)$/
 
@@ -25,6 +26,7 @@ export function allowedProxyRequest(method: string | undefined, path: string): b
     return true
   return (method === 'GET' && readPath.test(path))
     || (method === 'POST' && runPath.test(path))
+    || ((method === 'POST' || method === 'DELETE') && demoModePath.test(path))
 }
 
 export function isLocalRequest(request: LocalRequest, session: string): boolean {
@@ -104,7 +106,7 @@ export function inaliaOAuthPlugin(): OAuthPlugin {
           return fail(404, 'Unsupported Inalia request.')
         try {
           let body: string | undefined
-          if (request.method === 'POST') {
+          if (request.method === 'POST' || request.method === 'DELETE') {
             const raw = await bodyOf(request)
             if (path === '/broadcasting/auth') {
               const data = JSON.parse(raw) as { socket_id?: unknown, channel_name?: unknown } | null
