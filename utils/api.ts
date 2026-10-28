@@ -1,13 +1,13 @@
 import type { Question } from '../types/question'
 import type { Talk } from '../types/talk'
 import { ofetch } from 'ofetch'
-import { INALIA_API_KEY, INALIA_ENDPOINT, INALIA_TALK_NUMBER } from './constants'
+import { INALIA_API_KEY, INALIA_ENDPOINT, INALIA_OAUTH, INALIA_OAUTH_SESSION, INALIA_TALK_NUMBER } from './constants'
 
 export const api = ofetch.create({
-  baseURL: INALIA_ENDPOINT,
+  baseURL: INALIA_OAUTH ? '/_inalia' : INALIA_ENDPOINT,
   headers: {
     Accept: 'application/json',
-    Authorization: `Bearer ${INALIA_API_KEY}`,
+    ...(INALIA_OAUTH ? { 'X-Inalia-Session': INALIA_OAUTH_SESSION } : { Authorization: `Bearer ${INALIA_API_KEY}` }),
   },
 })
 
@@ -29,9 +29,9 @@ export async function fetchTalk(username: string): Promise<Talk> {
 }
 
 export async function runTalk(username: string): Promise<void> {
-  return api(`${talkPath(username)}/run`, {
+  await api<void>(`${talkPath(username)}/run`, {
     method: 'POST',
-  }).then(response => response.data)
+  })
 }
 
 export async function startDemoMode(username: string): Promise<void> {
