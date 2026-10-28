@@ -42,7 +42,9 @@ describe('useInaliaTalk demo mode', () => {
     const { controls, wrapper } = mountHost({ ...mockTalk, demo_mode: demoMode }, 'token-owner')
     const request = demoMode ? stopDemoMode : startDemoMode
     let complete!: () => void
-    request.mockImplementationOnce(() => new Promise<void>((resolve) => { complete = resolve }))
+    request.mockImplementationOnce(() => new Promise<void>((resolve) => {
+      complete = resolve
+    }))
 
     const pending = controls.toggleDemoMode()
     expect(request).toHaveBeenCalledExactlyOnceWith('token-owner')
