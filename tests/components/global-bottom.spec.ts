@@ -50,9 +50,27 @@ function mountComponent() {
 describe('global-bottom', () => {
   beforeEach(() => {
     mocks.configs = {}
+    mocks.talk = null
     mocks.currentSlideRouteValue = {
       meta: { slide: { frontmatter: {} } },
     }
+  })
+
+  it('shows a debug badge with the debug icon when demo mode is enabled', () => {
+    mocks.talk = { demo_mode: true, slidev: {} }
+
+    const wrapper = mountComponent()
+    const badge = wrapper.get('[role="status"]')
+
+    expect(badge.text()).toBe('Debug mode enabled')
+    expect(badge.find('[class="i-carbon:debug"]').attributes('aria-hidden')).toBe('true')
+    expect(badge.classes()).toContain('pointer-events-none')
+  })
+
+  it.each([null, { demo_mode: false, slidev: {} }])('hides the debug badge when demo mode is not enabled (%s)', (talk) => {
+    mocks.talk = talk
+
+    expect(mountComponent().find('[role="status"]').exists()).toBe(false)
   })
 
   it.each([

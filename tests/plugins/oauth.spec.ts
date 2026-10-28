@@ -20,6 +20,14 @@ describe('local OAuth proxy', () => {
     expect(allowedProxyRequest('GET', '/speaker/talks/1')).toBe(true)
     expect(allowedProxyRequest('GET', '/speaker/talks/1/questions/2')).toBe(true)
     expect(allowedProxyRequest('POST', '/speaker/talks/1/run')).toBe(true)
+    expect(allowedProxyRequest('POST', '/speaker/talks/1/demo-mode')).toBe(true)
+    expect(allowedProxyRequest('DELETE', '/speaker/talks/1/demo-mode')).toBe(true)
+    expect(allowedProxyRequest('PUT', '/speaker/talks/1/demo-mode')).toBe(false)
+    expect(allowedProxyRequest('DELETE', '/speaker/talks/1/run')).toBe(false)
+    for (const path of ['/speaker/talks/0/demo-mode', '/speaker/talks/1/demo-mode?x=y', '/speaker/talks/1/demo-mode/extra']) {
+      expect(allowedProxyRequest('POST', path)).toBe(false)
+      expect(allowedProxyRequest('DELETE', path)).toBe(false)
+    }
     expect(allowedProxyRequest('POST', '/broadcasting/auth')).toBe(true)
     for (const path of ['/logout', '/front/profile', '/speaker/talks/1?x=y', '/speaker/talks/1/../2', '//attacker.example', '/speaker/talks/1/demo-mode'])
       expect(allowedProxyRequest('GET', path)).toBe(false)
@@ -89,6 +97,40 @@ describe('local OAuth proxy', () => {
     expect(fetcher.mock.calls[0][1].headers.Authorization).toBe('Bearer upstream-only-secret')
     expect(response.end).toHaveBeenCalledWith('{"data":{"number":1}}')
     expect(JSON.stringify(response.end.mock.calls)).not.toContain('upstream-only-secret')
+  })
+
+  it.each(['POST', 'DELETE'])('forwards %s demo-mode requests with upstream-only authorization', async (method) => {
+    const fetcher = vi.fn().mockResolvedValue({ ok: true, status: 200, text: async () => '' })
+    vi.stubGlobal('fetch', fetcher)
+    const plugin = inaliaOAuthPlugin()
+    const config = plugin.config({}, { command: 'serve', mode: 'development' })
+    const use = vi.fn()
+    plugin.configureServer({ middlewares: { use } })
+    const middleware = use.mock.calls[0][0]
+    const response = { statusCode: 200, setHeader: vi.fn(), end: vi.fn() }
+    const request = {
+      method,
+      url: '/_inalia/api/Barbapapazes/talks/1/demo-mode',
+      socket: { remoteAddress: '127.0.0.1' },
+      headers: { 'host': 'localhost:3030', 'x-inalia-session': JSON.parse(config.define.__INALIA_OAUTH_SESSION__) },
+      async* [Symbol.asyncIterator]() {},
+    }
+    await middleware(request, response, vi.fn())
+    expect(fetcher).toHaveBeenCalledWith('https://inalia.app/api/slidev/Barbapapazes/talks/1/demo-mode', expect.objectContaining({
+      method,
+      headers: expect.objectContaining({ Authorization: 'Bearer upstream-only-secret' }),
+      body: undefined,
+    }))
+    expect(response.statusCode).toBe(200)
+    expect(response.end).toHaveBeenCalledWith('')
+
+    fetcher.mockClear()
+    await middleware({
+      ...request,
+      async* [Symbol.asyncIterator]() { yield '{"unexpected":true}' },
+    }, response, vi.fn())
+    expect(response.statusCode).toBe(400)
+    expect(fetcher).not.toHaveBeenCalled()
   })
 
   it('creates a new local capability for each dev server', () => {

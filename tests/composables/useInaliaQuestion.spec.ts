@@ -16,6 +16,7 @@ const warningMessage = '[slidev-addon-inalia] `useInaliaQuestion` received an un
 
 const question: Question = {
   id: 7,
+  demo_mode: false,
   number: 7,
   tiny_url: 'https://inalia.app/q/7',
   question: 'What should we test?',
