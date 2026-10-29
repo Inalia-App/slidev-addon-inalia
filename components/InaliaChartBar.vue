@@ -31,8 +31,10 @@ defineSlots<InaliaChartBarSlots>()
 const ui = computed(() => inaliaChartBar())
 
 const definition = computed(() => defineChart({
+  svgAnimation: { duration: 450, easing: 'ease-out', respectReducedMotion: true, resize: false },
   marks: [
-    barY(props.data.map(d => ({ ...d })), {
+    barY(props.data.map((d, index) => ({ ...d, choiceKey: index })), {
+      key: 'choiceKey',
       x: (_datum, { index }) => index,
       y: 'count',
       fill: d => d.color,

@@ -4,6 +4,7 @@ import type { SelectData } from '../types/data'
 import { defineChart } from '@tanstack/charts'
 import { pie, polar, radialArc } from '@tanstack/charts/polar'
 import { Chart } from '@tanstack/charts/vue'
+import { TransitionPresets, usePreferredReducedMotion, useTransition } from '@vueuse/core'
 import { tv } from 'tailwind-variants'
 import { computed } from 'vue'
 
@@ -29,11 +30,25 @@ defineSlots<InaliaChartDonutSlots>()
 
 const ui = computed(() => inaliaChartDonut())
 
+const reducedMotion = usePreferredReducedMotion()
+// Interpolate counts, not SVG paths, to keep the ring circular during updates.
+const counts = useTransition(() => props.data.map(d => d.count), {
+  duration: 300,
+  transition: TransitionPresets.linear,
+  disabled: computed(() => reducedMotion.value === 'reduce'),
+})
+const data = computed(() => props.data.map((d, index) => ({
+  ...d,
+  choiceKey: index,
+  count: Math.max(0, counts.value[index] ?? d.count),
+})))
+
 const definition = computed(() => defineChart({
   marks: [
     polar({
       marks: [
-        radialArc(pie(props.data, { value: 'count', gapAngle: 0.04 }), {
+        radialArc(pie(data.value, { value: 'count', gapAngle: 0.04 }), {
+          key: 'choiceKey',
           innerRadius: ({ radius }) => Math.max(0, radius - 30),
           cornerRadius: 4,
           fill: d => d.color,
