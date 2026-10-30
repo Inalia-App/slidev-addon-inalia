@@ -7,6 +7,10 @@ Never touch the README unless the user explicitly requests it.
 
 ## Documentation
 
-- Keep the CLI and addon documentation in [Inalia-App/inalia.app](https://github.com/Inalia-App/inalia.app) up to date whenever changing this repository.
-- For changes that affect installation, configuration, authentication, components, or other user-facing behavior, update the corresponding documentation in `inalia.app` as part of the same task.
-- If no documentation update is needed, explain why in the pull request. If the documentation changes require a separate pull request in `inalia.app`, link it in this repository's pull request.
+- The CLI and addon documentation lives in [Inalia-App/inalia.app](https://github.com/Inalia-App/inalia.app), under `apps/inalia.app/content/knowledge-base/`.
+- Keep documentation accurate, not exhaustive. A user-facing change does not automatically require a documentation change.
+- Document only what users need to understand a concept or accomplish a task. Skip self-explanatory UI behavior, cosmetic changes, and implementation details.
+- When updating an article, make the smallest useful change. Do not expand it with related details, edge cases, or troubleshooting unless necessary for the task.
+- Describe the current product, not change history, legacy behavior, or backward compatibility unless explicitly requested.
+- Add an article only for a distinct user need not already covered; maintain the index when adding, renaming, or removing articles.
+- When a documentation update is needed, include it in the same task. If it requires a separate pull request in `inalia.app`, link that pull request.
