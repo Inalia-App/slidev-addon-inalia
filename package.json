@@ -59,6 +59,7 @@
     "@slidev/cli": "^52.11.5",
     "@slidev/theme-default": "latest",
     "@tanstack/charts": "1.1.0",
+    "@vueuse/core": "^14.2.1",
     "laravel-echo": "^2.2.0",
     "ofetch": "^1.4.1",
     "pusher-js": "8.4.0-rc2",
