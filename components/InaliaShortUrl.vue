@@ -24,14 +24,21 @@ defineSlots<InaliaShortUrlSlots>()
 
 const ui = computed(() => inaliaShortUrl())
 
-const httpRegex = /^https?:\/\//
+const httpRegex = /^https?:\/\//i
+const protocolRelativeRegex = /^\/\//
+const href = computed(() => {
+  if (httpRegex.test(props.url))
+    return props.url
+
+  return `https://${props.url.replace(protocolRelativeRegex, '')}`
+})
 const textUrl = computed(() => {
   return props.url.replace(httpRegex, '')
 })
 </script>
 
 <template>
-  <a :href="url" target="_blank" :class="ui.base({ class: [props.ui?.base, props.class] })">
+  <a :href="href" target="_blank" :class="ui.base({ class: [props.ui?.base, props.class] })">
     {{ textUrl }}
   </a>
 </template>
